@@ -20,7 +20,6 @@ const GlobalStyle = createGlobalStyle`
     h3 {
         font-family: Roboto Bold, sans-serif;
         font-weight: bold;
-        margin-bottom: 1rem;
     }
 
     p {
