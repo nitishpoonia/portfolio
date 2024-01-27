@@ -4,11 +4,19 @@ import {
   ProjectTitle,
   ProjectDesc,
   ProjectImg,
+  Button,
 } from "./styles/Project.styled";
+import styled from "styled-components";
+
 
 // Images
 
 function Project(props) {
+  const ButtonContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+  `;
   return (
     <div>
       <StyledProject>
@@ -24,6 +32,14 @@ function Project(props) {
             ))}
           </ul>
         </ProjectDesc>
+        <ButtonContainer>
+          <Button color={"#007aff"} hoverColor={"#0069d9"}>
+            View Detail
+          </Button>
+          <Button color={"#238636"} hoverColor={"#2C9947"}>
+            Github
+          </Button>
+        </ButtonContainer>
       </StyledProject>
     </div>
   );

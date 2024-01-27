@@ -5,6 +5,7 @@ export const Container = styled.div`
 export const ProjectContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
 `;
 export const StyledHr = styled.hr`
   height: 7px;

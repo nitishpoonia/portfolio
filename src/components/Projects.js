@@ -1,9 +1,14 @@
 import React from "react";
-import { ProjectContainer, StyledHr, Container } from "./styles/Containers.styled";
+import {
+  ProjectContainer,
+  StyledHr,
+  Container,
+} from "./styles/Containers.styled";
 import Project from "./Project";
 import eggTimer from "./../assets/eggTimer.png";
 import quizler from "./../assets/quizler.png";
 import { eggTimerSkills, quizlerSkills } from "./ProjectSkills";
+import CardComponent from "./Card";
 function Projects() {
   return (
     <Container>
@@ -23,6 +28,7 @@ function Projects() {
           description="A quiz app to test your general knowledge."
           skills={quizlerSkills}
         />
+        <CardComponent />
       </ProjectContainer>
     </Container>
   );
