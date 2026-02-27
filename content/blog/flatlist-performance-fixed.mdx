@@ -1,0 +1,310 @@
+---
+title: "Why FlatList Slows Down With 5000 Items (And How to Fix It)"
+date: "2025-02-27"
+description: "A deep dive into why React Native's FlatList struggles at scale, what's actually happening under the hood, and the exact techniques to fix it."
+tags: ["react-native", "performance", "flatlist"]
+published: true
+---
+
+You have a FlatList. It works perfectly with 50 items. You test it with real data — 
+5000 items — and suddenly the app stutters, scrolls feel sticky, and the JS thread 
+is pegged at 100%. Nothing in your code changed. So what happened?
+
+This post breaks down exactly why FlatList degrades at scale and gives you concrete 
+fixes ordered from easiest to most impactful.
+
+## What FlatList Actually Does
+
+Before fixing anything, you need to understand what FlatList is doing for you.
+
+FlatList is a wrapper around `ScrollView` that virtualises your list. Virtualisation 
+means it only renders items that are currently visible on screen plus a small buffer 
+above and below. Items scrolled past are unmounted from the React tree. Items about 
+to come into view are mounted just in time.
+
+This sounds perfect. The problem is that "just in time" mounting is expensive, and 
+at scale several things compound to make it fall apart.
+
+## The Real Causes of Slowdown
+
+### 1. The JS Thread is Single-Threaded
+
+React Native runs your JavaScript on a single thread. Every render, every state 
+update, every `onScroll` event handler runs on this one thread. When you scroll fast 
+through 5000 items, FlatList is simultaneously:
+
+- Unmounting items that left the viewport
+- Mounting new items entering the viewport
+- Running your `renderItem` function for each new item
+- Calculating layout for newly mounted items
+- Firing `onScroll` events at up to 60 times per second
+
+All of this competes on the same thread. When the thread is busy rendering, it 
+cannot respond to your finger gesture. That's the stutter you feel — it's not a slow 
+scroll, it's the UI waiting for JS to finish work.
+
+### 2. renderItem Creates New Function References on Every Render
+
+This is the single most common mistake and the easiest to fix.
+```js
+// ❌ This creates a new function on every parent render
+<FlatList
+  data={items}
+  renderItem={({ item }) => <ItemCard item={item} />}
+/>
+```
+
+Every time the parent component re-renders — which happens on every scroll event 
+if you have any state in the parent — a brand new `renderItem` function is created. 
+FlatList sees a new function reference and re-renders every visible item. With 5000 
+items and scroll events firing 60 times per second, this is catastrophic.
+
+### 3. keyExtractor is Recalculated Unnecessarily
+
+Same problem as above. If `keyExtractor` is defined inline, it recreates on every 
+render and forces FlatList to recheck all item keys.
+```js
+// ❌ New function reference every render
+keyExtractor={(item) => item.id.toString()}
+```
+
+### 4. Item Components Are Not Memoised
+
+Even with a stable `renderItem` reference, if your item component is not wrapped in 
+`React.memo`, it will re-render whenever the parent renders — regardless of whether 
+the item's own props changed.
+
+### 5. The windowSize Is Too Large
+
+FlatList renders a window of items around the viewport. The default `windowSize` is 
+21, which means it renders 10 viewport-heights above and 10 below the current 
+scroll position. With large items or a slow device this is far too much.
+
+### 6. Images Are Not Cached or Sized Correctly
+
+If your items contain images without explicit `width` and `height`, React Native 
+has to measure them after they load. This triggers layout recalculations that 
+cascade through the list. Multiply this by hundreds of items entering the viewport 
+and the layout thread gets overwhelmed.
+
+### 7. You Are Storing List State in the Parent
+
+If your list items have interactive state — selected, expanded, liked — and you 
+store that state in the parent component, every interaction re-renders the entire 
+parent, which cascades down to every visible FlatList item.
+
+---
+
+## The Fixes
+
+### Fix 1 — Move renderItem Outside the Component
+```js
+// ✅ Defined once, stable reference forever
+const renderItem = ({ item }) => <ItemCard item={item} />;
+
+export default function MyList({ data }) {
+  return (
+    <FlatList
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+    />
+  );
+}
+```
+
+If you need props from the parent inside `renderItem`, use `useCallback`:
+```js
+const renderItem = useCallback(({ item }) => (
+  <ItemCard item={item} onPress={handlePress} />
+), [handlePress]); // only recreates when handlePress changes
+```
+
+### Fix 2 — Stabilise keyExtractor
+```js
+// ✅ Defined outside the component
+const keyExtractor = (item) => item.id.toString();
+```
+
+### Fix 3 — Memoise Your Item Component
+```js
+import React, { memo } from 'react';
+
+const ItemCard = memo(({ item }) => {
+  return (
+    <View>
+      <Text>{item.title}</Text>
+    </View>
+  );
+});
+
+export default ItemCard;
+```
+
+`memo` does a shallow comparison of props. If nothing changed, the component does 
+not re-render. For a list of 5000 items this is the difference between re-rendering 
+20 visible items and re-rendering none of them on a parent state change.
+
+If your item has complex props, pass a custom comparison function:
+```js
+const ItemCard = memo(({ item }) => {
+  // ...
+}, (prevProps, nextProps) => {
+  // Return true if props are equal (skip re-render)
+  return prevProps.item.id === nextProps.item.id &&
+         prevProps.item.updatedAt === nextProps.item.updatedAt;
+});
+```
+
+### Fix 4 — Tune the Virtualisation Window
+```js
+<FlatList
+  data={items}
+  renderItem={renderItem}
+  keyExtractor={keyExtractor}
+  windowSize={5}           // default 21 — render 2 viewports above and below
+  maxToRenderPerBatch={10} // default 10 — items rendered per JS batch
+  initialNumToRender={10}  // default 10 — items rendered on first paint
+  updateCellsBatchingPeriod={50} // ms between batch renders, default 50
+  removeClippedSubviews={true}   // unmount offscreen items from native view
+/>
+```
+
+`windowSize={5}` is a good starting point for most lists. Go lower if items are 
+tall, higher if you see blank flashes while scrolling.
+
+`removeClippedSubviews={true}` unmounts the native view of offscreen items while 
+keeping the JS component mounted. This reduces memory and GPU pressure but can 
+cause blank flashes on fast scrolls. Test on a real device before shipping.
+
+### Fix 5 — Give Images Explicit Dimensions
+```js
+// ❌ Forces layout recalculation after image loads
+<Image source={{ uri: item.imageUrl }} />
+
+// ✅ Layout calculated immediately, no recalculation
+<Image
+  source={{ uri: item.imageUrl }}
+  style={{ width: 80, height: 80 }}
+/>
+```
+
+For dynamic image sizes, use a fixed aspect ratio container:
+```js
+<View style={{ width: '100%', aspectRatio: 16/9 }}>
+  <Image source={{ uri: item.imageUrl }} style={{ flex: 1 }} />
+</View>
+```
+
+### Fix 6 — Move Item State Into the Item Component
+```js
+// ❌ Selected state in parent — every selection re-renders everything
+const [selectedId, setSelectedId] = useState(null);
+
+// ✅ Selected state inside item — only that item re-renders
+const ItemCard = memo(({ item }) => {
+  const [selected, setSelected] = useState(false);
+  return (
+    <Pressable onPress={() => setSelected(s => !s)}>
+      <View style={{ backgroundColor: selected ? '#eee' : 'white' }}>
+        <Text>{item.title}</Text>
+      </View>
+    </Pressable>
+  );
+});
+```
+
+If you genuinely need selected state in the parent (for a submit action), use a 
+`Set` ref instead of state so updates do not trigger re-renders:
+```js
+const selectedIds = useRef(new Set());
+
+const handleSelect = useCallback((id) => {
+  if (selectedIds.current.has(id)) {
+    selectedIds.current.delete(id);
+  } else {
+    selectedIds.current.add(id);
+  }
+}, []);
+```
+
+### Fix 7 — Use getItemLayout If Your Items Are Fixed Height
+
+When FlatList needs to scroll to an index or calculate scroll position, it has to 
+measure every item above that position. With 5000 items this is thousands of 
+measurements.
+
+If your items have a fixed height, `getItemLayout` pre-calculates all positions 
+instantly:
+```js
+const ITEM_HEIGHT = 72;
+
+<FlatList
+  data={items}
+  renderItem={renderItem}
+  keyExtractor={keyExtractor}
+  getItemLayout={(data, index) => ({
+    length: ITEM_HEIGHT,
+    offset: ITEM_HEIGHT * index,
+    index,
+  })}
+/>
+```
+
+This also makes `scrollToIndex` instant instead of triggering a measuring pass.
+
+### Fix 8 — Consider FlashList for Extreme Cases
+
+If you have done all of the above and still see performance issues above 1000 items, 
+consider Shopify's [FlashList](https://shopify.github.io/flash-list/). It is a 
+drop-in replacement for FlatList that recycles item components instead of 
+unmounting and remounting them — the same pattern used by RecyclerView on Android 
+and UICollectionView on iOS.
+```bash
+npm install @shopify/flash-list
+```
+```js
+import { FlashList } from '@shopify/flash-list';
+
+<FlashList
+  data={items}
+  renderItem={renderItem}
+  estimatedItemSize={72} // required — your approximate item height
+  keyExtractor={keyExtractor}
+/>
+```
+
+The key difference: FlatList unmounts items that leave the viewport and mounts 
+fresh ones as new items enter. FlashList takes the unmounted component and reuses 
+it for the new item, only updating its props. This eliminates the mount/unmount 
+cost entirely.
+
+---
+
+## Quick Reference Checklist
+
+Before shipping any FlatList with large data:
+
+- `renderItem` defined outside the component or wrapped in `useCallback`
+- `keyExtractor` defined outside the component
+- Item component wrapped in `React.memo`
+- `windowSize` reduced from 21 to 5–7
+- `getItemLayout` provided if items are fixed height
+- All images have explicit `width` and `height`
+- Item-level state lives inside the item component
+- Tested on a low-end Android device, not just a simulator
+
+A mid-range Android device is the real benchmark. Simulators run on your Mac's CPU 
+and will hide every performance problem. If it is smooth on a Redmi or a Samsung A 
+series device, it is smooth for your users.
+
+---
+
+## Summary
+
+FlatList slowdown at scale is almost never one thing — it is four or five small 
+mistakes that compound. The JS thread gets overloaded because renderItem creates 
+new functions on every scroll event, item components re-render unnecessarily because 
+they are not memoised, and the virtualisation window is rendering far more than what 
+is visible. Fix these in order and you will see the difference immediately in the 
+React Native performance monitor.

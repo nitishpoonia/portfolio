@@ -7,6 +7,7 @@ import Experience  from '@/components/Experience';
 import Testimonial from '@/components/Testimonial';
 import Contact     from '@/components/Contact';
 import Navbar from '@/components/NavBar';
+import HireStrip from '@/components/HireStrip';
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
         <About />
         <Skills />
         <Projects />
+        <HireStrip/>
         <Experience />
         <Testimonial />
         <Contact />

@@ -8,9 +8,21 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: "Nitish Poonia — Developer & Creator",
+  title: "Nitish Poonia — React Native & Full-Stack Developer",
   description:
-    "Software engineer, sculptor, vermiculturist, and vegetable grower.",
+    "React Native and full-stack developer based in India. I build mobile apps, web platforms, and software systems from design to deployment.",
+  keywords: [
+    "React Native developer India",
+    "mobile app developer",
+    "full stack developer India",
+    "Next.js developer",
+  ],
+  openGraph: {
+    title: "Nitish Poonia — React Native & Full-Stack Developer",
+    description: "React Native and full-stack developer based in India.",
+    url: "https://nitishpoonia.in",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {

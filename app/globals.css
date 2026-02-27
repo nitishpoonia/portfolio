@@ -62,3 +62,72 @@ body {
 .delay-2  { animation-delay: 0.25s; }
 .delay-3  { animation-delay: 0.4s; }
 .delay-4  { animation-delay: 0.55s; }
+/* ── Blog prose styles ────────────────────────── */
+.prose {
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  line-height: 1.85;
+  color: var(--ink);
+}
+.prose h2 {
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 2.5rem 0 1rem;
+  color: var(--ink);
+}
+.prose h3 {
+  font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+  font-weight: 700;
+  margin: 2rem 0 0.75rem;
+  color: var(--ink);
+}
+.prose p {
+  margin-bottom: 1.4rem;
+  color: var(--ink);
+}
+.prose a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose strong { font-weight: 800; }
+.prose ul, .prose ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.4rem;
+}
+.prose li { margin-bottom: 0.4rem; }
+.prose code {
+  background: #eeecea;
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  font-size: 0.88em;
+  font-family: 'Courier New', monospace;
+}
+.prose pre {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 1.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 1.4rem;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+.prose blockquote {
+  border-left: 3px solid var(--border);
+  padding-left: 1.5rem;
+  color: var(--mid);
+  font-style: italic;
+  margin: 1.5rem 0;
+}
+.prose img {
+  width: 100%;
+  border-radius: 4px;
+  margin: 1.5rem 0;
+}

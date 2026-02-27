@@ -52,19 +52,27 @@ function ContactCard({ href, eyebrow, label, external }) {
 
 export default function Contact() {
   return (
-    <section id="contact" style={{
-      padding: 'var(--pad-y) var(--pad-x)',
-      maxWidth: 'var(--max)', margin: '0 auto',
-    }}>
+    <section
+      id="contact"
+      style={{
+        padding: "var(--pad-y) var(--pad-x)",
+        maxWidth: "var(--max)",
+        margin: "0 auto",
+      }}
+    >
       <SectionHeader
         label="Get in touch"
         title="Let's work together."
-        subtitle="Open to new opportunities, collaborations, and interesting conversations."
+        subtitle="Available for freelance projects, full-time roles, and consulting. Fastest response on WhatsApp."
       />
 
-      <div style={{
-        display: 'flex', gap: '1rem', flexWrap: 'wrap',
-      }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "1rem",
+          flexWrap: "wrap",
+        }}
+      >
         <ContactCard
           href={`mailto:${email}`}
           eyebrow="Email"
@@ -80,11 +88,17 @@ export default function Contact() {
       </div>
 
       {/* Footer */}
-      <p style={{
-        marginTop: 'clamp(3rem, 6vw, 5rem)',
-        fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.18em',
-        textTransform: 'uppercase', color: 'var(--faint)', textAlign: 'center',
-      }}>
+      <p
+        style={{
+          marginTop: "clamp(3rem, 6vw, 5rem)",
+          fontSize: "0.62rem",
+          fontWeight: 700,
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          color: "var(--faint)",
+          textAlign: "center",
+        }}
+      >
         Nitish Poonia — {new Date().getFullYear()}
       </p>
     </section>
