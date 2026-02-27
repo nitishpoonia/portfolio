@@ -1,14 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import HireButton from "./HireButton";
+import Image from "next/image";
 
 const roles = [
-  "Software Engineer",
-  "React Native Developer",
-  "Full-Stack Builder",
-  "Vermiculturist",
-  "Vegetable Grower",
-  "Sculptor",
+  "Using AI tools to iterate fast",
+  "Turning ideas into reality",
+  "Making vermicompost",
+  "Growing Vegetables",
 ];
 
 export default function Hero() {
@@ -57,18 +56,12 @@ export default function Hero() {
           background: "#eeede8",
         }}
       >
-        {/*
-          ┌──────────────────────────────────────────────────────┐
-          │  TO ADD YOUR PHOTO:                                  │
-          │  1. Put portrait.jpg in /public/                     │
-          │  2. Replace the placeholder div below with:         │
-          │                                                      │
-          │  import Image from 'next/image'                      │
-          │  <Image src="/portrait.jpg" alt="Nitish Poonia"      │
-          │    fill style={{ objectFit:'cover',                  │
-          │    objectPosition:'center top' }} />                 │
-          └──────────────────────────────────────────────────────┘
-        */}
+        <Image
+          src="/assets/Untitled-design.png"
+          alt="Nitish Poonia"
+          fill
+          style={{ objectFit: "cover", objectPosition: "center top" }}
+        />
         <div
           style={{
             width: "100%",
@@ -77,33 +70,7 @@ export default function Hero() {
             alignItems: "center",
             justifyContent: "center",
           }}
-        >
-          <svg
-            width="120"
-            height="120"
-            viewBox="0 0 120 120"
-            fill="none"
-            style={{ opacity: 0.18 }}
-          >
-            <circle cx="60" cy="42" r="24" fill="#0d0d0d" />
-            <ellipse cx="60" cy="105" rx="44" ry="30" fill="#0d0d0d" />
-          </svg>
-        </div>
-
-        <span
-          style={{
-            position: "absolute",
-            bottom: "2rem",
-            left: "2rem",
-            fontSize: "0.6rem",
-            fontWeight: 700,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--mid)",
-          }}
-        >
-          Portrait
-        </span>
+        ></div>
       </div>
 
       {/* ── RIGHT: Name + Typewriter ── */}
@@ -127,7 +94,7 @@ export default function Hero() {
             marginBottom: "1.2rem",
           }}
         >
-          Based in India
+          generalist
         </p>
 
         <h1
@@ -192,7 +159,7 @@ export default function Hero() {
             fontWeight: 700,
             letterSpacing: "0.2em",
             textTransform: "uppercase",
-            color: "var(--faint)",
+            color: "var(--mid)",
           }}
         >
           Scroll to explore ↓

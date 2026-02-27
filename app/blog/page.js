@@ -102,7 +102,7 @@ export default function BlogPage() {
               <p
                 style={{
                   fontSize: "0.65rem",
-                  color: "var(--faint)",
+                  color: "var(--ink)",
                   marginTop: "0.25rem",
                 }}
               >

@@ -31,7 +31,7 @@ const projects = [
   },
   {
     number: '03',
-    title: 'OTA Hotel Booking App',
+    title: 'Hotel Booking App',
     tagline: 'End-to-end hotel discovery and booking with Stripe payments.',
     link: null,
     features: [
@@ -103,7 +103,7 @@ function ProjectCard({ project }) {
       <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
         {project.features.map((f, i) => (
           <li key={i} data-invert style={{
-            fontSize: '2rem', color: 'var(--mid)',
+            fontSize: '1rem', color: 'var(--mid)',
             lineHeight: 1.55, display: 'flex', gap: '0.6rem',
             transition: 'color 0.25s',
           }}>

@@ -48,7 +48,7 @@ export default function HireButton({
           ...sizes[size],
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = "transparent";
+          e.currentTarget.style.background = "var(--white)";
           e.currentTarget.style.color = "var(--ink)";
         }}
         onMouseLeave={(e) => {
@@ -73,7 +73,7 @@ export default function HireButton({
           textDecoration: "none",
           transition: "color 0.2s",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
+        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--white)")}
         onMouseLeave={(e) => (e.currentTarget.style.color = "var(--mid)")}
       >
         or email →
