@@ -1,0 +1,170 @@
+---
+title: "NFC Based Employee Time Tracking"
+slug: "nfc-time-tracking"
+tagline: "Built a tamper-proof, offline-resilient attendance system powered by NFC tags"
+role: "Lead Developer"
+company: "Vision Vivante"
+timeline: "Dec 2024 – Dec 2025"
+tags: ["React Native", "NFC", "Android Native", "iOS Native", "Async Storage", "Node.js"]
+published: true
+---
+
+## Overview
+
+NFC Time Tracker was my first professional project — built at Vision Vivante
+from December 2024 to December 2025. The app replaces manual attendance
+sheets with NFC tag scans. Workers tap their assigned tag to start or end a
+shift, and the system records the timestamp, location, and user identity
+against their profile in real time.
+
+I did not start from scratch. The authentication flow and the core NFC
+scanning were already scaffolded using the NFC Tag Manager library when I
+joined. My work was to take that foundation and build everything on top of
+it — the role system, the time integrity layer, the offline sync, and the
+multi-role navigation architecture.
+
+## Challenge 1: Workers Could Manipulate Their Shift Times by Changing Device Time
+
+The app was recording shift start and end times using the device's local
+clock. This meant any worker could set their phone's time backward before
+tapping in, or forward before tapping out, and the falsified timestamp would
+be sent to the backend as truth. There was no way to detect it on the server
+either, because the server received a timestamp and had no reference point
+to validate it against.
+
+### Solution
+
+I collaborated with the backend developer to build a server-time bridge. On
+app launch and at regular intervals, the app fetches the current UTC time
+from the server and stores the delta between server time and device time
+locally.
+
+But fetching server time alone is not enough — if the user goes offline or
+the fetch fails, you fall back to device time and the problem returns. So I
+went a level deeper and wrote a native bridge for both Android and iOS that
+exposes the device's time since last boot.
+```js
+// Native bridge — returns milliseconds since device boot
+import { NativeModules } from 'react-native';
+const { SystemClock } = NativeModules;
+
+export async function getReliableTimestamp() {
+  const serverTime      = await fetchServerTime(); // cached on last sync
+  const bootTime        = await SystemClock.getElapsedRealtime();
+  const adjustedTime    = serverTime + bootTime;
+  return new Date(adjustedTime);
+}
+```
+
+Time since boot cannot be changed by the user — it is maintained by the
+kernel and resets only when the device restarts. By anchoring our clock to
+boot time plus the last known server time, we run a separate internal clock
+inside the app that is completely independent of whatever the system clock
+shows. All timestamps sent to the backend come from this internal clock, not
+`new Date()`.
+
+## Challenge 2: NFC Scans Were Lost When the Network Was Unreliable
+
+Several client sites had poor or intermittent network coverage. When a
+worker tapped their NFC tag in a low-signal area, the scan event would fail
+to reach the server and simply disappear — no record, no error shown to the
+user, no retry. From the backend's perspective the worker never clocked in.
+
+### Solution
+
+I built an offline sync queue using Async Storage. Every NFC scan event is
+written to a local queue before any network request is made. When the
+request succeeds, the event is removed from the queue. When it fails or the
+device is offline, it stays in the queue.
+```js
+const QUEUE_KEY = 'offline_scan_queue';
+
+export async function enqueueScan(scanEvent) {
+  const raw      = await AsyncStorage.getItem(QUEUE_KEY);
+  const queue    = raw ? JSON.parse(raw) : [];
+  queue.push({ ...scanEvent, queuedAt: Date.now() });
+  await AsyncStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+}
+
+export async function flushQueue(syncFn) {
+  const raw   = await AsyncStorage.getItem(QUEUE_KEY);
+  const queue = raw ? JSON.parse(raw) : [];
+  if (queue.length === 0) return;
+
+  // Prompt user before syncing
+  // (handled in the UI layer — this just processes the queue)
+  for (const event of queue) {
+    await syncFn(event);
+  }
+
+  await AsyncStorage.removeItem(QUEUE_KEY);
+}
+```
+
+When the device comes back online, the app checks whether the queue is
+empty before allowing a new scan. If there are pending events, the worker
+is shown a prompt asking them to sync their offline scans first. This keeps
+the backend records in chronological order and prevents a worker from
+doing a new scan before their previous offline scans are recorded.
+
+## Challenge 3: Role-Based UI Was Needed After Navigation Was Already Built
+
+Midway through the project the client requirement changed — after login,
+workers, managers, and admins needed to see completely different interfaces,
+not just different screens within the same navigation stack. The navigation
+was already set up as a single stack at this point, so adding branching
+logic to the existing structure would have meant spreading role checks
+across every navigator and every screen transition.
+
+### Solution
+
+Instead of patching the existing navigator, I restructured the navigation
+into separate stacks — one per role — and added a routing layer at the root
+that runs after login and directs the user to the correct stack entirely.
+```js
+// navigation/RootNavigator.js
+import { useAuth } from '../context/AuthContext';
+
+const ROLE_STACKS = {
+  admin:   AdminStack,
+  manager: ManagerStack,
+  worker:  WorkerStack,
+};
+
+export default function RootNavigator() {
+  const { user } = useAuth();
+
+  if (!user) return <AuthStack />;
+
+  const Stack = ROLE_STACKS[user.role];
+  return Stack ? <Stack /> : <FallbackScreen />;
+}
+```
+
+Each role stack is fully self-contained — its own screens, its own tab bars,
+its own deep link handling. Adding a new role means adding one new stack and
+one new entry in `ROLE_STACKS`. No existing stack is touched. This approach
+also made it straightforward to test each role in isolation during
+development.
+
+## Results
+
+- Shift times are fully tamper-proof regardless of device clock manipulation
+- NFC scans are never lost, even in zero-network environments
+- Three distinct role interfaces ship from a single codebase with clean
+  separation
+- The offline queue approach was later reused in the social media app for
+  queuing failed media uploads
+
+## Lessons Learned
+
+Starting on an existing codebase taught me to read before writing. The first
+week was entirely spent understanding what was already there before touching
+anything. The offline sync and the native time bridge were both solutions
+that came from deeply understanding the constraints first — neither would
+have been obvious without knowing the full picture of how the app was
+deployed and where it was being used.
+
+The role navigation restructure also reinforced something I now treat as a
+rule: when a requirement change makes you want to add conditionals
+everywhere, that is a signal to change the structure instead.
