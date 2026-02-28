@@ -1,0 +1,404 @@
+---
+title: "Infinite Scroll Done Right: Offset vs Cursor Pagination (With Backend Support)"
+date: "2025-02-28"
+description: "Why offset pagination silently breaks at scale, how cursor-based pagination fixes it, and how to implement both the frontend infinite scroll and the backend API correctly in React Native and Node.js."
+tags: ["react-native", "pagination", "backend", "node.js", "performance"]
+published: true
+---
+
+Every app eventually needs a scrollable list that loads more data as the user scrolls down. The implementation looks simple. You fetch page one, when the user hits the bottom you fetch page two, and so on. Most developers reach for offset pagination because it is the first thing that comes to mind and it works perfectly in development.
+
+Then the app goes to production. The list has 50,000 records. Users start seeing duplicate items. Some items never appear at all. The database slows down as the list grows. And none of this shows up in testing because your test database has 100 rows.
+
+This post explains exactly why offset pagination breaks, how cursor pagination fixes every one of those problems, and how to implement the full stack — backend API in Node.js and frontend infinite scroll in React Native.
+
+## How Offset Pagination Works
+
+Offset pagination is what most people learn first. You tell the database to skip a number of rows and return the next batch.
+```sql
+SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET 40;
+```
+
+In an API this looks like:
+```
+GET /posts?page=3&limit=20
+GET /posts?offset=40&limit=20
+```
+
+The frontend keeps track of which page it is on, increments it on each fetch, and appends the results to the list.
+```js
+const [page, setPage] = useState(1);
+const [posts, setPosts] = useState([]);
+
+const loadMore = async () => {
+  const response = await fetch(`/api/posts?page=${page}&limit=20`);
+  const data = await response.json();
+  setPosts(prev => [...prev, ...data.posts]);
+  setPage(prev => prev + 1);
+};
+```
+
+This works. Until it does not.
+
+## Why Offset Pagination Breaks at Scale
+
+### Problem 1 — The Shifting Window
+
+Offset pagination assumes the dataset is frozen while you are paginating through it. It never is.
+
+Imagine a user is on page three of a feed sorted by newest first. While they were reading pages one and two, five new posts were published. The entire dataset shifted forward by five positions.
+
+When the user fetches page three, the database skips the first 40 rows. But those first 40 rows now include the five new posts. So the rows that were previously positions 36 through 40 are now at positions 41 through 45. The user sees them again — duplicates — because those exact rows are now at the top of page three.
+
+The reverse also happens. If posts are deleted while the user is paginating, items get skipped entirely and the user never sees them.
+
+This is not a bug in your code. It is a fundamental property of offset pagination. There is no fix. You can only replace it.
+
+### Problem 2 — Database Performance Degrades With Depth
+
+When you run `OFFSET 10000 LIMIT 20`, the database does not magically jump to row 10,001. It reads and discards the first 10,000 rows, then returns the next 20. Every deep page scan costs more than the one before it.
+
+On a table with one million rows, fetching page 500 requires the database to scan and discard 9,980 rows on every single request. As your data grows, your deepest pages get slower — which is exactly when you need them to be fast.
+```sql
+-- This gets slower as offset grows
+SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET 9980;
+
+-- Execution plan: Sequential scan, discard 9980 rows, return 20
+-- Cost: O(offset)
+```
+
+### Problem 3 — Race Conditions on the Frontend
+
+If the user scrolls fast and triggers multiple simultaneous fetches, responses can arrive out of order. The second fetch resolves before the first, your state is set to page two results, then the first fetch resolves and overwrites it with page one results mixed in.
+
+You end up with a scrambled, duplicated list and no error in your console.
+
+## Cursor Pagination — How It Actually Works
+
+Cursor pagination replaces the concept of "page number" with a pointer to a specific record. Instead of saying "give me rows 40 to 60", you say "give me 20 rows after this specific record".
+
+The API response includes a cursor — usually the ID or timestamp of the last item returned. The next request sends that cursor back, and the database uses it to find exactly where to continue from.
+```
+First request:
+GET /api/posts?limit=20
+Response: { posts: [...], nextCursor: "post_id_xyz" }
+
+Second request:
+GET /api/posts?limit=20&cursor=post_id_xyz
+Response: { posts: [...], nextCursor: "post_id_abc" }
+
+No more data:
+GET /api/posts?limit=20&cursor=post_id_abc
+Response: { posts: [...], nextCursor: null }
+```
+
+The cursor is opaque to the frontend. It does not know or care what it means. It just sends it back on the next request.
+
+### Why This Fixes the Shifting Window
+
+When new posts are added to the top of the feed, your cursor still points to the same record it always did. The query says "give me posts older than post_id_xyz" — new posts are newer, so they are excluded. No duplicates, no skipped items, regardless of how much the dataset changes while the user is scrolling.
+
+### Why This Fixes the Performance Problem
+```sql
+-- Offset: scans and discards N rows every time
+SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET 9980;
+
+-- Cursor: index seek directly to the record, then scan forward
+SELECT * FROM posts
+WHERE created_at < '2025-01-15T10:23:00Z'
+ORDER BY created_at DESC
+LIMIT 20;
+```
+
+With an index on `created_at`, the cursor query is O(1) regardless of how deep into the list you are. Page one and page 500 cost the same.
+
+## Backend Implementation — Node.js with PostgreSQL
+
+### The Posts Table
+```sql
+CREATE TABLE posts (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title       TEXT NOT NULL,
+  content     TEXT,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  user_id     UUID REFERENCES users(id)
+);
+
+-- This index is what makes cursor pagination fast
+CREATE INDEX idx_posts_created_at ON posts (created_at DESC);
+```
+
+### The API Endpoint
+```js
+// routes/posts.js
+import express from 'express';
+import { db } from '../db.js';
+
+const router = express.Router();
+
+router.get('/', async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const cursor = req.query.cursor || null;
+
+    let query;
+    let params;
+
+    if (cursor) {
+      // Decode the cursor — it's a base64 encoded timestamp + id
+      const decoded = JSON.parse(Buffer.from(cursor, 'base64').toString('utf8'));
+
+      query = `
+        SELECT id, title, content, created_at, user_id
+        FROM posts
+        WHERE (created_at, id) < ($1, $2)
+        ORDER BY created_at DESC, id DESC
+        LIMIT $3
+      `;
+      params = [decoded.createdAt, decoded.id, limit + 1];
+    } else {
+      query = `
+        SELECT id, title, content, created_at, user_id
+        FROM posts
+        ORDER BY created_at DESC, id DESC
+        LIMIT $1
+      `;
+      params = [limit + 1];
+    }
+
+    const result = await db.query(query, params);
+    const rows = result.rows;
+
+    // Fetch one extra row to know if there is a next page
+    const hasNextPage = rows.length > limit;
+    const posts = hasNextPage ? rows.slice(0, limit) : rows;
+
+    // Encode the cursor from the last item
+    let nextCursor = null;
+    if (hasNextPage && posts.length > 0) {
+      const lastPost = posts[posts.length - 1];
+      nextCursor = Buffer.from(JSON.stringify({
+        createdAt: lastPost.created_at,
+        id: lastPost.id,
+      })).toString('base64');
+    }
+
+    res.json({
+      posts,
+      nextCursor,
+      hasNextPage,
+    });
+  } catch (error) {
+    console.error('Failed to fetch posts:', error);
+    res.status(500).json({ error: 'Failed to fetch posts' });
+  }
+});
+
+export default router;
+```
+
+Two things worth noting here. First, the cursor encodes both `created_at` and `id`. Using timestamp alone causes problems if two posts are created at the exact same millisecond — the tie-breaker `id` ensures the cursor always points to exactly one record. Second, fetching `limit + 1` rows is the cleanest way to check for a next page without a separate `COUNT` query.
+
+### Why Base64 Encode the Cursor
+
+You could send the raw timestamp and ID as separate query params. Base64 encoding makes the cursor opaque — the frontend treats it as a black box and sends it back unchanged. This means you can change what the cursor encodes internally (add a shard ID, change the sort field) without any frontend changes.
+
+## Frontend Implementation — React Native
+
+### The Hook
+
+Separate the pagination logic from your UI entirely. This hook handles fetching, appending, deduplication, and race conditions.
+```js
+// hooks/usePaginatedFetch.js
+import { useState, useCallback, useRef } from 'react';
+
+export function usePaginatedFetch(url) {
+  const [items, setItems]           = useState([]);
+  const [loading, setLoading]       = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [error, setError]           = useState(null);
+
+  const cursorRef    = useRef(null);
+  const fetchingRef  = useRef(false); // prevents duplicate fetches
+  const seenIds      = useRef(new Set()); // deduplication
+
+  const fetchPage = useCallback(async (isRefresh = false) => {
+    // Guard: do not fetch if already fetching or no more pages
+    if (fetchingRef.current) return;
+    if (!isRefresh && !hasNextPage) return;
+
+    fetchingRef.current = true;
+    isRefresh ? setLoading(true) : setLoadingMore(true);
+    setError(null);
+
+    try {
+      const cursor = isRefresh ? '' : cursorRef.current;
+      const endpoint = cursor
+        ? `${url}?cursor=${cursor}&limit=20`
+        : `${url}?limit=20`;
+
+      const response = await fetch(endpoint);
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const data = await response.json();
+
+      if (isRefresh) {
+        // Hard reset on pull-to-refresh
+        seenIds.current = new Set();
+        cursorRef.current = null;
+        setItems([]);
+      }
+
+      // Deduplicate before appending
+      const newItems = data.posts.filter(item => {
+        if (seenIds.current.has(item.id)) return false;
+        seenIds.current.add(item.id);
+        return true;
+      });
+
+      setItems(prev => isRefresh ? newItems : [...prev, ...newItems]);
+      cursorRef.current = data.nextCursor;
+      setHasNextPage(data.hasNextPage);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      fetchingRef.current = false;
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  }, [url, hasNextPage]);
+
+  const loadMore  = useCallback(() => fetchPage(false), [fetchPage]);
+  const refresh   = useCallback(() => fetchPage(true),  [fetchPage]);
+
+  return { items, loading, loadingMore, hasNextPage, error, loadMore, refresh };
+}
+```
+
+### The List Component
+```js
+// components/PostList.js
+import {
+  FlatList, View, Text, ActivityIndicator,
+  RefreshControl, StyleSheet
+} from 'react-native';
+import { useEffect } from 'react';
+import { usePaginatedFetch } from '../hooks/usePaginatedFetch';
+
+const ITEM_HEIGHT = 80;
+
+const keyExtractor = item => item.id;
+
+const renderItem = ({ item }) => (
+  <View style={styles.item}>
+    <Text style={styles.title}>{item.title}</Text>
+    <Text style={styles.date}>
+      {new Date(item.created_at).toLocaleDateString()}
+    </Text>
+  </View>
+);
+
+const getItemLayout = (_, index) => ({
+  length: ITEM_HEIGHT,
+  offset: ITEM_HEIGHT * index,
+  index,
+});
+
+export default function PostList() {
+  const {
+    items, loading, loadingMore,
+    hasNextPage, error, loadMore, refresh,
+  } = usePaginatedFetch('https://api.yoursite.com/posts');
+
+  // Load the first page on mount
+  useEffect(() => { refresh(); }, []);
+
+  if (loading && items.length === 0) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (error && items.length === 0) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.error}>Failed to load. Pull to retry.</Text>
+      </View>
+    );
+  }
+
+  return (
+    <FlatList
+      data={items}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+      getItemLayout={getItemLayout}
+      onEndReached={hasNextPage ? loadMore : null}
+      onEndReachedThreshold={0.5}
+      refreshControl={
+        <RefreshControl refreshing={loading} onRefresh={refresh} />
+      }
+      ListFooterComponent={
+        loadingMore
+          ? <ActivityIndicator style={styles.footer} />
+          : !hasNextPage && items.length > 0
+          ? <Text style={styles.end}>You have reached the end</Text>
+          : null
+      }
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  item: {
+    height: ITEM_HEIGHT,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+    justifyContent: 'center',
+  },
+  title:  { fontSize: 16, fontWeight: '600', marginBottom: 4 },
+  date:   { fontSize: 12, color: '#888' },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  footer: { paddingVertical: 20 },
+  end:    { textAlign: 'center', padding: 20, color: '#aaa', fontSize: 13 },
+  error:  { color: '#e33', fontSize: 14 },
+});
+```
+
+## Handling Race Conditions
+
+The `fetchingRef` in the hook above is the key guard. Consider what happens without it:
+
+1. User scrolls to the bottom, `loadMore` fires
+2. Network is slow, request is in flight
+3. User scrolls up and back down, `loadMore` fires again
+4. Second response arrives first — state set to page two
+5. First response arrives — page two results are overwritten with a mix
+
+With `fetchingRef.current = true` set before the fetch and cleared in `finally`, the second call hits the guard immediately and returns. Only one fetch runs at a time.
+
+The `seenIds` Set handles the case where a race condition does slip through or where the server returns an item you already have. Before appending any item, you check whether its ID has already been seen. If it has, you skip it. This makes the list resilient to any source of duplicates — race conditions, network retries, or the shifting window problem itself.
+
+## Handling Pull to Refresh Correctly
+
+Pull to refresh needs to reset everything — the cursor, the seen IDs, and the list itself — before fetching fresh data. Doing this in the wrong order causes a flash of empty content.
+
+The `isRefresh` path in the hook clears `seenIds` and resets `cursorRef` before the fetch resolves, then replaces `items` with the fresh data in a single `setItems` call. One render, no flicker.
+
+## When to Use Each Approach
+
+Cursor pagination is the right default for any feed or timeline sorted by recency. It handles scale, handles a live dataset, and costs the same at any depth.
+
+Offset pagination still makes sense in two specific cases. First, when users need to jump to a specific page — search results with page numbers, admin tables, report exports. Second, when the dataset is small and static, such as a settings list or a catalogue that never changes. For everything else, cursors.
+
+## Summary
+
+Offset pagination has three fatal flaws at scale: duplicates from a shifting dataset, skipped items when records are deleted, and database scans that get slower with depth. None of these show up in development with small datasets.
+
+Cursor pagination fixes all three by pointing to a specific record rather than a position. The backend fetches `limit + 1` rows to detect the next page cheaply, encodes the cursor as an opaque base64 token, and uses a composite cursor of timestamp plus ID to handle ties. The frontend tracks an in-flight guard to prevent duplicate fetches and a seen-IDs Set to deduplicate results before they hit the list. The result is a list that is correct at any scale and costs the same to query whether you are on item 20 or item 200,000.
