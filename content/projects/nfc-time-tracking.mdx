@@ -49,9 +49,9 @@ import { NativeModules } from 'react-native';
 const { SystemClock } = NativeModules;
 
 export async function getReliableTimestamp() {
-  const serverTime      = await fetchServerTime(); // cached on last sync
-  const bootTime        = await SystemClock.getElapsedRealtime();
-  const adjustedTime    = serverTime + bootTime;
+  const serverTime   = await fetchServerTime(); // cached on last sync
+  const bootTime     = await SystemClock.getElapsedRealtime();
+  const adjustedTime = serverTime + bootTime;
   return new Date(adjustedTime);
 }
 ```
@@ -80,8 +80,8 @@ device is offline, it stays in the queue.
 const QUEUE_KEY = 'offline_scan_queue';
 
 export async function enqueueScan(scanEvent) {
-  const raw      = await AsyncStorage.getItem(QUEUE_KEY);
-  const queue    = raw ? JSON.parse(raw) : [];
+  const raw   = await AsyncStorage.getItem(QUEUE_KEY);
+  const queue = raw ? JSON.parse(raw) : [];
   queue.push({ ...scanEvent, queuedAt: Date.now() });
   await AsyncStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
 }
@@ -91,8 +91,6 @@ export async function flushQueue(syncFn) {
   const queue = raw ? JSON.parse(raw) : [];
   if (queue.length === 0) return;
 
-  // Prompt user before syncing
-  // (handled in the UI layer — this just processes the queue)
   for (const event of queue) {
     await syncFn(event);
   }
@@ -168,3 +166,23 @@ deployed and where it was being used.
 The role navigation restructure also reinforced something I now treat as a
 rule: when a requirement change makes you want to add conditionals
 everywhere, that is a signal to change the structure instead.
+
+This project was also my first time publishing an app to both the Apple App
+Store and Google Play Store. The submission process taught me things no
+documentation prepares you for — the exact icon dimensions required at each
+size, the screenshot specifications per device class, and the specific terms
+and conditions that only surface after your first rejection.
+
+Two things stood out. Publishing to Android is genuinely easier — the Play
+Store has a more straightforward review process and the tooling around
+signing and release tracks is well documented. The App Store is stricter and
+the review guidelines require careful reading before your first submission or
+you will spend days iterating on rejections for things that feel minor but
+are not negotiable.
+
+The counterintuitive part: iOS reviews faster. Despite being the harder
+store to get accepted by, Apple's review team typically responds within 24
+hours once your submission is clean. Google's review can take several days.
+If you are launching to both stores simultaneously, get your iOS submission
+right first and submit it before Android — they will likely approve around
+the same time.

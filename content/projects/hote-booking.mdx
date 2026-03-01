@@ -1,0 +1,201 @@
+---
+title: "Hotel Booking App"
+slug: "hotel-booking"
+tagline: "A full-featured hotel discovery and booking platform with Stripe payments and a seamless guest checkout flow"
+role: "Lead Developer"
+company: "Vision Vivante"
+timeline: "April 2025 – Dec 2025"
+tags: ["React Native", "Stripe", "Node.js", "React Navigation", "FlatList"]
+published: true
+---
+
+## Overview
+
+The Hotel Booking App was my second professional project at Vision Vivante,
+built in parallel with the NFC Time Tracker. Users can search, filter, and
+book hotels with Stripe card payments. A guest flow lets anyone browse and
+reach checkout without an account — authentication is only triggered at the
+point of payment.
+
+What made this project unique in terms of how I worked on it was the
+parallel delivery. I managed my day in two blocks, switching between the
+NFC app and this one as tasks came in for each. It was the first time I had
+to context-switch at a professional level and maintain momentum on two
+separate codebases simultaneously.
+
+The original scope was much larger — the plan included search for hotels,
+flights, cars, and more. That scope was dropped early on and the focus
+narrowed to hotels only. This left some traces in the initial project
+structure that I had to clean up as the requirements became clearer.
+
+## Challenge 1: Project Structure Was Set Up for a Scope That Changed
+
+The initial project structure was designed to accommodate hotels, flights,
+cars, and other travel verticals. When the scope was reduced to hotels only,
+the folder structure, navigation hierarchy, and shared components were
+already partially built around the broader vision. This created dead code,
+confusing module boundaries, and navigation routes that went nowhere.
+
+### Solution
+
+Rather than leaving the unused structure in place, I refactored the project
+to reflect what was actually being built. Unused navigator stacks were
+removed, shared components were consolidated, and the folder structure was
+reorganised around the hotel domain only. It was not glamorous work but it
+made every subsequent feature faster to build because the codebase matched
+the actual product. This was an early lesson in not letting a changed
+requirement silently accumulate technical debt.
+
+## Challenge 2: No Pagination on the Hotels List
+
+The initial API returned all hotels in a single response. In development
+with a small dataset this was fine. As the data grew it became a performance
+and UX problem — slow initial load, a massive FlatList rendering everything
+at once, and no way to progressively load results.
+
+### Solution
+
+I collaborated with the backend developer to design and implement cursor-based
+pagination for the hotels endpoint. On the frontend I applied the same
+FlatList optimisations I had developed on the NFC app — memoised item
+components, stable `keyExtractor` and `renderItem` references, tuned
+`windowSize`, and `getItemLayout` for fixed-height hotel cards.
+```js
+const keyExtractor = (item) => item.id.toString();
+
+const renderHotelCard = ({ item }) => <HotelCard hotel={item} />;
+
+<FlatList
+  data={hotels}
+  keyExtractor={keyExtractor}
+  renderItem={renderHotelCard}
+  onEndReached={hasNextPage ? loadMore : null}
+  onEndReachedThreshold={0.5}
+  windowSize={5}
+  getItemLayout={(_, index) => ({
+    length: CARD_HEIGHT,
+    offset: CARD_HEIGHT * index,
+    index,
+  })}
+  ListFooterComponent={loadingMore ? <ActivityIndicator /> : null}
+/>
+```
+
+The combination of server-side pagination and client-side virtualisation
+meant the list stayed performant regardless of how many hotels were in the
+database.
+
+## Challenge 3: Stripe Card Payment Integration
+
+This was my first time integrating a payment gateway into a mobile app. The
+requirement was to use Stripe's legacy card payment flow — collecting card
+details directly and processing them through the backend.
+
+### Solution
+
+The flow works in three steps. The app collects card details using Stripe's
+CardField component, sends them to the backend to create a PaymentIntent,
+then confirms the payment on the client using the returned client secret.
+```js
+import { useStripe, CardField } from '@stripe/stripe-react-native';
+
+export default function PaymentScreen({ bookingId, amount }) {
+  const { confirmPayment } = useStripe();
+
+  const handlePay = async () => {
+    // Step 1 — Create PaymentIntent on backend
+    const { clientSecret } = await createPaymentIntent({ bookingId, amount });
+
+    // Step 2 — Confirm payment on client
+    const { error, paymentIntent } = await confirmPayment(clientSecret, {
+      paymentMethodType: 'Card',
+    });
+
+    if (error) {
+      Alert.alert('Payment failed', error.message);
+      return;
+    }
+
+    // Step 3 — Confirm booking on backend
+    await confirmBooking(bookingId, paymentIntent.id);
+  };
+
+  return (
+    <>
+      <CardField
+        postalCodeEnabled={false}
+        style={{ height: 50, marginVertical: 16 }}
+      />
+      <Button title="Pay Now" onPress={handlePay} />
+    </>
+  );
+}
+```
+
+## Challenge 4: Guest Booking Flow With Redirect Back After Authentication
+
+The app needed to allow users to browse hotels and begin the booking process
+without an account. The friction of requiring sign-up upfront would have
+killed conversion. But payment requires identity, so authentication had to
+happen at checkout.
+
+The problem is what happens after the user authenticates. A naive
+implementation drops them back on the home screen and they have to find
+their hotel again. That is a broken experience.
+
+### Solution
+
+I implemented a redirect flow that captures the user's position in the
+booking journey before sending them to authentication, then returns them
+to exactly that step after sign-in or sign-up completes.
+```js
+// When guest tries to proceed to payment
+const handleGuestCheckout = (hotelId, roomId, bookingDetails) => {
+  navigation.navigate('Auth', {
+    screen: 'Login',
+    params: {
+      redirectTo: 'BookingConfirm',
+      redirectParams: { hotelId, roomId, bookingDetails },
+    },
+  });
+};
+
+// Inside the auth flow, after successful login
+const handleAuthSuccess = () => {
+  const { redirectTo, redirectParams } = route.params ?? {};
+
+  if (redirectTo) {
+    navigation.replace(redirectTo, redirectParams);
+  } else {
+    navigation.replace('Home');
+  }
+};
+```
+
+The user taps "Book Now", gets redirected to login, signs in, and lands
+directly on the booking confirmation screen with all their previous
+selections intact. No lost context, no starting over.
+
+## Results
+
+- Hotel list handles large datasets smoothly with cursor pagination and
+  FlatList optimisation
+- Stripe payment flow tested and working end to end
+- Guest users can complete a booking without ever being dropped out of
+  their flow
+- Project structure refactored early enough that it did not slow down
+  feature delivery
+
+## Lessons Learned
+
+Managing two projects simultaneously taught me to be deliberate about
+context switching. Unstructured switching between codebases is expensive —
+you spend the first fifteen minutes of every switch just remembering where
+you were. Working in dedicated time blocks made both projects move faster
+than trying to interleave them throughout the day.
+
+The scope change early in this project also reinforced that a changed
+requirement is not just a product decision — it has a structural cost in
+the codebase if you do not act on it immediately. Cleaning up the unused
+travel verticals structure the week the scope changed took half a day.
+Leaving it would have cost far more spread across every feature built after.
