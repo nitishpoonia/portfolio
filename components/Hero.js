@@ -73,14 +73,13 @@ export default function Hero() {
         ></div>
       </div>
 
-      {/* ── RIGHT: Name + Typewriter ── */}
       <div
+        className="hero-text"
         style={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-end",
           padding:
-            "clamp(5rem, 10vw, 9rem) var(--pad-x) clamp(2.5rem, 5vw, 4rem)",
+            "clamp(1.5rem, 5vw, 9rem) var(--pad-x) clamp(2.5rem, 5vw, 4rem)",
         }}
       >
         <p
@@ -168,17 +167,42 @@ export default function Hero() {
 
       {/* Responsive: stack on mobile */}
       <style>{`
-        @media (max-width: 768px) {
-          #hero {
-            grid-template-columns: 1fr !important;
-          }
-          #hero > div:first-child {
-            min-height: 55vw !important;
-            border-right: none !important;
-            border-bottom: 1px solid var(--border);
-          }
-        }
-      `}</style>
+      .hero-text {
+    justify-content: flex-end; /* default = laptop */
+  }
+  @media (max-width: 768px) {
+
+.hero-text {
+      justify-content: flex-start;
+    }
+
+  #hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  #hero > div:first-child {
+    min-height: 55vw !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border);
+  }
+
+  #hero > div:last-child {
+    padding: 1.5rem var(--pad-x) 2rem !important;
+    justify-content: flex-start !important;
+
+  }
+
+  /* ← Add these two */
+  #hero h1 {
+    margin-bottom: 1rem !important;
+    font-size: clamp(2.4rem, 10vw, 3.5rem) !important;
+  }
+
+  #hero .fade-up.delay-3 {
+    padding-top: 1rem !important;
+  }
+}
+`}</style>
     </section>
   );
 }

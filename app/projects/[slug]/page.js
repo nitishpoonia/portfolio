@@ -2,7 +2,20 @@ import { getAllProjects, getProjectBySlug } from "@/lib/project";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 import Link from "next/link";
-
+import rehypePrettyCode from "rehype-pretty-code";
+const mdxOptions = {
+  mdxOptions: {
+    rehypePlugins: [
+      [
+        rehypePrettyCode,
+        {
+          theme: "github-light",
+          keepBackground: true,
+        },
+      ],
+    ],
+  },
+};
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
@@ -170,7 +183,7 @@ export default async function ProjectPage({ params }) {
 
       {/* MDX case study body */}
       <div className="prose">
-        <MDXRemote source={project.content} />
+        <MDXRemote source={project.content} options={mdxOptions} />
       </div>
 
       {/* Bottom nav */}

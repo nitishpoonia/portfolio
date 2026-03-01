@@ -1,7 +1,22 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
+import Link from "next/link";
+import rehypePrettyCode from "rehype-pretty-code";
 
-// This auto-generates the canonical URL for every post
+const mdxOptions = {
+  mdxOptions: {
+    rehypePlugins: [
+      [
+        rehypePrettyCode,
+        {
+          theme: "github-light",
+          keepBackground: true,
+        },
+      ],
+    ],
+  },
+};
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
@@ -90,11 +105,11 @@ export default async function PostPage({ params }) {
 
       {/* MDX Content */}
       <div className="prose">
-        <MDXRemote source={post.content} />
+        <MDXRemote source={post.content} options={mdxOptions} />
       </div>
 
       {/* Back link */}
-      <a
+      <Link
         href="/blog"
         style={{
           display: "inline-block",
@@ -108,7 +123,7 @@ export default async function PostPage({ params }) {
         }}
       >
         ← All posts
-      </a>
+      </Link>
     </main>
   );
 }
