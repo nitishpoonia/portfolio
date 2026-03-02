@@ -148,7 +148,11 @@ export default function Hero() {
 
         {/* Scroll hint */}
         <div className="fade-up delay-4" style={{ marginTop: "2.5rem" }}>
-          <HireButton size="md" />
+          <HireButton
+            size="md"
+            label="Read my case studies"
+            url={"/projects"}
+          />
         </div>
 
         <p

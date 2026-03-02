@@ -6,6 +6,7 @@ import { MessageCircle } from "lucide-react";
 export default function HireButton({
   size = "md",
   label = "Let's work together",
+  url,
 }) {
   const waUrl = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(
     CONTACT.whatsappMessage,
@@ -28,7 +29,7 @@ export default function HireButton({
     >
       {/* Primary — WhatsApp */}
       <a
-        href={waUrl}
+        href={url ?? waUrl}
         target="_blank"
         rel="noopener noreferrer"
         style={{
