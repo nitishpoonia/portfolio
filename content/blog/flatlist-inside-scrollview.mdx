@@ -1,0 +1,308 @@
+---
+title: "Vertical FlatList Inside ScrollView — Why It Breaks and How to Fix It"
+date: "2025-03-03"
+description: "Why nesting a vertical FlatList inside a ScrollView breaks rendering and scroll behaviour, what is actually happening under the hood, and the correct architectural patterns to replace it."
+tags: ["react-native", "flatlist", "scrollview", "performance", "architecture"]
+published: true
+---
+
+If you have ever nested a vertical FlatList inside a ScrollView, you have
+probably noticed the list either renders all items at once, refuses to
+scroll, or behaves unpredictably depending on the device. You add
+`nestedScrollEnabled`, it still does not work right. You set a fixed height,
+items get cut off. Nothing feels correct because nothing is correct —
+the combination is fundamentally broken by design, not by implementation.
+
+This post explains exactly why, what is happening at the rendering and event
+level, and the patterns that actually solve it without hacks.
+
+## Why This Combination Exists in the First Place
+
+The temptation is understandable. You have a screen with a header, some
+profile information, a section of stats, and then a list of posts. The
+natural instinct is to wrap everything in a ScrollView and drop a FlatList
+in the middle for the posts section. It looks clean in JSX and works fine
+on small datasets.
+```jsx
+// What everyone tries first
+<ScrollView>
+  <ProfileHeader />
+  <StatsSection />
+  <FlatList
+    data={posts}
+    renderItem={renderPost}
+    keyExtractor={keyExtractor}
+  />
+</ScrollView>
+```
+
+The problem is that ScrollView and FlatList are solving the same problem in
+conflicting ways, and React Native has to pick one. It always picks
+ScrollView — and in doing so, it breaks FlatList completely.
+
+## Rendering Conflict — Virtualisation Is Disabled
+
+FlatList's entire purpose is virtualisation. It renders only the items
+currently visible on screen plus a small buffer, unmounts items that scroll
+past, and mounts new ones just before they come into view. This is what
+keeps a list of 1000 items performant.
+
+Virtualisation requires FlatList to know its own height. It needs to know
+how tall its viewport is so it can calculate which items are visible and
+which are not.
+
+When FlatList is inside a ScrollView, it has no bounded height. ScrollView
+expands to fit all of its children — that is literally what it does. So
+FlatList's height becomes unbounded, and the virtualisation engine sees an
+infinitely tall viewport. If everything is visible, nothing needs to be
+virtualised. So FlatList renders every single item immediately and keeps
+them all mounted forever.
+
+The result is identical to using a plain `ScrollView` with a `map()` — you
+have lost all the performance benefits of FlatList while keeping the
+complexity of it. With 500 items, all 500 components are mounted, measured,
+and held in memory simultaneously.
+```jsx
+// This is what React Native actually does with your nested FlatList
+<ScrollView>
+  <ProfileHeader />
+  <StatsSection />
+  <View>
+    {posts.map(post => <PostCard key={post.id} post={post} />)}
+  </View>
+</ScrollView>
+```
+
+That is functionally what you have written. FlatList is not helping you.
+
+## Scroll Event Propagation Conflict
+
+The second problem is at the gesture and event level. Both ScrollView and
+FlatList want to own vertical scroll events. When your finger moves
+vertically on the screen, React Native's gesture system has to decide which
+component receives the event.
+
+On iOS, the two scroll views fight over the gesture. The result is jumpy,
+inconsistent scrolling — sometimes the outer ScrollView scrolls, sometimes
+the inner FlatList tries to, and the transition between them feels broken.
+Momentum scrolling stops working correctly. Pull-to-refresh on the FlatList
+conflicts with any pull-to-refresh on the outer ScrollView.
+
+On Android the behaviour is different but equally broken. Android's
+`nestedScrollEnabled` prop exists specifically for this scenario and it does
+help — but it adds significant overhead to every scroll event because the
+system now has to propagate each event up the view hierarchy to determine
+who should handle it. On low-end Android devices this overhead is measurable
+and causes frame drops.
+```jsx
+// nestedScrollEnabled helps but does not fix the core problem
+<FlatList
+  data={posts}
+  renderItem={renderPost}
+  nestedScrollEnabled // ← band-aid, not a fix
+/>
+```
+
+The deeper issue remains: you have two competing scroll containers and every
+gesture has to be arbitrated between them. There is no clean solution at
+the event level — the fix has to be architectural.
+
+## The Wrong Fixes People Try
+
+Before covering the correct patterns, it is worth naming the fixes that seem
+reasonable but create new problems.
+
+**Fixed height on FlatList** — Setting a fixed `height` style on the
+FlatList gives it a bounded viewport, which re-enables virtualisation. But
+now you have a list inside a scrollable container inside a scrollable
+screen. You have two scroll areas visible simultaneously and users have to
+scroll inside a scroll. This is a poor UX pattern on mobile.
+```jsx
+// Creates a scroll-within-scroll UX problem
+<ScrollView>
+  <ProfileHeader />
+  <FlatList
+    data={posts}
+    renderItem={renderPost}
+    style={{ height: 400 }} // ← two scrollable areas visible at once
+  />
+</ScrollView>
+```
+
+**`scrollEnabled={false}` on FlatList** — Disabling scroll on FlatList and
+relying on the outer ScrollView to scroll means FlatList still renders
+everything because it has no bounded height. You have just made it a very
+expensive `map()`.
+
+**`ListHeaderComponent` misuse** — Some developers put the header content
+inside FlatList's `ListHeaderComponent` to avoid needing a ScrollView at
+all. This works but is often done poorly, leading to a massive header
+component that re-renders every time the list data changes.
+
+## The Correct Architectural Patterns
+
+### Pattern 1 — Use ListHeaderComponent and ListFooterComponent
+
+This is the cleanest solution for the most common case. Instead of wrapping
+FlatList in a ScrollView, move your header content into FlatList's own
+`ListHeaderComponent`. The entire screen becomes one single scroll
+container — FlatList — with your non-list content rendered above and below
+the list items.
+```jsx
+const ProfileHeader = () => (
+  <View>
+    <ProfileHeader />
+    <StatsSection />
+  </View>
+);
+
+export default function FeedScreen() {
+  return (
+    <FlatList
+      data={posts}
+      renderItem={renderPost}
+      keyExtractor={keyExtractor}
+      ListHeaderComponent={<ProfileHeader />}
+      ListFooterComponent={hasNextPage ? <ActivityIndicator /> : null}
+    />
+  );
+}
+```
+
+FlatList now owns the entire scroll surface. Virtualisation works correctly
+because FlatList knows its own height — it fills the screen. The header
+scrolls away naturally as the user scrolls down. Pull-to-refresh works
+without conflict.
+
+The `ListHeaderComponent` re-renders when the list data changes, so keep it
+memoised if it contains expensive components.
+```jsx
+const MemoHeader = React.memo(() => (
+  <View>
+    <ProfileHeader />
+    <StatsSection />
+  </View>
+));
+
+<FlatList
+  ListHeaderComponent={<MemoHeader />}
+  ...
+/>
+```
+
+### Pattern 2 — SectionList for Multiple Content Types
+
+If your screen has multiple distinct sections — not just a header and a list
+but several lists or mixed content types — `SectionList` is the right tool.
+It handles heterogeneous sections natively, virtualises across all of them,
+and maintains a single scroll container.
+```jsx
+const sections = [
+  {
+    type: 'profile',
+    data: [{ id: 'profile' }],
+    renderItem: () => <ProfileHeader />,
+  },
+  {
+    type: 'posts',
+    title: 'Recent Posts',
+    data: posts,
+    renderItem: ({ item }) => <PostCard post={item} />,
+  },
+  {
+    type: 'media',
+    title: 'Media',
+    data: mediaItems,
+    renderItem: ({ item }) => <MediaThumb item={item} />,
+  },
+];
+
+<SectionList
+  sections={sections}
+  keyExtractor={(item) => item.id}
+  renderSectionHeader={({ section }) =>
+    section.title ? <SectionTitle title={section.title} /> : null
+  }
+/>
+```
+
+SectionList is still a virtualised list under the hood — it uses the same
+VirtualizedList base as FlatList. All sections are part of one scroll
+container and virtualisation works correctly across all of them.
+
+### Pattern 3 — FlashList for Complex Mixed Layouts
+
+If you are on Shopify's FlashList, it handles mixed item types through the
+`overrideItemType` prop. You define different item types and FlashList
+recycles components within each type, keeping the performance benefits of
+component recycling even with heterogeneous content.
+```jsx
+import { FlashList } from '@shopify/flash-list';
+
+const data = [
+  { type: 'header', id: 'header' },
+  { type: 'stats', id: 'stats' },
+  ...posts.map(p => ({ ...p, type: 'post' })),
+];
+
+<FlashList
+  data={data}
+  estimatedItemSize={80}
+  overrideItemType={(item) => item.type}
+  renderItem={({ item }) => {
+    if (item.type === 'header') return <ProfileHeader />;
+    if (item.type === 'stats')  return <StatsSection />;
+    return <PostCard post={item} />;
+  }}
+  keyExtractor={(item) => item.id}
+/>
+```
+
+This is the most performant option for complex screens. FlashList recycles
+the `PostCard` component across all post items, which eliminates the
+mount/unmount cost entirely for the most frequently rendered item type.
+
+### Pattern 4 — Separate Screens for Separate Lists
+
+Sometimes the right answer is not a clever layout pattern but a navigation
+change. If your screen has two or more substantial lists, consider whether
+they belong on the same screen at all. Two tabs, each with its own FlatList
+filling the screen, is almost always a better UX than one screen trying to
+scroll through multiple lists simultaneously.
+```jsx
+// Before — one screen trying to do too much
+<ScrollView>
+  <PostList />
+  <MediaList />
+  <FollowerList />
+</ScrollView>
+
+// After — tab navigator, each screen is a single FlatList
+<Tab.Navigator>
+  <Tab.Screen name="Posts"     component={PostsScreen} />
+  <Tab.Screen name="Media"     component={MediaScreen} />
+  <Tab.Screen name="Followers" component={FollowersScreen} />
+</Tab.Navigator>
+```
+
+## Decision Guide
+
+Use this to choose the right pattern for your screen:
+
+- **Single list with non-list content above or below** → `ListHeaderComponent` and `ListFooterComponent`
+- **Multiple distinct sections with different item types** → `SectionList`
+- **Complex mixed layout with high performance requirements** → `FlashList` with `overrideItemType`
+- **Multiple substantial lists on one screen** → Reconsider the layout, use tabs
+
+## Summary
+
+Nesting a vertical FlatList inside a ScrollView disables virtualisation
+because FlatList cannot determine its own height, causing every item to
+render immediately and remain mounted. Scroll event propagation conflicts
+between the two containers cause unreliable gesture handling, especially on
+iOS, and measurable performance overhead on Android even with
+`nestedScrollEnabled`. The fix is always architectural — move non-list
+content into `ListHeaderComponent`, use `SectionList` for multi-section
+screens, or reconsider whether multiple lists belong on the same screen at
+all. One scroll container per screen is not a constraint — it is the
+correct mental model for building smooth React Native interfaces.

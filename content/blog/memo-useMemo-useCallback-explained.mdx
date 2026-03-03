@@ -1,0 +1,368 @@
+---
+title: "Optimizing Re-renders in React Native: React.memo, useCallback, useMemo — When They Actually Help"
+date: "2025-03-03"
+description: "The real guide to React.memo, useCallback, and useMemo in React Native — what they actually do, where developers misuse them, how to measure whether they are helping, and why premature optimization often makes performance worse."
+tags: ["react-native", "performance", "react-memo", "usecallback", "usememo", "optimization"]
+published: false
+---
+
+React.memo, useCallback, and useMemo are the most misunderstood performance
+tools in React Native. Most developers either ignore them entirely and
+wonder why their lists re-render constantly, or wrap everything in all three
+and wonder why their app feels slower than before. Neither approach is right.
+
+This post covers what these tools actually do at the mechanics level, the
+most common ways they are misused, how to measure whether they are genuinely
+helping, and how to know when not to use them at all.
+
+## What Re-renders Actually Are
+
+Before optimising re-renders, you need to be precise about what a re-render
+is and what it costs.
+
+A re-render in React means the component function runs again. React calls
+your function, gets a new JSX tree, diffs it against the previous one, and
+applies only the changes to the native view layer. The function running
+again does not necessarily mean anything visible changes on screen.
+
+The cost of a re-render has two parts. First, the cost of running the
+function itself — executing your JavaScript, computing derived values,
+creating new objects. Second, the cost of reconciliation — React diffing
+the old and new JSX trees. For simple components this is microseconds.
+For complex components with deep trees it can be meaningful.
+
+The mistake most developers make is assuming all re-renders are expensive.
+Most are not. Optimising a component that renders in 0.1ms is wasted effort
+that adds complexity without improving anything the user experiences.
+
+## React.memo — What It Does and When It Helps
+
+`React.memo` is a higher-order component that wraps your component and
+memoises the last rendered output. Before re-rendering, it does a shallow
+comparison of the previous and current props. If nothing changed, it skips
+the render entirely and returns the cached output.
+```jsx
+const PostCard = React.memo(({ post, onPress }) => {
+  return (
+    <Pressable onPress={onPress}>
+      <Text>{post.title}</Text>
+      <Text>{post.subtitle}</Text>
+    </Pressable>
+  );
+});
+```
+
+`React.memo` genuinely helps in one specific scenario: a parent component
+re-renders frequently, but a child component's props rarely or never change.
+The canonical example is a FlatList item component whose parent re-renders
+on scroll events or state changes unrelated to the list data.
+```jsx
+// Parent re-renders on every scroll event due to scroll position state
+export default function FeedScreen() {
+  const [scrollY, setScrollY] = useState(0);
+
+  return (
+    <FlatList
+      data={posts}
+      onScroll={e => setScrollY(e.nativeEvent.contentOffset.y)}
+      renderItem={({ item }) => <PostCard post={item} />}
+    />
+  );
+}
+```
+
+Without `React.memo`, every scroll event re-renders `FeedScreen`, which
+re-renders every visible `PostCard`. With `React.memo`, each `PostCard`
+checks whether its `post` prop changed — and since scroll position does not
+affect the post data, all of them skip the render.
+
+### When React.memo Does Not Help
+
+`React.memo` does a **shallow** comparison. This means it compares object
+references, not object contents. If you create a new object or array on
+every render and pass it as a prop, `React.memo` sees a new reference every
+time and re-renders anyway.
+```jsx
+// ❌ New object created on every parent render
+// React.memo on PostCard is useless here
+<PostCard
+  post={post}
+  style={{ marginBottom: 8 }} // ← new object every render
+/>
+
+// ✅ Stable reference — React.memo works correctly
+const cardStyle = { marginBottom: 8 }; // defined outside component
+
+<PostCard post={post} style={cardStyle} />
+```
+
+The same applies to functions passed as props. This is where `useCallback`
+comes in.
+
+## useCallback — Stable Function References
+
+`useCallback` memoises a function. It returns the same function reference
+across renders unless its dependencies change.
+```jsx
+// ❌ New function reference on every render
+// React.memo on PostCard cannot help — onPress always changes
+const handlePress = (postId) => {
+  navigation.navigate('Post', { postId });
+};
+
+// ✅ Stable reference — React.memo on PostCard works correctly
+const handlePress = useCallback((postId) => {
+  navigation.navigate('Post', { postId });
+}, [navigation]);
+```
+
+`useCallback` is useful in exactly one scenario: you are passing a function
+as a prop to a memoised child component and you want `React.memo` to be
+able to determine that the function did not change.
+
+Without `useCallback`, `React.memo` on the child is useless because the
+function prop is a new reference on every render.
+With `useCallback`, the function reference is stable, `React.memo` can
+correctly determine nothing changed, and the child skips re-rendering.
+
+The two always work together. `useCallback` alone does nothing useful —
+a stable function reference is only valuable if something is checking
+whether the reference changed.
+
+### The Dependency Array Is the Trap
+
+`useCallback` takes a dependency array, exactly like `useEffect`. The
+memoised function is only recreated when a dependency changes. If you
+omit a dependency, the function closes over a stale value and produces
+incorrect behaviour that is difficult to debug.
+```jsx
+// ❌ Missing dependency — handleDelete always sees the initial value of userId
+const handleDelete = useCallback(() => {
+  deletePost(userId, postId);
+}, [postId]); // ← userId is missing
+
+// ✅ All dependencies included
+const handleDelete = useCallback(() => {
+  deletePost(userId, postId);
+}, [userId, postId]);
+```
+
+A `useCallback` with a stale dependency is worse than no `useCallback` at
+all because it introduces a subtle bug that only appears when the missing
+dependency changes.
+
+## useMemo — Expensive Computations Only
+
+`useMemo` memoises the result of a computation. It runs the function once,
+caches the result, and returns the cached result on subsequent renders
+unless the dependencies change.
+```jsx
+// ❌ Filtered and sorted on every render
+const sortedPosts = posts
+  .filter(p => p.published)
+  .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+// ✅ Only recomputed when posts changes
+const sortedPosts = useMemo(() =>
+  posts
+    .filter(p => p.published)
+    .sort((a, b) => new Date(b.date) - new Date(a.date)),
+  [posts]
+);
+```
+
+`useMemo` is appropriate when a computation is genuinely expensive — takes
+measurable time — and the component re-renders more frequently than the
+data changes. Filtering and sorting large arrays, computing aggregates over
+large datasets, and building derived data structures are good candidates.
+
+### What Is Not Worth Memoising
+
+Most computations in a React Native component are not expensive enough to
+justify `useMemo`. The memoisation itself has a cost — React has to store
+the cached value and run the dependency comparison on every render. For a
+simple computation, that overhead can exceed the cost of just running the
+computation again.
+```jsx
+// ❌ useMemo adds overhead with no benefit
+// This computation is trivially fast
+const fullName = useMemo(
+  () => `${user.firstName} ${user.lastName}`,
+  [user.firstName, user.lastName]
+);
+
+// ✅ Just compute it — it's a string concatenation
+const fullName = `${user.firstName} ${user.lastName}`;
+```
+
+A useful mental threshold: if you cannot measure the computation taking more
+than 1ms in the React Native performance monitor, do not memoize it.
+
+## Common Misuse Patterns
+
+### Wrapping Everything in React.memo
+
+The most common misuse is wrapping every component in `React.memo` as a
+default practice, assuming it is always free and always beneficial.
+
+`React.memo` is not free. Every render of the parent triggers the shallow
+comparison in every memoised child. For a component with many props,
+that comparison has a non-trivial cost. If the component re-renders
+frequently anyway — because its props do change — the comparison cost is
+paid on every render with no benefit.
+```jsx
+// ❌ Memo with no benefit — props change on every render anyway
+const ActiveIndicator = React.memo(({ isActive, timestamp }) => (
+  <View style={{ opacity: isActive ? 1 : 0.4 }}>
+    <Text>{timestamp}</Text>
+  </View>
+));
+
+// timestamp changes on every render — memo always misses, always pays comparison cost
+```
+
+### useCallback on Every Function
+
+Wrapping every function in `useCallback` is another common pattern that adds
+complexity without benefit. A `useCallback`-wrapped function that is not
+passed to a memoised child serves no purpose — nothing is checking whether
+the reference changed.
+```jsx
+// ❌ useCallback with no memoised consumer — no benefit
+export default function SettingsScreen() {
+  const handleSave = useCallback(() => {
+    saveSettings(formData);
+  }, [formData]);
+
+  return <Button onPress={handleSave} title="Save" />;
+  // Button is not memoised — it re-renders regardless
+}
+```
+
+### useMemo for Object Identity
+
+A subtler misuse is using `useMemo` not for computation cost but purely to
+maintain object identity — to prevent a new object reference from breaking
+`React.memo` downstream.
+```jsx
+// Using useMemo just for reference stability
+const config = useMemo(() => ({
+  animationDuration: 300,
+  easing: 'ease-in-out',
+}), []);
+```
+
+This works but it is the wrong tool. If the object is truly static, define
+it outside the component. `useMemo` with an empty dependency array is a
+code smell that indicates the value should not be inside the component
+at all.
+```jsx
+// ✅ Static values belong outside the component
+const ANIMATION_CONFIG = {
+  animationDuration: 300,
+  easing: 'ease-in-out',
+};
+
+export default function AnimatedCard() {
+  // ANIMATION_CONFIG is always the same reference — no memo needed
+}
+```
+
+## Measuring Real Performance Gains
+
+The only way to know whether an optimisation is helping is to measure before
+and after. React Native provides two tools for this.
+
+### React DevTools Profiler
+
+The React DevTools profiler shows you which components re-rendered during a
+recording, how long each render took, and why it re-rendered. Enable it by
+connecting React DevTools to your Metro bundler.
+
+Record a user interaction — scrolling a list, tapping a button, typing in
+a field. The profiler shows a flame graph of renders. Look for:
+
+- Components that re-render when they should not
+- Components with unexpectedly high render times
+- Components that re-render dozens of times for a single interaction
+
+This tells you where to optimise. Do not optimise components that do not
+appear as problems here.
+
+### Why Did You Render
+
+The `@welldone-software/why-did-you-render` library patches React to log
+every re-render and tell you exactly why it happened — which prop or state
+changed and what the old and new values were.
+```js
+// index.js — development only
+if (__DEV__) {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render');
+  whyDidYouRender(React, {
+    trackAllPureComponents: true,
+  });
+}
+```
+
+Then opt specific components into tracking:
+```jsx
+const PostCard = ({ post }) => (
+  <View><Text>{post.title}</Text></View>
+);
+
+PostCard.whyDidYouRender = true;
+```
+
+The console will now log every time `PostCard` re-renders and exactly what
+caused it. This removes all guesswork from the optimisation process.
+
+### The Performance Monitor
+
+For frame rate impact, use the built-in React Native performance monitor
+(`Cmd+D` on iOS simulator → `Perf Monitor`). It shows JS thread FPS and
+UI thread FPS in real time. A healthy app maintains 60 FPS on both threads.
+
+If you see JS thread drops during list scrolling, re-render optimisation
+will help. If the UI thread is dropping and the JS thread is fine, the
+problem is in native rendering — animations, shadows, or image decoding —
+and re-render optimisation will not help at all.
+
+## The Right Mental Model
+
+Before reaching for any of these tools, ask three questions:
+
+**1. Is there actually a performance problem?** Open the profiler and
+measure. If the app is at 60 FPS and interactions feel instant, there is
+nothing to optimise. Adding memo to a fast component makes it more complex
+without making it faster.
+
+**2. Is the problem re-renders?** The performance monitor shows you whether
+the JS thread or the UI thread is the bottleneck. Only re-render
+optimisation if the JS thread is dropping frames.
+
+**3. Is this the right tool?** Re-renders in a FlatList item → `React.memo`.
+Stable function reference for a memoised child → `useCallback`. Expensive
+computation over large data → `useMemo`. Static values inside a component
+→ move them outside the component entirely.
+
+The hierarchy of impact for React Native performance is roughly:
+
+1. Avoid unnecessary renders with correct architecture first
+2. Use `React.memo` on FlatList items that have stable props
+3. Use `useCallback` on functions passed to memoised components
+4. Use `useMemo` only for demonstrably expensive computations
+5. Consider FlashList for very large lists regardless of memo usage
+
+## Summary
+
+`React.memo`, `useCallback`, and `useMemo` are precise tools for specific
+problems, not a default coating to apply to every component. `React.memo`
+skips re-renders when props have not changed — but only if those props have
+stable references. `useCallback` provides stable function references — but
+only helps when the consumer is memoised. `useMemo` caches expensive
+computations — but adds overhead that exceeds its benefit for anything
+trivially fast. The correct approach is to measure first with the React
+DevTools profiler and Why Did You Render, identify the actual bottleneck,
+and apply the minimum tool needed to fix it. Premature optimisation with
+these tools does not just waste time — it actively adds complexity and
+overhead that can make performance worse.
