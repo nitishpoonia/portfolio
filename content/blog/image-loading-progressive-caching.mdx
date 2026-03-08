@@ -1,0 +1,481 @@
+---
+title: "Image Loading at Scale: Progressive Loading, Caching & Placeholder Strategies"
+date: "2025-03-08"
+description: "A practical guide to image loading in React Native — skeleton vs shimmer placeholders, progressive loading techniques, prefetching strategies, and how to avoid the memory and performance traps that only appear at scale."
+tags: ["react-native", "performance", "images", "ux", "caching"]
+published: true
+---
+
+Images are the most common source of performance problems in React Native
+apps that nobody talks about until the app is in production. A feed with
+fifty posts loads fine in development. With five hundred posts and real
+network conditions, the same feed stutters, blanks out, and consumes memory
+until the OS kills the app. The code did not change — the scale did.
+
+This post covers the full picture: what happens when an image loads, how to
+fill the gap between request and render without jarring the user, how
+caching works and where it breaks down, and the memory traps that only
+surface once your list has real data in it.
+
+## What Actually Happens When React Native Loads an Image
+
+Before optimising anything, it helps to understand the full lifecycle of an
+image load.
+
+When React Native encounters an `<Image source={{ uri: url }} />`, it does
+the following in sequence:
+
+1. Checks the in-memory cache for the decoded bitmap
+2. If not in memory, checks the disk cache for the raw image data
+3. If not on disk, makes a network request to download the image
+4. Decodes the downloaded data into a bitmap
+5. Stores the bitmap in memory and the raw data on disk
+6. Renders the bitmap to the screen
+
+Steps 3 and 4 are the slow ones. A network request on a poor connection can
+take seconds. Decoding a large image — especially a high-resolution JPEG —
+takes meaningful CPU time and allocates significant memory. On a low-end
+Android device with 2GB of RAM, decoding several large images simultaneously
+causes frame drops and can trigger the OS memory killer.
+
+The goal of every strategy in this post is to either eliminate steps 3 and 4
+(through caching and prefetching) or hide their cost from the user (through
+placeholders and progressive loading).
+
+## Placeholder Strategies — Skeleton vs Shimmer
+
+The moment between when a component mounts and when its image finishes
+loading is a gap. How you fill that gap determines whether the loading
+experience feels broken or intentional.
+
+### Skeleton Loaders
+
+A skeleton loader is a static placeholder that mimics the shape and layout
+of the content it is waiting for. For an image card, it is a grey rectangle
+the same dimensions as the image. For a profile header, it is a circle for
+the avatar and two grey bars for the name and subtitle.
+
+```jsx
+const ImageSkeleton = ({ width, height, borderRadius = 4 }) => (
+  <View
+    style={{
+      width,
+      height,
+      borderRadius,
+      backgroundColor: "#e8e8e8",
+    }}
+  />
+);
+
+const PostCard = ({ post }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <View>
+      {!loaded && <ImageSkeleton width="100%" height={200} />}
+      <Image
+        source={{ uri: post.imageUrl }}
+        style={[
+          { width: "100%", height: 200 },
+          !loaded && { position: "absolute", opacity: 0 },
+        ]}
+        onLoad={() => setLoaded(true)}
+      />
+    </View>
+  );
+};
+```
+
+Skeletons work well when the layout is predictable. If every card is the
+same height, the skeleton prevents layout shift — the page does not reflow
+when the image loads because the placeholder already occupies the same
+space. This is critical for `getItemLayout` to work correctly in FlatList,
+since layout shift invalidates the pre-calculated positions.
+
+### Shimmer Loaders
+
+A shimmer loader adds an animated highlight that sweeps across the skeleton
+from left to right. It is the same grey rectangle, but with a moving
+gradient overlay that signals to the user that loading is actively in
+progress rather than stalled.
+
+```jsx
+import { useEffect, useRef } from "react";
+import { Animated, View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+
+const Shimmer = ({ width, height, borderRadius = 4 }) => {
+  const shimmerAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(shimmerAnim, {
+        toValue: 1,
+        duration: 1200,
+        useNativeDriver: true,
+      }),
+    ).start();
+  }, []);
+
+  const translateX = shimmerAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-width, width],
+  });
+
+  return (
+    <View
+      style={{
+        width,
+        height,
+        borderRadius,
+        backgroundColor: "#e8e8e8",
+        overflow: "hidden",
+      }}
+    >
+      <Animated.View style={{ flex: 1, transform: [{ translateX }] }}>
+        <LinearGradient
+          colors={["transparent", "rgba(255,255,255,0.6)", "transparent"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{ flex: 1 }}
+        />
+      </Animated.View>
+    </View>
+  );
+};
+```
+
+### When to Use Each
+
+Skeleton without shimmer is appropriate for fast connections where images
+load in under 500ms. The placeholder appears so briefly that animation adds
+no value and only consumes CPU.
+
+Shimmer is appropriate when loading times are unpredictable or slow — poor
+network conditions, large images, or cold cache states. The animation
+communicates that the app is working, which measurably reduces perceived
+wait time compared to a static placeholder.
+
+The mistake to avoid is adding shimmer to every image by default. Each
+shimmer animation runs a `requestAnimationFrame` loop on the JS thread.
+In a FlatList with twenty visible items each running their own shimmer,
+you have twenty animation loops competing on the JS thread before a single
+image has even loaded. This makes the loading experience worse than a static
+skeleton.
+
+The correct pattern is a single shimmer component that manages one animation
+value, shared across all items in the loading state via context or a shared
+animated value.
+
+## Progressive Loading — Blur to Sharp
+
+Progressive loading shows a low-quality version of the image immediately and
+transitions to the full-quality version as it loads. Instagram and Twitter
+both use this pattern.
+
+The implementation requires two image URLs — a tiny thumbnail (typically
+20x20 pixels, under 1KB) that loads instantly, and the full-resolution image.
+The thumbnail is displayed first with a blur filter, then the full image fades
+in on top when it finishes loading.
+
+```jsx
+const ProgressiveImage = ({ thumbnailUri, fullUri, style }) => {
+  const [fullLoaded, setFullLoaded] = useState(false);
+  const fullOpacity = useRef(new Animated.Value(0)).current;
+
+  const handleFullLoad = () => {
+    setFullLoaded(true);
+    Animated.timing(fullOpacity, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return (
+    <View style={[style, { overflow: "hidden" }]}>
+      {/* Thumbnail — always rendered, blurred */}
+      <Image
+        source={{ uri: thumbnailUri }}
+        style={[style, { position: "absolute" }]}
+        blurRadius={8}
+      />
+
+      {/* Full image — fades in on load */}
+      <Animated.Image
+        source={{ uri: fullUri }}
+        style={[style, { opacity: fullOpacity }]}
+        onLoad={handleFullLoad}
+      />
+    </View>
+  );
+};
+```
+
+This pattern requires backend support — your image pipeline needs to
+generate thumbnails. Services like Cloudinary and Imgix do this automatically
+via URL parameters. A 200x200 image can be requested at 20x20 by appending
+width and quality parameters to the URL.
+
+```js
+// Cloudinary example — same image, different sizes
+const fullUri = "https://res.cloudinary.com/.../image/upload/v1/photo.jpg";
+const thumbnailUri =
+  "https://res.cloudinary.com/.../image/upload/w_20,q_10/photo.jpg";
+```
+
+The thumbnail is under 1KB and loads in milliseconds even on a poor
+connection. The user sees something immediately instead of a grey box.
+
+## Image Caching
+
+React Native's default `<Image>` component has a built-in cache, but its
+behaviour is inconsistent between iOS and Android and it gives you no
+control over cache invalidation or size limits.
+
+### The Default Cache Problem
+
+On Android, React Native uses a custom image pipeline with in-memory and
+disk caching. On iOS, it uses `NSURLCache` which is shared with the entire
+app and can be cleared by the OS at any time. Neither implementation exposes
+an API for manual cache management.
+
+The practical consequence is that images that should be cached sometimes are
+not, causing unnecessary network requests on re-renders or navigation back
+to a screen.
+
+### react-native-fast-image
+
+`react-native-fast-image` is the standard solution for reliable image caching
+in React Native. It uses Fresco on Android and SDWebImage on iOS — the same
+image loading libraries used by the Facebook and Twitter apps.
+
+```bash
+npm install react-native-fast-image
+```
+
+```jsx
+import FastImage from "react-native-fast-image";
+
+<FastImage
+  source={{
+    uri: post.imageUrl,
+    priority: FastImage.priority.normal,
+    cache: FastImage.cacheControl.immutable,
+  }}
+  style={{ width: 200, height: 200 }}
+  resizeMode={FastImage.resizeMode.cover}
+/>;
+```
+
+The `cache` option gives you explicit control:
+
+- `immutable` — cache forever, never re-request. Use for static assets like avatars that have versioned URLs
+- `web` — respect HTTP cache headers from the server
+- `cacheOnly` — only load from cache, never network. Use for offline support
+
+The `priority` option controls which images get network bandwidth first
+when multiple images are loading simultaneously:
+
+```jsx
+// Items visible on screen get high priority
+// Items in the preload buffer get low priority
+<FastImage
+  source={{
+    uri: item.imageUrl,
+    priority: isVisible ? FastImage.priority.high : FastImage.priority.low,
+  }}
+/>
+```
+
+## Image Prefetching
+
+Prefetching loads images into the cache before they are needed — before
+the user scrolls to them. When the image component actually mounts, it finds
+the image already in cache and renders instantly.
+
+```jsx
+import FastImage from "react-native-fast-image";
+
+// Prefetch the next page of images before the user scrolls there
+const prefetchNextPage = (posts) => {
+  const urls = posts.map((post) => ({
+    uri: post.imageUrl,
+    priority: FastImage.priority.low,
+  }));
+
+  FastImage.preload(urls);
+};
+
+// In your FlatList
+<FlatList
+  data={posts}
+  onEndReached={() => {
+    loadMorePosts().then((newPosts) => {
+      prefetchNextPage(newPosts);
+    });
+  }}
+  onEndReachedThreshold={0.5}
+/>;
+```
+
+The key is to prefetch at low priority so prefetch requests do not compete
+with the high-priority requests for currently visible images.
+
+You can also prefetch on app launch for images you know the user will see —
+profile avatars, the first screen's hero images, or any image above the fold
+on the initial route.
+
+## Memory and Performance Considerations
+
+### The Memory Accumulation Problem
+
+Every decoded image bitmap lives in memory until it is garbage collected.
+In a FlatList without `removeClippedSubviews`, every image that has ever
+been on screen stays in memory. After scrolling through 200 posts with
+images, you have 200 decoded bitmaps sitting in memory simultaneously.
+
+On a device with 2GB of RAM, this causes the OS to start killing background
+processes. On a device with 1GB of RAM, it kills your app.
+
+The fixes work in layers:
+
+```jsx
+<FlatList
+  data={posts}
+  renderItem={renderItem}
+  removeClippedSubviews={true} // unmount offscreen native views
+  windowSize={5} // only keep 2 screens above and below
+  maxToRenderPerBatch={8} // limit images rendered per batch
+/>
+```
+
+`removeClippedSubviews` unmounts the native view of offscreen items,
+which allows the bitmap memory to be freed. The JS component stays mounted
+so re-mounting is cheap, but the native layer — and the memory it holds —
+is released.
+
+### Image Dimensions and Decode Cost
+
+The decode cost of an image scales with the pixel dimensions of the source
+file, not the display size. A 4000x3000 photo displayed at 100x100 pixels
+still decodes the full 12 megapixel image into memory before downsampling
+it for display.
+
+```jsx
+// ❌ Downloads and decodes a 4MB photo to display at 100x100
+<Image
+  source={{ uri: user.originalPhotoUrl }}
+  style={{ width: 100, height: 100 }}
+/>;
+
+// ✅ Request a resized version from the server
+const avatarUrl = `${user.photoUrl}?w=200&h=200&fit=crop`;
+<FastImage source={{ uri: avatarUrl }} style={{ width: 100, height: 100 }} />;
+```
+
+Always request images at 2x the display size (for retina screens) rather
+than at the original resolution. For a 100x100 avatar, request 200x200.
+The memory saving is the difference between a 48MB decoded bitmap and a
+120KB one.
+
+### Measuring Image Performance
+
+The React Native performance monitor shows JS thread and UI thread FPS in
+real time. Image loading problems typically manifest as UI thread drops —
+the decoder runs on the UI thread on Android and blocks rendering while
+it processes each image.
+
+To identify specific images causing problems, add `onLoad` timing:
+
+```jsx
+const ImageWithTiming = ({ uri, style }) => {
+  const startTime = useRef(Date.now());
+
+  return (
+    <Image
+      source={{ uri }}
+      style={style}
+      onLoadStart={() => {
+        startTime.current = Date.now();
+      }}
+      onLoad={() => {
+        const duration = Date.now() - startTime.current;
+        if (duration > 500) {
+          console.warn(`Slow image load: ${uri} took ${duration}ms`);
+        }
+      }}
+    />
+  );
+};
+```
+
+Any image consistently taking over 500ms on a good connection is either too
+large, not cached correctly, or missing a CDN.
+
+## The Complete Pattern
+
+Putting everything together for a production image feed:
+
+```jsx
+import FastImage from "react-native-fast-image";
+import { useState, useRef } from "react";
+import { View, Animated } from "react-native";
+
+const FeedImage = ({ uri, thumbnailUri, width, height }) => {
+  const [loaded, setLoaded] = useState(false);
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  const handleLoad = () => {
+    setLoaded(true);
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return (
+    <View style={{ width, height, backgroundColor: "#e8e8e8" }}>
+      {/* Blurred thumbnail — instant */}
+      {thumbnailUri && !loaded && (
+        <FastImage
+          source={{ uri: thumbnailUri, priority: FastImage.priority.high }}
+          style={{ width, height, position: "absolute" }}
+          blurRadius={6}
+        />
+      )}
+
+      {/* Full image — fades in */}
+      <Animated.View style={{ opacity }}>
+        <FastImage
+          source={{
+            uri,
+            priority: FastImage.priority.normal,
+            cache: FastImage.cacheControl.immutable,
+          }}
+          style={{ width, height }}
+          resizeMode={FastImage.resizeMode.cover}
+          onLoad={handleLoad}
+        />
+      </Animated.View>
+    </View>
+  );
+};
+```
+
+## Summary
+
+Image loading problems in React Native are almost always invisible in
+development and obvious in production. The default `<Image>` component has
+unreliable caching, no priority system, and no prefetch API. Replacing it
+with `react-native-fast-image` alone fixes the majority of cache-related
+issues. Progressive loading with blurred thumbnails eliminates the blank
+grey box while the full image loads. Prefetching the next page of images
+at low priority means the user never waits for images as they scroll.
+Requesting correctly sized images from the server prevents the decoder from
+processing megapixel photos to display 100 pixel avatars. And tuning
+FlatList's `windowSize` and `removeClippedSubviews` keeps memory from
+accumulating as the user scrolls through hundreds of items. None of these
+are complex changes individually — together they are the difference between
+an app that feels native and one that feels slow.
