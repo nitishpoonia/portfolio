@@ -4,8 +4,11 @@ import SectionHeader from "./SectionHeader";
 import { projects } from "@/content/projectOverview/projectOverview";
 
 function ProjectCard({ project }) {
+  console.log("Project", project);
+
   return (
-    <div
+    <Link
+      href={project.link}
       onMouseEnter={(e) => {
         e.currentTarget.style.background = "var(--ink)";
         e.currentTarget.querySelectorAll("[data-invert]").forEach((el) => {
@@ -36,8 +39,17 @@ function ProjectCard({ project }) {
         borderBottom: "1px solid var(--border)",
         transition: "background 0.25s ease",
         cursor: project.link ? "pointer" : "default",
+        textDecoration: "none",
       }}
     >
+      <div
+        style={{
+          border: "1px solid var(--border)",
+          minHeight: "180px",
+          marginBottom: "1.5rem",
+          borderRadius: "6px",
+        }}
+      ></div>
       <div
         style={{
           display: "flex",
@@ -120,7 +132,7 @@ function ProjectCard({ project }) {
           </li>
         ))}
       </ul>
-    </div>
+    </Link>
   );
 }
 
@@ -170,6 +182,8 @@ export default function Projects() {
             textTransform: "uppercase",
             color: "var(--mid)",
             textDecoration: "none",
+            border: "1px solid var(--border)",
+            padding: "0.5rem 0.75rem",
           }}
         >
           View all projects →

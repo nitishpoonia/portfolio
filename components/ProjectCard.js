@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 // Reusable: project card with expandable features list.
 // To wire up a detail page later, pass a `slug` prop and add a Link around the title.
@@ -52,7 +53,7 @@ export default function ProjectCard({
               </li>
             ))}
           </ul>
-          {/* Future: <Link href={`/projects/${slug}`}>View details →</Link> */}
+          Future: <Link href={`/projects/${slug}`}>View details →</Link>
         </div>
       )}
     </div>

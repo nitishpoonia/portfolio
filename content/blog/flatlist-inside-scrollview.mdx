@@ -5,7 +5,6 @@ description: "Why nesting a vertical FlatList inside a ScrollView breaks renderi
 tags: ["react-native", "flatlist", "scrollview", "performance", "architecture"]
 published: true
 ---
-
 If you have ever nested a vertical FlatList inside a ScrollView, you have
 probably noticed the list either renders all items at once, refuses to
 scroll, or behaves unpredictably depending on the device. You add
@@ -15,6 +14,8 @@ the combination is fundamentally broken by design, not by implementation.
 
 This post explains exactly why, what is happening at the rendering and event
 level, and the patterns that actually solve it without hacks.
+
+For a deep dive into FlatList Optimization you can check this blog [How to Fix Flatlist Performance](/blog/how-to-fix-flatlist-performance)
 
 ## Why This Combination Exists in the First Place
 
@@ -168,6 +169,9 @@ export default function FeedScreen() {
   );
 }
 ```
+
+I applied this pattern in production on the
+[Hotel Booking App](/projects/hotel-booking).
 
 FlatList now owns the entire scroll surface. Virtualisation works correctly
 because FlatList knows its own height — it fills the screen. The header

@@ -40,7 +40,6 @@ body {
   }
 }
 
-/* â”€â”€ Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
@@ -65,7 +64,6 @@ body {
 .delay-3 { animation-delay: 0.4s; }
 .delay-4 { animation-delay: 0.55s; }
 
-/* â”€â”€ Responsive layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 768px) {
   #hero { grid-template-columns: 1fr !important; }
   #hero > div:first-child {
@@ -93,7 +91,6 @@ body {
   .mobile-drawer { display: none !important; }
 }
 
-/* â”€â”€ Prose (blog + case studies) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .prose {
   font-size: clamp(1rem, 1.5vw, 1.1rem);
   line-height: 1.85;
@@ -127,7 +124,7 @@ body {
 }
 .prose img  { width: 100%; border-radius: 4px; margin: 1.5rem 0; }
 
-/* â”€â”€ Inline code â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
 .prose :not(pre) > code {
   background: #eeecea;
   padding: 0.15em 0.45em;
@@ -137,7 +134,7 @@ body {
   color: var(--ink);
 }
 
-/* â”€â”€ Code blocks (rehype-pretty-code) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
 .prose [data-rehype-pretty-code-fragment] {
   margin-bottom: 1.6rem;
 }
