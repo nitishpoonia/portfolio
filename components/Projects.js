@@ -1,74 +1,71 @@
-"use client";
 import Link from "next/link";
 import SectionHeader from "./SectionHeader";
-import { projects } from "@/content/projectOverview/projectOverview";
+import { getHomeProjects } from "@/lib/project";
 
 function ProjectCard({ project }) {
-  console.log("Project", project);
-
   return (
     <Link
       href={project.link}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "var(--ink)";
-        e.currentTarget.querySelectorAll("[data-invert]").forEach((el) => {
-          el.style.color = "rgba(247,246,242,0.5)";
-        });
-        e.currentTarget.querySelectorAll("[data-title]").forEach((el) => {
-          el.style.color = "var(--bg)";
-        });
-        e.currentTarget.querySelectorAll("[data-num]").forEach((el) => {
-          el.style.color = "rgba(247,246,242,0.3)";
-        });
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "transparent";
-        e.currentTarget.querySelectorAll("[data-invert]").forEach((el) => {
-          el.style.color = "var(--mid)";
-        });
-        e.currentTarget.querySelectorAll("[data-title]").forEach((el) => {
-          el.style.color = "var(--ink)";
-        });
-        e.currentTarget.querySelectorAll("[data-num]").forEach((el) => {
-          el.style.color = "var(--faint)";
-        });
-      }}
+      className={`home-project-card ${project.isBuilding ? "is-building" : ""}`}
       style={{
         padding: "clamp(1.5rem, 3vw, 2.5rem)",
         borderRight: "1px solid var(--border)",
         borderBottom: "1px solid var(--border)",
-        transition: "background 0.25s ease",
+        transition: "background 0.25s ease, border-color 0.25s ease",
         cursor: project.link ? "pointer" : "default",
         textDecoration: "none",
       }}
     >
       <div
         style={{
-          border: "1px solid var(--border)",
+          border: project.isBuilding
+            ? "1.5px solid var(--ink)"
+            : "1px solid var(--border)",
           minHeight: "180px",
           marginBottom: "1.5rem",
           borderRadius: "6px",
+          transition: "border-color 0.25s ease",
         }}
       ></div>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
+          gap: "0.8rem",
           marginBottom: "1.5rem",
         }}
       >
-        <span
-          data-num
-          style={{
-            fontSize: "0.65rem",
-            fontWeight: 700,
-            letterSpacing: "0.2em",
-            color: "var(--faint)",
-            transition: "color 0.25s",
-          }}
-        >
-          {project.number}
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
+          <span
+            data-num
+            style={{
+              fontSize: "0.65rem",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
+              color: "var(--faint)",
+              transition: "color 0.25s",
+            }}
+          >
+            {project.number}
+          </span>
+          <span
+            data-invert
+            style={{
+              fontSize: "0.62rem",
+              fontWeight: 700,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "var(--mid)",
+              transition: "color 0.25s",
+            }}
+          >
+            {project.timeline}
+          </span>
+          {project.isBuilding && (
+            <span className="build-badge">Currently Building</span>
+          )}
+        </div>
         {project.link && (
           <span
             data-invert
@@ -110,25 +107,27 @@ function ProjectCard({ project }) {
         style={{
           listStyle: "none",
           display: "flex",
-          flexDirection: "column",
+          flexWrap: "wrap",
           gap: "0.6rem",
         }}
       >
-        {project.features.map((f, i) => (
+        {project.tags.map((tag) => (
           <li
-            key={i}
+            key={tag}
             data-invert
             style={{
-              fontSize: "1rem",
+              fontSize: "0.66rem",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
               color: "var(--mid)",
-              lineHeight: 1.55,
-              display: "flex",
-              gap: "0.6rem",
+              lineHeight: 1.2,
+              border: "1px solid var(--border)",
+              padding: "0.35rem 0.65rem",
               transition: "color 0.25s",
             }}
           >
-            <span style={{ flexShrink: 0, marginTop: "1px" }}>—</span>
-            {f}
+            {tag}
           </li>
         ))}
       </ul>
@@ -137,6 +136,8 @@ function ProjectCard({ project }) {
 }
 
 export default function Projects() {
+  const projects = getHomeProjects();
+
   return (
     <section
       id="projects"
@@ -160,6 +161,7 @@ export default function Projects() {
 
       {/* Card grid — full bleed border effect */}
       <div
+        className="card-grid"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
@@ -190,11 +192,56 @@ export default function Projects() {
         </Link>
       </div>
       <style>{`
+        .home-project-card:hover {
+          background: var(--ink);
+          border-color: var(--ink);
+        }
+        .home-project-card:hover [data-invert] {
+          color: rgba(247, 246, 242, 0.55) !important;
+        }
+        .home-project-card:hover [data-title] {
+          color: var(--bg) !important;
+        }
+        .home-project-card:hover [data-num] {
+          color: rgba(247, 246, 242, 0.34) !important;
+        }
+        .home-project-card.is-building {
+          border-right: 1.5px solid var(--ink) !important;
+          border-bottom: 1.5px solid var(--ink) !important;
+        }
+        .home-project-card.is-building .build-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-size: 0.56rem;
+          font-weight: 700;
+          letter-spacing: 0.13em;
+          text-transform: uppercase;
+          border: 1.5px solid var(--ink);
+          color: var(--ink);
+          padding: 0.22rem 0.45rem;
+        }
+        .home-project-card.is-building .build-badge::before {
+          content: "";
+          width: 6px;
+          height: 6px;
+          border-radius: 999px;
+          background: #4ade80;
+          flex-shrink: 0;
+        }
+        .home-project-card.is-building:hover .build-badge {
+          border-color: rgba(247, 246, 242, 0.45);
+          color: rgba(247, 246, 242, 0.75);
+        }
         @media (max-width: 900px) {
-          #projects .card-grid { grid-template-columns: 1fr 1fr !important; }
+          #projects .card-grid {
+            grid-template-columns: 1fr 1fr !important;
+          }
         }
         @media (max-width: 600px) {
-          #projects div[style*="repeat(3"] { grid-template-columns: 1fr !important; }
+          #projects .card-grid {
+            grid-template-columns: 1fr !important;
+          }
         }
       `}</style>
     </section>

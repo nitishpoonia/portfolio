@@ -4,10 +4,11 @@ slug: "library-saas"
 tagline: "A full-stack SaaS built solo — from React Native frontend to Node.js backend — helping self-study center owners replace paper registers with a real management system"
 role: "Full-Stack Developer & Product Owner"
 company: "Independent"
-timeline: "2025 — Ongoing"
-tags: ["React Native", "Node.js", "Express", "PostgreSQL", "Neon", "Render", "SaaS"]
+timeline: "Dec 2025 - Present"
+tags:
+  ["React Native", "Node.js", "Express", "PostgreSQL", "Neon", "Render", "SaaS"]
 type: "product"
-status: "In Progress"
+status: "Currently Building"
 published: true
 ---
 
@@ -70,6 +71,7 @@ about what queries would be slow, designing the schema so that the dashboard
 query would not require ten joins — was a different kind of problem than
 anything I had done on the frontend. It was addictive in a way I did not
 expect.
+
 ```js
 // Membership status query — one round trip for the dashboard
 const getDashboardData = async (libraryId) => {
@@ -77,12 +79,12 @@ const getDashboardData = async (libraryId) => {
     db.query(
       `SELECT COALESCE(SUM(amount), 0) as total
        FROM payments WHERE library_id = $1`,
-      [libraryId]
+      [libraryId],
     ),
     db.query(
       `SELECT COALESCE(SUM(amount), 0) as total
        FROM expenses WHERE library_id = $1`,
-      [libraryId]
+      [libraryId],
     ),
     db.query(
       `SELECT s.name, m.end_date
@@ -92,7 +94,7 @@ const getDashboardData = async (libraryId) => {
        AND m.end_date < NOW()
        AND m.status = 'active'
        ORDER BY m.end_date ASC`,
-      [libraryId]
+      [libraryId],
     ),
     db.query(
       `SELECT s.name, m.end_date
@@ -102,14 +104,14 @@ const getDashboardData = async (libraryId) => {
        AND m.end_date BETWEEN NOW() AND NOW() + INTERVAL '7 days'
        AND m.status = 'active'
        ORDER BY m.end_date ASC`,
-      [libraryId]
+      [libraryId],
     ),
   ]);
 
   return {
-    revenue:  revenue.rows[0].total,
+    revenue: revenue.rows[0].total,
     expenses: expenses.rows[0].total,
-    overdue:  overdue.rows,
+    overdue: overdue.rows,
     expiring: expiring.rows,
   };
 };
@@ -140,6 +142,7 @@ target market. India has an unpredictable history of blocking cloud services
 and developer tools — Supabase was not the first and will not be the last.
 I now check reachability from an Indian network before committing to any
 infrastructure dependency.
+
 ```bash
 # Dump from Supabase
 pg_dump "postgresql://user:pass@supabase-host/db" > backup.sql
@@ -164,6 +167,7 @@ backend.
 
 I added a middleware function that runs on every write route and checks the
 owner's subscription status before allowing the request through.
+
 ```js
 // middleware/checkSubscription.js
 export const checkSubscription = async (req, res, next) => {
@@ -172,32 +176,30 @@ export const checkSubscription = async (req, res, next) => {
   const owner = await db.query(
     `SELECT subscription_status, trial_seats_used, trial_seats_limit
      FROM owners WHERE id = $1`,
-    [ownerId]
+    [ownerId],
   );
 
   const { subscription_status, trial_seats_used, trial_seats_limit } =
     owner.rows[0];
 
-  if (subscription_status === 'active') return next();
+  if (subscription_status === "active") return next();
 
-  if (
-    subscription_status === 'trial' &&
-    trial_seats_used < trial_seats_limit
-  ) {
+  if (subscription_status === "trial" && trial_seats_used < trial_seats_limit) {
     return next();
   }
 
   return res.status(403).json({
-    error: 'subscription_required',
-    message: 'Your trial has expired. Contact support to activate your membership.',
+    error: "subscription_required",
+    message:
+      "Your trial has expired. Contact support to activate your membership.",
   });
 };
 
 // Applied to all write routes
-router.post('/students',  checkSubscription, addStudent);
-router.post('/payments',  checkSubscription, recordPayment);
-router.post('/expenses',  checkSubscription, addExpense);
-router.put('/students/:id', checkSubscription, updateStudent);
+router.post("/students", checkSubscription, addStudent);
+router.post("/payments", checkSubscription, recordPayment);
+router.post("/expenses", checkSubscription, addExpense);
+router.put("/students/:id", checkSubscription, updateStudent);
 ```
 
 On the frontend, the `subscription_required` error code triggers a
@@ -222,6 +224,7 @@ the Render deployment, and eventually a production environment all need
 different database URLs, JWT secrets, and API keys. Setting up a proper
 `.env` structure and making sure secrets never touched the repository was
 the first real ops discipline I had to build from scratch.
+
 ```
 # .env.example — committed to repo
 DATABASE_URL=
