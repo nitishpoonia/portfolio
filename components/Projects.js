@@ -154,7 +154,7 @@ export default function Projects() {
         <SectionHeader
           label="Work"
           title="Projects"
-          subtitle="Built at Vision Vivante (Dec 2024 – Dec 2025) — from first wireframe to shipped product."
+          subtitle="Built at Vision Vivante (Dec 2024 – Jan 2025) — from first wireframe to shipped product."
         />
       </div>
 

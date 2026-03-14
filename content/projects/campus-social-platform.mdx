@@ -1,0 +1,348 @@
+---
+title: "Campus Social Media Platform"
+slug: "campus-social-platform"
+tagline: "A full-featured social platform for students and teachers — feeds, messaging, groups, and rich media posts built with TypeScript and React Query"
+role: "Frontend Developer"
+company: "Vision Vivante"
+timeline: "Dec 2024 – Dec 2025"
+tags: ["React Native", "TypeScript", "React Query", "Optimistic Updates", "Rich Text"]
+published: true
+---
+
+## Overview
+
+The Campus Social Platform was my third professional project at Vision
+Vivante and the most feature-complete app I had worked on up to that point.
+It is a social network built specifically for educational institutions —
+students and teachers get a shared space for a home feed, direct and group
+messaging, community groups, user profiles, notifications, and rich media
+posts with text formatting, images, and attachments.
+
+By this point in my career the fundamentals were solid. Navigation setup,
+auth flows, folder structure — none of that required much thought. What this
+project gave me was exposure to things I had not touched before: TypeScript
+in a production codebase, React Query for server state, optimistic updates
+for real-time feel, rich text input, and backend responses with a complexity
+level I had not encountered on the previous two apps.
+
+## Challenge 1: Adopting TypeScript Mid-Career for the First Time
+
+The previous two apps were JavaScript. This project was TypeScript from the
+start. I had read about TypeScript but had never used it in a real codebase
+under delivery pressure.
+
+### Solution
+
+The honest experience was that TypeScript slowed me down in the first two
+weeks. Every component prop needed a type, every API response needed an
+interface, and the compiler surfaced errors I would have previously only
+found at runtime — sometimes in ways I did not immediately understand how
+to fix.
+
+What changed my view was the first time TypeScript caught a real bug before
+it reached the app. I had passed a `userId` where a `postId` was expected —
+both were strings, so JavaScript would have accepted it silently. TypeScript
+flagged it at compile time. That one catch saved a debugging session.
+
+The pattern that made TypeScript manageable was typing API responses at the
+boundary and letting inference handle the rest. Rather than annotating every
+variable, I defined interfaces for what came back from the backend and let
+TypeScript figure out everything downstream from there.
+```ts
+// types/post.ts — typed at the boundary
+interface Author {
+  id: string;
+  name: string;
+  avatarUrl: string;
+  role: 'student' | 'teacher';
+}
+
+interface Post {
+  id: string;
+  author: Author;
+  content: string;
+  mediaUrls: string[];
+  likesCount: number;
+  commentsCount: number;
+  likedByMe: boolean;
+  createdAt: string;
+}
+
+interface FeedResponse {
+  posts: Post[];
+  nextCursor: string | null;
+  hasNextPage: boolean;
+}
+```
+
+Once the interfaces were defined, TypeScript handled the rest. Component
+props were inferred, hook return types were inferred, and the compiler
+pointed to exactly the right line whenever I made a mistake.
+
+## Challenge 2: Normalising Complex Backend Responses
+
+The backend responses on this project were significantly more complex than
+anything I had worked with before. A single feed post response included
+the post content, the author object, nested comment previews, reaction
+summaries, group context if the post was in a group, and attachment
+metadata. The shape of the response was not designed around what the UI
+needed — it was designed around what the database could return efficiently.
+
+Consuming this directly in components meant deeply nested property access
+everywhere, conditional checks at every level, and UI components that knew
+too much about the backend data structure.
+
+### Solution
+
+I introduced a normalisation layer between the API response and the UI —
+a set of adapter functions that transformed the raw response into the
+shape the components actually needed. Components never touched the raw
+API response.
+```ts
+// lib/adapters/post.ts
+import { Post, FeedResponse } from '../types/post';
+
+const adaptAuthor = (raw: any): Author => ({
+  id: raw.user_id,
+  name: `${raw.first_name} ${raw.last_name}`,
+  avatarUrl: raw.profile_picture_url ?? '',
+  role: raw.user_type === 'EDUCATOR' ? 'teacher' : 'student',
+});
+
+const adaptPost = (raw: any): Post => ({
+  id: raw.post_id,
+  author: adaptAuthor(raw.posted_by),
+  content: raw.post_body ?? '',
+  mediaUrls: (raw.attachments ?? []).map((a: any) => a.file_url),
+  likesCount: raw.reaction_count ?? 0,
+  commentsCount: raw.comment_count ?? 0,
+  likedByMe: raw.viewer_has_reacted ?? false,
+  createdAt: raw.created_at,
+});
+
+export const adaptFeedResponse = (raw: any): FeedResponse => ({
+  posts: (raw.data ?? []).map(adaptPost),
+  nextCursor: raw.pagination?.next_cursor ?? null,
+  hasNextPage: raw.pagination?.has_more ?? false,
+});
+```
+
+Every component now received clean, predictable, typed data. When the
+backend changed a field name — which happened twice during development —
+I updated one adapter function and nothing else changed. The components
+were completely isolated from the backend data shape.
+
+## Challenge 3: Optimistic Updates for Likes and Comments
+
+A social feed lives and dies by how responsive interactions feel. If tapping
+a like button requires a network round trip before the UI updates, the app
+feels broken compared to Instagram or Twitter where the like registers
+instantly.
+
+The challenge is that optimistic updates require rolling back gracefully if
+the network request fails — showing the like, then un-showing it if the
+server rejects it, without confusing the user.
+
+### Solution
+
+React Query's `useMutation` hook has built-in support for optimistic updates
+through its `onMutate`, `onError`, and `onSettled` callbacks. The pattern
+is to update the cache immediately in `onMutate`, store the previous state,
+and restore it in `onError` if the request fails.
+```ts
+const useLikePost = (postId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => api.likePost(postId),
+
+    onMutate: async () => {
+      // Cancel any in-flight refetches
+      await queryClient.cancelQueries({ queryKey: ['feed'] });
+
+      // Snapshot previous state for rollback
+      const previousFeed = queryClient.getQueryData<FeedResponse>(['feed']);
+
+      // Optimistically update the cache
+      queryClient.setQueryData<FeedResponse>(['feed'], (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          posts: old.posts.map((post) =>
+            post.id === postId
+              ? {
+                  ...post,
+                  likedByMe: true,
+                  likesCount: post.likesCount + 1,
+                }
+              : post
+          ),
+        };
+      });
+
+      return { previousFeed };
+    },
+
+    onError: (err, _, context) => {
+      // Roll back to the snapshot on failure
+      if (context?.previousFeed) {
+        queryClient.setQueryData(['feed'], context.previousFeed);
+      }
+    },
+
+    onSettled: () => {
+      // Sync with server after success or failure
+      queryClient.invalidateQueries({ queryKey: ['feed'] });
+    },
+  });
+};
+```
+
+The result is a like interaction that feels instant. Tapping the heart
+immediately increments the count and fills the icon. If the server rejects
+the request — rate limiting, network failure, auth error — the UI rolls
+back silently and the user can try again.
+
+## Challenge 4: Rich Text Input
+
+Posts on the platform supported text formatting — bold, italic, mentions,
+and hashtags — alongside media attachments. React Native's built-in
+`TextInput` does not support any of this. It is a plain text field.
+
+### Solution
+
+I used `react-native-rich-editor` which provides a WebView-based rich text
+editor and a toolbar component for formatting controls. The editor outputs
+HTML which is stored and rendered consistently across posts.
+```tsx
+import {
+  RichEditor,
+  RichToolbar,
+  actions,
+} from 'react-native-pell-rich-editor';
+import { useRef } from 'react';
+
+const PostComposer = ({ onSubmit }: { onSubmit: (html: string) => void }) => {
+  const editorRef = useRef<RichEditor>(null);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <RichToolbar
+        editor={editorRef}
+        actions={[
+          actions.setBold,
+          actions.setItalic,
+          actions.insertBulletsList,
+          actions.insertLink,
+        ]}
+      />
+      <RichEditor
+        ref={editorRef}
+        placeholder="What's on your mind?"
+        onChange={(html) => {
+          // html is stored and sent to backend
+        }}
+        style={{ flex: 1, minHeight: 200 }}
+      />
+      <Button
+        title="Post"
+        onPress={async () => {
+          const html = await editorRef.current?.getContentHtml();
+          if (html) onSubmit(html);
+        }}
+      />
+    </View>
+  );
+};
+```
+
+The WebView approach means the editor behaves like a browser text field —
+keyboard handling, selection, and formatting all work natively without custom
+implementation. The tradeoff is a slight performance overhead from the WebView
+and some styling limitations since the editor's interior is an iframe.
+
+## Challenge 5: Feature-Based Folder Structure
+
+The first two apps used a layer-based folder structure — all screens in one
+folder, all components in another, all hooks in another. At the scale of the
+campus app, with eight major features each containing their own screens,
+components, hooks, and types, this structure became unnavigable. Finding
+the hook for the messaging feature meant scanning through a hooks folder
+containing hooks for every other feature as well.
+
+### Solution
+
+I switched to a feature-based structure where everything related to a feature
+lives together.
+```
+src/
+  features/
+    feed/
+      components/
+        PostCard.tsx
+        PostSkeleton.tsx
+        FeedList.tsx
+      hooks/
+        useFeed.ts
+        useLikePost.ts
+      screens/
+        FeedScreen.tsx
+      types/
+        post.types.ts
+      adapters/
+        post.adapter.ts
+    messaging/
+      components/
+      hooks/
+      screens/
+    groups/
+    profile/
+    notifications/
+  shared/
+    components/
+    hooks/
+    lib/
+  navigation/
+  types/
+```
+
+Each feature is a self-contained module. Adding a new feature means adding
+a new folder. Deleting a feature means deleting a folder. Shared components
+and utilities live in `shared/` and are explicitly imported rather than
+implicitly assumed to belong to any feature.
+
+This structure also made it easier to work on the app alongside the NFC
+project. When switching context between the two codebases, the feature
+folders made it immediately obvious where to look for any piece of code
+without having to remember the full file tree.
+
+## Results
+
+- TypeScript caught multiple bugs before they reached testing, including
+  mismatched ID types that would have caused silent data corruption
+- Optimistic updates on likes and comments made interactions feel instant
+  regardless of network conditions
+- The adapter pattern isolated the UI completely from two backend field
+  name changes during development — zero component updates required
+- Feature-based folder structure made the codebase navigable across eight
+  distinct features without cross-contamination
+
+## Lessons Learned
+
+TypeScript's upfront cost is real. The first two weeks were slower because
+of it. The payoff is that bugs which would have reached production on a
+JavaScript codebase get caught at compile time. For a team project or any
+codebase that will be maintained past the initial delivery, the tradeoff is
+clearly worth it.
+
+The adapter pattern was the most transferable learning from this project.
+Every project I work on now has a normalisation layer between the API and
+the UI. Backend responses are designed for database efficiency, not UI
+convenience — treating them as if they were the same thing is what creates
+deeply nested conditional rendering and fragile components that break every
+time the backend changes a field name.
+
+Optimistic updates should be the default for any interaction the user
+expects to be instant — likes, follows, reactions, read receipts. The
+React Query implementation is not much more code than a regular mutation
+and the UX difference is significant.
