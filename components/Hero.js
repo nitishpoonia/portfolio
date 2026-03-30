@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import HireButton from "./HireButton";
-import Image from "next/image";
 
 const roles = [
-  "Using AI tools to iterate fast",
-  "Turning ideas into reality",
-  "Making vermicompost",
-  "Growing Vegetables",
+  "Available for new projects",
+  "Building cross-platform apps",
+  "Turning ideas into products",
+  "Shipping in weeks, not months",
 ];
 
 export default function Hero() {
@@ -46,31 +45,74 @@ export default function Hero() {
         borderBottom: "1px solid var(--border)",
       }}
     >
-      {/* ── LEFT: Portrait ── */}
+      {/* ── LEFT: Facts panel ── */}
       <div
+        className="hero-facts"
         style={{
           borderRight: "1px solid var(--border)",
-          position: "relative",
-          overflow: "hidden",
-          minHeight: "100vh",
-          background: "#eeede8",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          padding:
+            "clamp(1.5rem, 5vw, 9rem) var(--pad-x) clamp(2.5rem, 5vw, 4rem)",
         }}
       >
-        <Image
-          src="/assets/Untitled-design.png"
-          alt="Nitish Poonia"
-          fill
-          style={{ objectFit: "cover", objectPosition: "center top" }}
-        />
-        <div
+        <p
           style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            fontSize: "clamp(0.85rem, 1.3vw, 1rem)",
+            fontWeight: 300,
+            lineHeight: 1.85,
+            color: "var(--mid)",
+            maxWidth: "34ch",
+            marginBottom: "clamp(2rem, 4vw, 3rem)",
           }}
-        ></div>
+        >
+          I build mobile and web products for startups and small businesses
+          — from first conversation to live in the App Store.
+        </p>
+
+        {[
+          { label: "Experience",   value: "1+ Year" },
+          { label: "Apps shipped",  value: "3 Production apps" },
+          { label: "Stack",         value: "React Native · Next.js" },
+          { label: "Availability",  value: "Open to projects" },
+        ].map(({ label, value }) => (
+          <div
+            key={label}
+            style={{
+              borderTop: "1px solid var(--border)",
+              padding: "1rem 0",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              gap: "1rem",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "0.63rem",
+                fontWeight: 700,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: "var(--mid)",
+                flexShrink: 0,
+              }}
+            >
+              {label}
+            </span>
+            <span
+              style={{
+                fontSize: "0.82rem",
+                fontWeight: 700,
+                color: "var(--ink)",
+                letterSpacing: "-0.01em",
+                textAlign: "right",
+              }}
+            >
+              {value}
+            </span>
+          </div>
+        ))}
       </div>
 
       <div
@@ -93,7 +135,7 @@ export default function Hero() {
             marginBottom: "1.2rem",
           }}
         >
-          generalist
+          Mobile &amp; Web Developer
         </p>
 
         <h1
@@ -150,8 +192,7 @@ export default function Hero() {
         <div className="fade-up delay-4" style={{ marginTop: "2.5rem" }}>
           <HireButton
             size="md"
-            label="Read my case studies"
-            url={"/projects"}
+            label="Start a project"
           />
         </div>
 
@@ -185,9 +226,10 @@ export default function Hero() {
   }
 
   #hero > div:first-child {
-    min-height: 55vw !important;
     border-right: none !important;
     border-bottom: 1px solid var(--border);
+    padding: 1.5rem var(--pad-x) 1.5rem !important;
+    justify-content: flex-start !important;
   }
 
   #hero > div:last-child {

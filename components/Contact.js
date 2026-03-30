@@ -1,8 +1,9 @@
 'use client';
 import SectionHeader from './SectionHeader';
+import { CONTACT } from '@/lib/contact';
 
-const email  = 'nitishpoonia@zohomail.in';
-const github = 'https://github.com/nitishpoonia';
+const email = 'nitishpoonia@zohomail.in';
+const waUrl = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
 
 function ContactCard({ href, eyebrow, label, external }) {
   return (
@@ -61,30 +62,65 @@ export default function Contact() {
       }}
     >
       <SectionHeader
-        label="Get in touch"
-        title="Let's work together."
-        subtitle="Available for freelance projects, full-time roles, and consulting. Fastest response on WhatsApp."
+        label="Start a project"
+        title="Let's build something."
+        subtitle="Available for new projects globally. Fastest response on WhatsApp — usually replies within a few hours."
       />
 
-      <div
-        style={{
-          display: "flex",
-          gap: "1rem",
-          flexWrap: "wrap",
-        }}
-      >
-        <ContactCard
-          href={`mailto:${email}`}
-          eyebrow="Email"
-          label={email}
-          external={false}
-        />
-        <ContactCard
-          href={github}
-          eyebrow="GitHub"
-          label="github.com/nitishpoonia"
-          external
-        />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {/* WhatsApp — primary inverted card */}
+        <a
+          href={waUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.borderColor = 'var(--border)';
+            e.currentTarget.querySelectorAll('[data-c]').forEach(el => { el.style.color = 'var(--mid)'; });
+            e.currentTarget.querySelectorAll('[data-main]').forEach(el => { el.style.color = 'var(--ink)'; });
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'var(--ink)';
+            e.currentTarget.style.borderColor = 'var(--ink)';
+            e.currentTarget.querySelectorAll('[data-c]').forEach(el => { el.style.color = 'rgba(247,246,242,0.45)'; });
+            e.currentTarget.querySelectorAll('[data-main]').forEach(el => { el.style.color = 'var(--bg)'; });
+          }}
+          style={{
+            display: 'flex', flexDirection: 'column',
+            padding: 'clamp(1.5rem, 3vw, 2.5rem)',
+            background: 'var(--ink)',
+            border: '1px solid var(--ink)',
+            textDecoration: 'none',
+            transition: 'background 0.2s, border-color 0.2s',
+          }}
+        >
+          <span data-c style={{
+            fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.2em',
+            textTransform: 'uppercase', color: 'rgba(247,246,242,0.45)',
+            marginBottom: '0.75rem', transition: 'color 0.2s',
+          }}>WhatsApp — Fastest response</span>
+          <span data-main style={{
+            fontSize: 'clamp(0.95rem, 1.6vw, 1.2rem)',
+            fontWeight: 700, color: 'var(--bg)',
+            letterSpacing: '-0.01em', transition: 'color 0.2s',
+          }}>Message me on WhatsApp →</span>
+        </a>
+
+        {/* Email + GitHub — secondary row */}
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <ContactCard
+            href={`mailto:${email}`}
+            eyebrow="Email"
+            label={email}
+            external={false}
+          />
+          <ContactCard
+            href="https://github.com/nitishpoonia"
+            eyebrow="GitHub"
+            label="github.com/nitishpoonia"
+            external
+          />
+        </div>
       </div>
 
       {/* Footer */}

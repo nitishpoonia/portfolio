@@ -24,6 +24,7 @@ export default function sitemap() {
       lastModified: new Date(),
     },
     { url: "https://nitishpoonia.in/projects", lastModified: new Date() },
+    { url: "https://nitishpoonia.in/hire", lastModified: new Date() },
     ...postUrls,
     ...projectUrls,
   ];

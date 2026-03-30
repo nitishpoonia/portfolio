@@ -31,7 +31,7 @@ export default function HireStrip() {
               marginBottom: "0.75rem",
             }}
           >
-            Have a project in mind?
+            Have a product to build?
           </p>
 
           <h2
@@ -43,7 +43,7 @@ export default function HireStrip() {
               color: "var(--bg)",
             }}
           >
-            Let&apos;s build it.
+            Your idea deserves to ship.
           </h2>
         </div>
 

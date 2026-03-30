@@ -1,4 +1,5 @@
 import SectionHeader from './SectionHeader';
+import Image from 'next/image';
 
 export default function About() {
   return (
@@ -19,6 +20,25 @@ export default function About() {
         />
 
         <div>
+          {/* Portrait — small, contained */}
+          <div style={{
+            position: 'relative',
+            width: '100%',
+            maxWidth: '200px',
+            aspectRatio: '3 / 4',
+            marginBottom: '1.75rem',
+            overflow: 'hidden',
+            border: '1px solid var(--border)',
+          }}>
+            <Image
+              src="/assets/Untitled-design.png"
+              alt="Nitish Poonia"
+              fill
+              sizes="200px"
+              style={{ objectFit: 'cover', objectPosition: 'center top' }}
+            />
+          </div>
+
           <p style={{
             fontSize: 'clamp(1rem, 1.8vw, 1.25rem)',
             fontWeight: 300,
@@ -38,6 +58,16 @@ export default function About() {
           }}>
             Writing code and working with living systems are, in the end, the same
             discipline — patience, iteration, and care for the thing you&apos;re building.
+          </p>
+          <p style={{
+            marginTop: '1.25rem',
+            fontSize: 'clamp(0.9rem, 1.4vw, 1rem)',
+            fontWeight: 700,
+            lineHeight: 1.75,
+            color: 'var(--ink)',
+            letterSpacing: '-0.01em',
+          }}>
+            I build mobile and web products for startups and small businesses — from first idea to live in the App Store.
           </p>
         </div>
       </div>
