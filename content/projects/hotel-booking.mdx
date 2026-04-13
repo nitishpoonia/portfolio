@@ -28,6 +28,19 @@ flights, cars, and more. That scope was dropped early on and the focus
 narrowed to hotels only. This left some traces in the initial project
 structure that I had to clean up as the requirements became clearer.
 
+## AI in This Project
+
+Copilot was used for the Stripe payment integration scaffolding and
+the guest-to-authenticated redirect flow. The cursor pagination
+implementation for the hotels list was drafted with AI assistance
+and then reviewed and adjusted — the initial output used offset
+pagination which was incorrect for our use case, and required
+manual correction.
+
+This is a pattern I see consistently: AI produces a working solution
+to the generic version of the problem. The specific constraints of
+your actual product require human review to catch the mismatch.
+
 ## Challenge 1: Project Structure Was Set Up for a Scope That Changed
 
 The initial project structure was designed to accommodate hotels, flights,
@@ -60,6 +73,7 @@ pagination for the hotels endpoint. On the frontend I applied the same
 FlatList optimisations I had developed on the NFC app — memoised item
 components, stable `keyExtractor` and `renderItem` references, tuned
 `windowSize`, and `getItemLayout` for fixed-height hotel cards.
+
 ```js
 const keyExtractor = (item) => item.id.toString();
 
@@ -78,7 +92,7 @@ const renderHotelCard = ({ item }) => <HotelCard hotel={item} />;
     index,
   })}
   ListFooterComponent={loadingMore ? <ActivityIndicator /> : null}
-/>
+/>;
 ```
 
 The combination of server-side pagination and client-side virtualisation
@@ -96,8 +110,9 @@ details directly and processing them through the backend.
 The flow works in three steps. The app collects card details using Stripe's
 CardField component, sends them to the backend to create a PaymentIntent,
 then confirms the payment on the client using the returned client secret.
+
 ```js
-import { useStripe, CardField } from '@stripe/stripe-react-native';
+import { useStripe, CardField } from "@stripe/stripe-react-native";
 
 export default function PaymentScreen({ bookingId, amount }) {
   const { confirmPayment } = useStripe();
@@ -108,11 +123,11 @@ export default function PaymentScreen({ bookingId, amount }) {
 
     // Step 2 — Confirm payment on client
     const { error, paymentIntent } = await confirmPayment(clientSecret, {
-      paymentMethodType: 'Card',
+      paymentMethodType: "Card",
     });
 
     if (error) {
-      Alert.alert('Payment failed', error.message);
+      Alert.alert("Payment failed", error.message);
       return;
     }
 
@@ -148,13 +163,14 @@ their hotel again. That is a broken experience.
 I implemented a redirect flow that captures the user's position in the
 booking journey before sending them to authentication, then returns them
 to exactly that step after sign-in or sign-up completes.
+
 ```js
 // When guest tries to proceed to payment
 const handleGuestCheckout = (hotelId, roomId, bookingDetails) => {
-  navigation.navigate('Auth', {
-    screen: 'Login',
+  navigation.navigate("Auth", {
+    screen: "Login",
     params: {
-      redirectTo: 'BookingConfirm',
+      redirectTo: "BookingConfirm",
       redirectParams: { hotelId, roomId, bookingDetails },
     },
   });
@@ -167,7 +183,7 @@ const handleAuthSuccess = () => {
   if (redirectTo) {
     navigation.replace(redirectTo, redirectParams);
   } else {
-    navigation.replace('Home');
+    navigation.replace("Home");
   }
 };
 ```

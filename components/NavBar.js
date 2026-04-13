@@ -4,13 +4,11 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 
 const links = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
-  { label: "Experience", href: "#experience" },
+  { label: "Projects", href: "/projects" },
+  { label: "Design", href: "/design" },
   { label: "Blog", href: "/blog" },
-  { label: "Hire Me", href: "/hire" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "/portfolio#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
@@ -31,31 +29,134 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  const navBg = scrolled || menuOpen ? "rgba(247,246,242,0.97)" : "transparent";
-
   return (
     <>
+      {/* ── Desktop pill navbar ── */}
       <nav
+        className="nav-desktop-pill"
+        style={{
+          position: "fixed",
+          top: "1.1rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 200,
+          display: "flex",
+          alignItems: "center",
+          gap: "0",
+          background: "rgba(255,255,255,0.55)",
+          backdropFilter: "blur(28px) saturate(180%)",
+          WebkitBackdropFilter: "blur(28px) saturate(180%)",
+          border: "1px solid rgba(255,255,255,0.7)",
+          borderRadius: "999px",
+          padding: "0.45rem 0.5rem 0.45rem 1.15rem",
+          boxShadow:
+            "0 1px 0 0 rgba(255,255,255,0.6) inset, 0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {/* Logo */}
+        <Link
+          href="/"
+          style={{
+            fontSize: "0.82rem",
+            fontWeight: 900,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "var(--ink)",
+            textDecoration: "none",
+            marginRight: "1.75rem",
+            flexShrink: 0,
+          }}
+        >
+          NP
+        </Link>
+
+        {/* Nav links */}
+        <ul
+          style={{
+            display: "flex",
+            gap: "0.15rem",
+            listStyle: "none",
+            margin: 0,
+            padding: 0,
+            marginRight: "1.25rem",
+          }}
+        >
+          {links.map(({ label, href }) => (
+            <li key={href}>
+              <a
+                href={href}
+                style={{
+                  display: "block",
+                  fontSize: "0.78rem",
+                  fontWeight: 500,
+                  letterSpacing: "0.01em",
+                  color: "var(--mid)",
+                  textDecoration: "none",
+                  padding: "0.4rem 0.85rem",
+                  borderRadius: "999px",
+                  transition: "color 0.2s, background 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "var(--ink)";
+                  e.currentTarget.style.background = "rgba(0,0,0,0.06)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "var(--mid)";
+                  e.currentTarget.style.background = "transparent";
+                }}
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        {/* Hire Me pill button */}
+        <a
+          href="/#contact"
+          style={{
+            fontSize: "0.72rem",
+            fontWeight: 700,
+            letterSpacing: "0.04em",
+            color: "rgba(255,255,255,0.95)",
+            background: "rgba(10,10,10,0.82)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            textDecoration: "none",
+            padding: "0.52rem 1.2rem",
+            borderRadius: "999px",
+            flexShrink: 0,
+            border: "1px solid rgba(255,255,255,0.12)",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.18)",
+            transition: "opacity 0.2s",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.82")}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+        >
+          Hire Me
+        </a>
+      </nav>
+
+      {/* ── Mobile top bar ── */}
+      <nav
+        className="nav-mobile-bar"
         style={{
           position: "fixed",
           top: 0,
           left: 0,
           right: 0,
           zIndex: 200,
-          display: "flex",
+          display: "none",
           justifyContent: "space-between",
           alignItems: "center",
           padding: "1.1rem var(--pad-x)",
-          backgroundColor: navBg,
-          backdropFilter: scrolled ? "blur(12px)" : "none",
-          borderBottom:
-            scrolled || menuOpen
-              ? "1px solid var(--border)"
-              : "1px solid transparent",
+          backgroundColor: menuOpen ? "rgba(247,246,242,0.97)" : "transparent",
+          backdropFilter: menuOpen ? "blur(12px)" : "none",
+          borderBottom: menuOpen ? "1px solid var(--border)" : "1px solid transparent",
           transition: "background-color 0.3s ease, border-color 0.3s ease",
         }}
       >
-        {/* Logo */}
         <Link
           href="/"
           style={{
@@ -71,55 +172,19 @@ export default function Navbar() {
           NP
         </Link>
 
-        {/* Desktop links */}
-        <ul
-          style={{
-            display: "flex",
-            gap: "2.5rem",
-            listStyle: "none",
-            margin: 0,
-          }}
-          className="nav-desktop"
-        >
-          {links.map(({ label, href }) => (
-            <li key={href}>
-              <a
-                href={href}
-                style={{
-                  fontSize: "0.68rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "var(--mid)",
-                  textDecoration: "none",
-                  transition: "color 0.2s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--ink)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--mid)")
-                }
-              >
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        {/* Burger button — mobile only */}
+        {/* Burger button */}
         <button
           onClick={() => setMenuOpen((o) => !o)}
           className="hamburger"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           style={{
-            display: "none",
             background: "none",
             border: "none",
             cursor: "pointer",
             padding: "4px",
             color: "var(--ink)",
             zIndex: 201,
+            display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -228,12 +293,14 @@ export default function Navbar() {
       </div>
 
       <style>{`
-        @media (max-width: 768px) {
-          .nav-desktop { display: none !important; }
-          .hamburger   { display: flex !important; }
-        }
         @media (min-width: 769px) {
-          .mobile-drawer { display: none !important; }
+          .nav-mobile-bar { display: none !important; }
+          .mobile-drawer  { display: none !important; }
+          .hamburger      { display: none !important; }
+        }
+        @media (max-width: 768px) {
+          .nav-desktop-pill { display: none !important; }
+          .nav-mobile-bar   { display: flex !important; }
         }
       `}</style>
     </>

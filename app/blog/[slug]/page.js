@@ -2,6 +2,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import Link from "next/link";
 import rehypePrettyCode from "rehype-pretty-code";
+import BackButton from "@/components/BackButton";
 
 const mdxOptions = {
   mdxOptions: {
@@ -54,6 +55,8 @@ export default async function PostPage({ params }) {
         padding: "calc(var(--pad-y) + 4rem) var(--pad-x) var(--pad-y)",
       }}
     >
+      <BackButton />
+
       {/* Header */}
       <div
         style={{
@@ -108,22 +111,9 @@ export default async function PostPage({ params }) {
         <MDXRemote source={post.content} options={mdxOptions} />
       </div>
 
-      {/* Back link */}
-      <Link
-        href="/blog"
-        style={{
-          display: "inline-block",
-          marginTop: "4rem",
-          fontSize: "0.7rem",
-          fontWeight: 700,
-          letterSpacing: "0.15em",
-          textTransform: "uppercase",
-          color: "var(--mid)",
-          textDecoration: "none",
-        }}
-      >
-        ← All posts
-      </Link>
+      <div style={{ marginTop: "4rem" }}>
+        <BackButton />
+      </div>
     </main>
   );
 }

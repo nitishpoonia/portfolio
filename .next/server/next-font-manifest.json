@@ -15,6 +15,9 @@
     "[project]/app/page": [
       "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
     ],
+    "[project]/app/portfolio/page": [
+      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+    ],
     "[project]/app/projects/[slug]/page": [
       "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
     ],

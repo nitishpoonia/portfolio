@@ -67,15 +67,15 @@ export default function Hero() {
             marginBottom: "clamp(2rem, 4vw, 3rem)",
           }}
         >
-          I build mobile and web products for startups and small businesses
-          — from first conversation to live in the App Store.
+          I build mobile and web products for startups and small businesses —
+          from first conversation to live in the App Store.
         </p>
 
         {[
-          { label: "Experience",   value: "1+ Year" },
-          { label: "Apps shipped",  value: "3 Production apps" },
-          { label: "Stack",         value: "React Native · Next.js" },
-          { label: "Availability",  value: "Open to projects" },
+          { label: "Experience", value: "1+ Year" },
+          { label: "Apps shipped", value: "3 Production apps" },
+          { label: "Stack", value: "React Native · Next.js" },
+          { label: "Availability", value: "Open to projects" },
         ].map(({ label, value }) => (
           <div
             key={label}
@@ -135,7 +135,7 @@ export default function Hero() {
             marginBottom: "1.2rem",
           }}
         >
-          Mobile &amp; Web Developer
+          AI-Augmented Developer
         </p>
 
         <h1
@@ -190,10 +190,7 @@ export default function Hero() {
 
         {/* Scroll hint */}
         <div className="fade-up delay-4" style={{ marginTop: "2.5rem" }}>
-          <HireButton
-            size="md"
-            label="Start a project"
-          />
+          <HireButton size="md" label="Start a project" />
         </div>
 
         <p

@@ -1,7 +1,7 @@
-
 import { getAllProjects } from "@/lib/project";
 import ProjectCard from "./ProjectCard";
 import Link from "next/link";
+import BackButton from "@/components/BackButton";
 
 export const metadata = {
   title: "Projects — Nitish Poonia",
@@ -23,6 +23,7 @@ export default function ProjectsPage() {
         padding: "calc(var(--pad-y) + 4rem) var(--pad-x) var(--pad-y)",
       }}
     >
+      <BackButton />
       {/* Page header */}
       <div style={{ marginBottom: "clamp(3rem, 6vw, 5rem)" }}>
         <p
@@ -103,7 +104,7 @@ export default function ProjectsPage() {
       </div>
 
       <Link
-        href="/"
+        href="/portfolio"
         style={{
           display: "inline-block",
           marginTop: "3.5rem",
@@ -115,7 +116,7 @@ export default function ProjectsPage() {
           textDecoration: "none",
         }}
       >
-        ← Back to home
+        ← Back to portfolio
       </Link>
     </main>
   );

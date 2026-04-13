@@ -5,7 +5,14 @@ tagline: "A full-featured social platform for students and teachers — feeds, m
 role: "Frontend Developer"
 company: "Vision Vivante"
 timeline: "Dec 2024 – Dec 2025"
-tags: ["React Native", "TypeScript", "React Query", "Optimistic Updates", "Rich Text"]
+tags:
+  [
+    "React Native",
+    "TypeScript",
+    "React Query",
+    "Optimistic Updates",
+    "Rich Text",
+  ]
 published: true
 ---
 
@@ -24,6 +31,20 @@ project gave me was exposure to things I had not touched before: TypeScript
 in a production codebase, React Query for server state, optimistic updates
 for real-time feel, rich text input, and backend responses with a complexity
 level I had not encountered on the previous two apps.
+
+## AI in This Project
+
+The TypeScript interfaces and adapter functions in this project were
+largely scaffolded with Copilot, which significantly accelerated the
+normalisation layer between the complex backend responses and the UI
+components. The structure was correct. The field mappings required
+manual verification against the actual API documentation.
+
+The optimistic update implementation for likes and comments required
+careful reasoning about React Query's cache invalidation behaviour.
+Copilot produced a version that worked in the happy path but did not
+correctly handle the rollback on error. I rewrote the onError handler
+manually after testing edge cases.
 
 ## Challenge 1: Adopting TypeScript Mid-Career for the First Time
 
@@ -48,13 +69,14 @@ The pattern that made TypeScript manageable was typing API responses at the
 boundary and letting inference handle the rest. Rather than annotating every
 variable, I defined interfaces for what came back from the backend and let
 TypeScript figure out everything downstream from there.
+
 ```ts
 // types/post.ts — typed at the boundary
 interface Author {
   id: string;
   name: string;
   avatarUrl: string;
-  role: 'student' | 'teacher';
+  role: "student" | "teacher";
 }
 
 interface Post {
@@ -98,21 +120,22 @@ I introduced a normalisation layer between the API response and the UI —
 a set of adapter functions that transformed the raw response into the
 shape the components actually needed. Components never touched the raw
 API response.
+
 ```ts
 // lib/adapters/post.ts
-import { Post, FeedResponse } from '../types/post';
+import { Post, FeedResponse } from "../types/post";
 
 const adaptAuthor = (raw: any): Author => ({
   id: raw.user_id,
   name: `${raw.first_name} ${raw.last_name}`,
-  avatarUrl: raw.profile_picture_url ?? '',
-  role: raw.user_type === 'EDUCATOR' ? 'teacher' : 'student',
+  avatarUrl: raw.profile_picture_url ?? "",
+  role: raw.user_type === "EDUCATOR" ? "teacher" : "student",
 });
 
 const adaptPost = (raw: any): Post => ({
   id: raw.post_id,
   author: adaptAuthor(raw.posted_by),
-  content: raw.post_body ?? '',
+  content: raw.post_body ?? "",
   mediaUrls: (raw.attachments ?? []).map((a: any) => a.file_url),
   likesCount: raw.reaction_count ?? 0,
   commentsCount: raw.comment_count ?? 0,
@@ -149,6 +172,7 @@ React Query's `useMutation` hook has built-in support for optimistic updates
 through its `onMutate`, `onError`, and `onSettled` callbacks. The pattern
 is to update the cache immediately in `onMutate`, store the previous state,
 and restore it in `onError` if the request fails.
+
 ```ts
 const useLikePost = (postId: string) => {
   const queryClient = useQueryClient();
@@ -158,13 +182,13 @@ const useLikePost = (postId: string) => {
 
     onMutate: async () => {
       // Cancel any in-flight refetches
-      await queryClient.cancelQueries({ queryKey: ['feed'] });
+      await queryClient.cancelQueries({ queryKey: ["feed"] });
 
       // Snapshot previous state for rollback
-      const previousFeed = queryClient.getQueryData<FeedResponse>(['feed']);
+      const previousFeed = queryClient.getQueryData<FeedResponse>(["feed"]);
 
       // Optimistically update the cache
-      queryClient.setQueryData<FeedResponse>(['feed'], (old) => {
+      queryClient.setQueryData<FeedResponse>(["feed"], (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -175,7 +199,7 @@ const useLikePost = (postId: string) => {
                   likedByMe: true,
                   likesCount: post.likesCount + 1,
                 }
-              : post
+              : post,
           ),
         };
       });
@@ -186,13 +210,13 @@ const useLikePost = (postId: string) => {
     onError: (err, _, context) => {
       // Roll back to the snapshot on failure
       if (context?.previousFeed) {
-        queryClient.setQueryData(['feed'], context.previousFeed);
+        queryClient.setQueryData(["feed"], context.previousFeed);
       }
     },
 
     onSettled: () => {
       // Sync with server after success or failure
-      queryClient.invalidateQueries({ queryKey: ['feed'] });
+      queryClient.invalidateQueries({ queryKey: ["feed"] });
     },
   });
 };
@@ -214,13 +238,14 @@ and hashtags — alongside media attachments. React Native's built-in
 I used `react-native-rich-editor` which provides a WebView-based rich text
 editor and a toolbar component for formatting controls. The editor outputs
 HTML which is stored and rendered consistently across posts.
+
 ```tsx
 import {
   RichEditor,
   RichToolbar,
   actions,
-} from 'react-native-pell-rich-editor';
-import { useRef } from 'react';
+} from "react-native-pell-rich-editor";
+import { useRef } from "react";
 
 const PostComposer = ({ onSubmit }: { onSubmit: (html: string) => void }) => {
   const editorRef = useRef<RichEditor>(null);
@@ -274,6 +299,7 @@ containing hooks for every other feature as well.
 
 I switched to a feature-based structure where everything related to a feature
 lives together.
+
 ```
 src/
   features/

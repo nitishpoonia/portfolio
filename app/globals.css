@@ -187,3 +187,37 @@ body {
 .prose [data-rehype-pretty-code-title] + pre {
   border-radius: 0 0 4px 4px;
 }
+
+@media (max-width: 640px) {
+  .services-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 768px) {
+  .screens-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 900px) {
+  .screens-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* ── Back Button ─────────────────────────────── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--mid);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  margin-bottom: 2.5rem;
+  font-family: var(--font);
+}
+.back-btn:hover {
+  background: var(--faint);
+  color: var(--ink);
+  border-color: var(--mid);
+}

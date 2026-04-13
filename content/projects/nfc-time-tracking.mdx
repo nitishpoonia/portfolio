@@ -5,7 +5,15 @@ tagline: "Built a tamper-proof, offline-resilient attendance system powered by N
 role: "Lead Developer"
 company: "Vision Vivante"
 timeline: "Dec 2024 – Dec 2025"
-tags: ["React Native", "NFC", "Android Native", "iOS Native", "Async Storage", "Node.js"]
+tags:
+  [
+    "React Native",
+    "NFC",
+    "Android Native",
+    "iOS Native",
+    "Async Storage",
+    "Node.js",
+  ]
 published: true
 ---
 
@@ -22,6 +30,20 @@ scanning were already scaffolded using the NFC Tag Manager library when I
 joined. My work was to take that foundation and build everything on top of
 it — the role system, the time integrity layer, the offline sync, and the
 multi-role navigation architecture.
+
+## AI in This Project
+
+AI tooling played a smaller role on this project since it predates my
+current workflow, but GitHub Copilot was used for repetitive patterns —
+particularly the AsyncStorage queue implementation and the FlatList
+optimisation utilities.
+
+The native bridge for Android and iOS time-since-boot had no useful
+AI output. That required reading the Android and iOS documentation
+directly and writing the bridge manually. This is a good example of
+where AI assistance ends and engineering judgment begins — AI is fast
+on patterns it has seen before, slow and unreliable on anything novel
+or platform-specific.
 
 ## Challenge 1: Workers Could Manipulate Their Shift Times by Changing Device Time
 
@@ -43,14 +65,15 @@ But fetching server time alone is not enough — if the user goes offline or
 the fetch fails, you fall back to device time and the problem returns. So I
 went a level deeper and wrote a native bridge for both Android and iOS that
 exposes the device's time since last boot.
+
 ```js
 // Native bridge — returns milliseconds since device boot
-import { NativeModules } from 'react-native';
+import { NativeModules } from "react-native";
 const { SystemClock } = NativeModules;
 
 export async function getReliableTimestamp() {
-  const serverTime   = await fetchServerTime(); // cached on last sync
-  const bootTime     = await SystemClock.getElapsedRealtime();
+  const serverTime = await fetchServerTime(); // cached on last sync
+  const bootTime = await SystemClock.getElapsedRealtime();
   const adjustedTime = serverTime + bootTime;
   return new Date(adjustedTime);
 }
@@ -76,18 +99,19 @@ I built an offline sync queue using Async Storage. Every NFC scan event is
 written to a local queue before any network request is made. When the
 request succeeds, the event is removed from the queue. When it fails or the
 device is offline, it stays in the queue.
+
 ```js
-const QUEUE_KEY = 'offline_scan_queue';
+const QUEUE_KEY = "offline_scan_queue";
 
 export async function enqueueScan(scanEvent) {
-  const raw   = await AsyncStorage.getItem(QUEUE_KEY);
+  const raw = await AsyncStorage.getItem(QUEUE_KEY);
   const queue = raw ? JSON.parse(raw) : [];
   queue.push({ ...scanEvent, queuedAt: Date.now() });
   await AsyncStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
 }
 
 export async function flushQueue(syncFn) {
-  const raw   = await AsyncStorage.getItem(QUEUE_KEY);
+  const raw = await AsyncStorage.getItem(QUEUE_KEY);
   const queue = raw ? JSON.parse(raw) : [];
   if (queue.length === 0) return;
 
@@ -119,14 +143,15 @@ across every navigator and every screen transition.
 Instead of patching the existing navigator, I restructured the navigation
 into separate stacks — one per role — and added a routing layer at the root
 that runs after login and directs the user to the correct stack entirely.
+
 ```js
 // navigation/RootNavigator.js
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from "../context/AuthContext";
 
 const ROLE_STACKS = {
-  admin:   AdminStack,
+  admin: AdminStack,
   manager: ManagerStack,
-  worker:  WorkerStack,
+  worker: WorkerStack,
 };
 
 export default function RootNavigator() {

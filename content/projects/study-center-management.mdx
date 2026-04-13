@@ -48,6 +48,21 @@ until they activate a paid membership. No payment gateway is integrated yet;
 activation happens by contacting support directly. This was a deliberate MVP
 decision to reduce complexity and launch faster.
 
+## AI in This Project
+
+I used GitHub Copilot throughout the backend development — particularly
+for boilerplate Express routes, Prisma schema generation, and repetitive
+CRUD operations. Every generated function was reviewed before being
+committed. Where Copilot produced incorrect logic — especially around
+the subscription check middleware — I rewrote it manually.
+
+For UI direction, I used Stitch to generate initial screen layouts which
+I then refined in Figma. The final screens reflect my design decisions,
+not the AI's first output.
+
+This approach cut development time significantly without producing a
+codebase I do not understand. Every line that ships is a line I have read.
+
 ## Challenge 1: Learning Backend Development Without a Safety Net
 
 Every previous project I had worked on gave me a backend developer to

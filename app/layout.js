@@ -8,19 +8,16 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: "Nitish Poonia — React Native & Full-Stack Developer",
+  title: {
+    default: "Nitish Poonia — Mobile & Web App Developer",
+    template: "%s | Nitish Poonia",
+  },
   description:
-    "React Native and full-stack developer based in India. I build mobile apps, web platforms, and software systems from design to deployment.",
-  keywords: [
-    "React Native developer India",
-    "mobile app developer",
-    "full stack developer India",
-    "Next.js developer",
-  ],
+    "I build mobile apps and web platforms for startups and small businesses. React Native, Next.js, Node.js. Based in India, working globally.",
+  metadataBase: new URL("https://nitishpoonia.in"),
   openGraph: {
-    title: "Nitish Poonia — React Native & Full-Stack Developer",
-    description: "React Native and full-stack developer based in India.",
-    url: "https://nitishpoonia.in",
+    siteName: "Nitish Poonia",
+    locale: "en_IN",
     type: "website",
   },
 };

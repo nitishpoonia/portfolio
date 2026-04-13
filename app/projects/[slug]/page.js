@@ -1,8 +1,8 @@
 import { getAllProjects, getProjectBySlug } from "@/lib/project";
 import { MDXRemote } from "next-mdx-remote/rsc";
-
 import Link from "next/link";
 import rehypePrettyCode from "rehype-pretty-code";
+import BackButton from "@/components/BackButton";
 const mdxOptions = {
   mdxOptions: {
     rehypePlugins: [
@@ -52,21 +52,7 @@ export default async function ProjectPage({ params }) {
       }}
     >
       {/* Back */}
-      <Link
-        href="/projects"
-        style={{
-          display: "inline-block",
-          marginBottom: "2.5rem",
-          fontSize: "0.68rem",
-          fontWeight: 700,
-          letterSpacing: "0.15em",
-          textTransform: "uppercase",
-          color: "var(--mid)",
-          textDecoration: "none",
-        }}
-      >
-        ← All projects
-      </Link>
+      <BackButton />
 
       {/* Header */}
       <div
