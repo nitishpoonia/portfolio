@@ -3,11 +3,26 @@ import BlogTabs from "./BlogTabs";
 import BackButton from "@/components/BackButton";
 
 export const metadata = {
-  title: "Blog — Nitish Poonia",
+  title: "Blog — React Native, Node.js & Mobile Development | Nitish Poonia",
   description:
-    "Writing about React Native, mobile development, and building software systems.",
+    "In-depth articles on React Native performance, FlatList optimisation, cursor pagination, image loading, and full-stack mobile development — written from real production experience.",
   alternates: {
     canonical: "https://nitishpoonia.in/blog",
+  },
+  openGraph: {
+    title: "Blog — React Native, Node.js & Mobile Development | Nitish Poonia",
+    description:
+      "In-depth articles on React Native performance, FlatList optimisation, cursor pagination, image loading, and full-stack mobile development — written from real production experience.",
+    url: "https://nitishpoonia.in/blog",
+    type: "website",
+    siteName: "Nitish Poonia",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog — React Native, Node.js & Mobile Development | Nitish Poonia",
+    description:
+      "In-depth articles on React Native performance, FlatList optimisation, cursor pagination, image loading, and full-stack mobile development — written from real production experience.",
+    creator: "@nitishpoonia",
   },
 };
 

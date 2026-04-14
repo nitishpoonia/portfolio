@@ -21,17 +21,32 @@ const mdxOptions = {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
+
+  const fullTitle = `${post.title} | Nitish Poonia`;
+  const description =
+    post.description && post.description.length >= 150
+      ? post.description
+      : `${post.description} Written from real production experience building React Native apps.`;
+
   return {
-    title: `${post.title} — Nitish Poonia`,
-    description: post.description,
+    title: fullTitle,
+    description,
     alternates: {
       canonical: `https://nitishpoonia.in/blog/${slug}`,
     },
     openGraph: {
-      title: post.title,
-      description: post.description,
+      title: fullTitle,
+      description,
       url: `https://nitishpoonia.in/blog/${slug}`,
       type: "article",
+      siteName: "Nitish Poonia",
+      publishedTime: post.date,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description,
+      creator: "@nitishpoonia",
     },
   };
 }

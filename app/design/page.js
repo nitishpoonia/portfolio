@@ -3,11 +3,26 @@ import Navbar from "@/components/NavBar";
 import DesignGallery from "@/components/DesignGallery";
 
 export const metadata = {
-  title: "Design Work — Nitish Poonia",
+  title: "UI/UX Design Work — Nitish Poonia | Figma & AI-Assisted Design",
   description:
-    "UI/UX design direction for mobile and web products. Figma-based screen design, AI-assisted for speed, human-directed for quality.",
+    "Screen designs and UI direction for mobile and web products by Nitish Poonia. Figma-based, AI-assisted for speed, human-directed for quality. Every project starts with design.",
   alternates: {
     canonical: "https://nitishpoonia.in/design",
+  },
+  openGraph: {
+    title: "UI/UX Design Work — Nitish Poonia | Figma & AI-Assisted Design",
+    description:
+      "Screen designs and UI direction for mobile and web products by Nitish Poonia. Figma-based, AI-assisted for speed, human-directed for quality. Every project starts with design.",
+    url: "https://nitishpoonia.in/design",
+    type: "website",
+    siteName: "Nitish Poonia",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "UI/UX Design Work — Nitish Poonia | Figma & AI-Assisted Design",
+    description:
+      "Screen designs and UI direction for mobile and web products by Nitish Poonia. Figma-based, AI-assisted for speed, human-directed for quality. Every project starts with design.",
+    creator: "@nitishpoonia",
   },
 };
 

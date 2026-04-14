@@ -19,6 +19,14 @@ export const metadata = {
       "I build mobile apps and web platforms for startups and small businesses. React Native, Next.js, Node.js. Fixed price. From first conversation to App Store.",
     url: "https://nitishpoonia.in",
     type: "website",
+    siteName: "Nitish Poonia",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nitish Poonia — Mobile & Web App Developer for Hire",
+    description:
+      "I build mobile apps and web platforms for startups and small businesses. React Native, Next.js, Node.js. Fixed price. From first conversation to App Store.",
+    creator: "@nitishpoonia",
   },
 };
 

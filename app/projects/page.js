@@ -4,10 +4,25 @@ import Link from "next/link";
 import BackButton from "@/components/BackButton";
 
 export const metadata = {
-  title: "Projects — Nitish Poonia",
+  title: "Projects & Case Studies — Nitish Poonia | React Native Developer",
   description:
-    "Case studies of production apps built by Nitish Poonia — NFC time tracking, hotel booking, and an independent product build.",
+    "Full case studies of production apps built by Nitish Poonia — NFC attendance tracking, hotel booking with Stripe, a campus social platform, and a full-stack SaaS product.",
   alternates: { canonical: "https://nitishpoonia.in/projects" },
+  openGraph: {
+    title: "Projects & Case Studies — Nitish Poonia | React Native Developer",
+    description:
+      "Full case studies of production apps built by Nitish Poonia — NFC attendance tracking, hotel booking with Stripe, a campus social platform, and a full-stack SaaS product.",
+    url: "https://nitishpoonia.in/projects",
+    type: "website",
+    siteName: "Nitish Poonia",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Projects & Case Studies — Nitish Poonia | React Native Developer",
+    description:
+      "Full case studies of production apps built by Nitish Poonia — NFC attendance tracking, hotel booking with Stripe, a campus social platform, and a full-stack SaaS product.",
+    creator: "@nitishpoonia",
+  },
 };
 
 export default function ProjectsPage() {

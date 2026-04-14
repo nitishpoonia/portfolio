@@ -11,16 +11,24 @@ import HireStrip from "@/components/HireStrip";
 export const metadata = {
   title: "Portfolio — Nitish Poonia | React Native & Full-Stack Developer",
   description:
-    "React Native and full-stack developer with 2+ year building production apps. Case studies, skills, and experience from Vision Vivante and independent projects.",
+    "Case studies, projects, and experience from Nitish Poonia — a React Native and full-stack developer who has shipped production apps across attendance, hospitality, and social platforms.",
   alternates: {
     canonical: "https://nitishpoonia.in/portfolio",
   },
   openGraph: {
-    title: "Portfolio — Nitish Poonia",
+    title: "Portfolio — Nitish Poonia | React Native & Full-Stack Developer",
     description:
-      "React Native and full-stack developer. Case studies, skills, and experience.",
+      "Case studies, projects, and experience from Nitish Poonia — a React Native and full-stack developer who has shipped production apps across attendance, hospitality, and social platforms.",
     url: "https://nitishpoonia.in/portfolio",
     type: "website",
+    siteName: "Nitish Poonia",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Portfolio — Nitish Poonia | React Native & Full-Stack Developer",
+    description:
+      "Case studies, projects, and experience from Nitish Poonia — a React Native and full-stack developer who has shipped production apps across attendance, hospitality, and social platforms.",
+    creator: "@nitishpoonia",
   },
 };
 

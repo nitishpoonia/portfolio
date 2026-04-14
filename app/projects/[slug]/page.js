@@ -19,17 +19,31 @@ const mdxOptions = {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
+
+  const fullTitle = `${project.title} — Case Study | Nitish Poonia`;
+  const description =
+    project.tagline && project.tagline.length >= 150
+      ? project.tagline
+      : `${project.tagline} Full case study covering challenges, solutions, and technical decisions made during development.`;
+
   return {
-    title: `${project.title} — Nitish Poonia`,
-    description: project.tagline,
+    title: fullTitle,
+    description,
     alternates: {
       canonical: `https://nitishpoonia.in/projects/${slug}`,
     },
     openGraph: {
-      title: project.title,
-      description: project.tagline,
+      title: fullTitle,
+      description,
       url: `https://nitishpoonia.in/projects/${slug}`,
       type: "article",
+      siteName: "Nitish Poonia",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description,
+      creator: "@nitishpoonia",
     },
   };
 }
