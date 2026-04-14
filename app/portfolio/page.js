@@ -11,7 +11,7 @@ import HireStrip from "@/components/HireStrip";
 export const metadata = {
   title: "Portfolio — Nitish Poonia | React Native & Full-Stack Developer",
   description:
-    "React Native and full-stack developer with 1+ year building production apps. Case studies, skills, and experience from Vision Vivante and independent projects.",
+    "React Native and full-stack developer with 2+ year building production apps. Case studies, skills, and experience from Vision Vivante and independent projects.",
   alternates: {
     canonical: "https://nitishpoonia.in/portfolio",
   },

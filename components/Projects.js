@@ -159,37 +159,45 @@ export default function Projects() {
         />
       </div>
 
-      {/* Card grid — full bleed border effect */}
+      {/* Card grid */}
       <div
-        className="card-grid"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          borderTop: "1px solid var(--border)",
-          borderLeft: "1px solid var(--border)",
-          marginTop: 0,
+          maxWidth: "var(--max)",
+          margin: "0 auto",
+          padding: "0 var(--pad-x)",
         }}
       >
-        {projects.map((p) => (
-          <ProjectCard key={p.number} project={p} />
-        ))}
-      </div>
-      <div style={{ padding: "2rem var(--pad-x)", textAlign: "right" }}>
-        <Link
-          href="/projects"
+        <div
+          className="card-grid"
           style={{
-            fontSize: "0.68rem",
-            fontWeight: 700,
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            color: "var(--mid)",
-            textDecoration: "none",
-            border: "1px solid var(--border)",
-            padding: "0.5rem 0.75rem",
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            borderTop: "1px solid var(--border)",
+            borderLeft: "1px solid var(--border)",
+            marginTop: 0,
           }}
         >
-          View all projects →
-        </Link>
+          {projects.map((p) => (
+            <ProjectCard key={p.number} project={p} />
+          ))}
+        </div>
+        <div style={{ padding: "2rem 0", textAlign: "right" }}>
+          <Link
+            href="/projects"
+            style={{
+              fontSize: "0.68rem",
+              fontWeight: 700,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "var(--mid)",
+              textDecoration: "none",
+              border: "1px solid var(--border)",
+              padding: "0.5rem 0.75rem",
+            }}
+          >
+            View all projects →
+          </Link>
+        </div>
       </div>
       <style>{`
         .home-project-card:hover {

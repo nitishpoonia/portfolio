@@ -72,9 +72,9 @@ export default function Hero() {
         </p>
 
         {[
-          { label: "Experience", value: "1+ Year" },
+          { label: "Experience", value: "2+ Year" },
           { label: "Apps shipped", value: "3 Production apps" },
-          { label: "Stack", value: "React Native · Next.js" },
+          { label: "Stack", value: "React Native · Next.js. · Node.js" },
           { label: "Availability", value: "Open to projects" },
         ].map(({ label, value }) => (
           <div

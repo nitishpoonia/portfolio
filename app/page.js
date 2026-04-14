@@ -1,6 +1,7 @@
 import Navbar from "@/components/NavBar";
 import SectionHeader from "@/components/SectionHeader";
 import HireButton from "@/components/HireButton";
+import Projects from "@/components/Projects";
 import { CONTACT } from "@/lib/contact";
 
 const hireWaUrl = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(
@@ -118,7 +119,7 @@ export default function HomePage() {
               }}
             >
               {[
-                { label: "Experience", value: "1+ Year" },
+                { label: "Experience", value: "2+ Year" },
                 { label: "Delivery", value: "Fixed-price milestones" },
                 { label: "Timezone", value: "IST — UTC +5:30" },
                 { label: "Status", value: "Accepting new projects", dot: true },
@@ -298,6 +299,8 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+
+        <Projects />
 
         {/* How I Work Section */}
         <section
