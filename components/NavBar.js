@@ -113,7 +113,7 @@ export default function Navbar() {
         </ul>
 
         {/* Hire Me pill button */}
-        <a
+        <Link
           href="/#contact"
           style={{
             fontSize: "0.72rem",
@@ -135,7 +135,7 @@ export default function Navbar() {
           onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
         >
           Hire Me
-        </a>
+        </Link>
       </nav>
 
       {/* ── Mobile top bar ── */}
@@ -153,7 +153,9 @@ export default function Navbar() {
           padding: "1.1rem var(--pad-x)",
           backgroundColor: menuOpen ? "rgba(247,246,242,0.97)" : "transparent",
           backdropFilter: menuOpen ? "blur(12px)" : "none",
-          borderBottom: menuOpen ? "1px solid var(--border)" : "1px solid transparent",
+          borderBottom: menuOpen
+            ? "1px solid var(--border)"
+            : "1px solid transparent",
           transition: "background-color 0.3s ease, border-color 0.3s ease",
         }}
       >
