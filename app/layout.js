@@ -9,19 +9,19 @@ const montserrat = Montserrat({
 
 export const metadata = {
   title: {
-    default: "Nitish Poonia — React Native & Full-Stack Developer",
+    default: "Nitish Poonia — React Native & Frontend Developer",
     template: "%s | Nitish Poonia",
   },
   description:
-    "React Native and full-stack developer building mobile apps and web platforms for startups and small businesses. Fixed price projects from wireframe to App Store.",
+    "React Native and React developer with 1.5+ years shipping production mobile and web apps. Open to full-time opportunities.",
   metadataBase: new URL("https://nitishpoonia.in"),
   alternates: {
     canonical: "https://nitishpoonia.in",
   },
   openGraph: {
-    title: "Nitish Poonia — React Native & Full-Stack Developer",
+    title: "Nitish Poonia — React Native & Frontend Developer",
     description:
-      "React Native and full-stack developer building mobile apps and web platforms for startups and small businesses. Fixed price projects from wireframe to App Store.",
+      "React Native and React developer with 1.5+ years shipping production mobile and web apps. Open to full-time opportunities.",
     url: "https://nitishpoonia.in",
     siteName: "Nitish Poonia",
     locale: "en_IN",
@@ -31,15 +31,15 @@ export const metadata = {
         url: "https://nitishpoonia.in/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Nitish Poonia — React Native & Full-Stack Developer",
+        alt: "Nitish Poonia — React Native & Frontend Developer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nitish Poonia — React Native & Full-Stack Developer",
+    title: "Nitish Poonia — React Native & Frontend Developer",
     description:
-      "React Native and full-stack developer building mobile apps and web platforms for startups and small businesses.",
+      "React Native and React developer with 1.5+ years shipping production mobile and web apps. Open to full-time opportunities.",
     creator: "@nitishpoonia",
     images: ["https://nitishpoonia.in/og-image.png"],
   },

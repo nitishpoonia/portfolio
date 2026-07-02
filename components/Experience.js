@@ -3,13 +3,32 @@ import SectionHeader from "./SectionHeader";
 // ── Add future roles here ─────────────────────────────────────────────────────
 const experiences = [
   {
-    company: "Vision Vivante",
-    role: "Software Engineer",
-    period: "Dec 2024 – Dec 2025",
+    company: "Arthtech Supports",
+    role: "Software Developer — MDR (MyDigiRecords)",
+    period: "Mar 2026 – Present",
     responsibilities: [
-      "Led end-to-end development of three production applications — from initial design and wireframing through to full feature delivery.",
-      "Owned all architecture decisions: framework selection, project structure, and development patterns adopted across the team.",
-      "Mentored a junior developer through regular code reviews and hands-on guidance in React Native and mobile best practices.",
+      "Took ownership of an existing production React Native app via knowledge transfer after the prior developer left.",
+      "Fixed a production Android crash (Fragment$InstantiationException) affecting live users.",
+      "Implemented multi-device session management, including authentication failure monitoring and notification tap handling.",
+      "Own incremental feature development and frontend bug resolution on the app.",
+    ],
+  },
+  {
+    company: "Vision Vivante",
+    role: "Software Developer",
+    period: "Dec 2024 – Jan 2026",
+    responsibilities: [
+      "Built and shipped a production NFC attendance app in React Native, deployed across multiple company facilities.",
+      "Owned frontend, API integration, and built two native modules for an OS-independent clock system to prevent device time manipulation.",
+      "Built frontend to 70–80% completion across three additional products — a hotel booking platform, a gaming app, and an agri social platform — in a fast-moving, under-resourced environment; owned full-stack development independently on the gaming app.",
+    ],
+  },
+  {
+    company: "Self-Employed",
+    role: "Freelance Web Developer",
+    period: "2026 – Present",
+    responsibilities: [
+      "Building a client website using Next.js and Sanity.io as a headless CMS, handling requirements, design implementation, and content modeling directly with the client.",
     ],
   },
 ];

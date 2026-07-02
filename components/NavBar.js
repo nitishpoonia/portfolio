@@ -7,7 +7,7 @@ const links = [
   { label: "Projects", href: "/projects" },
   { label: "Design", href: "/design" },
   { label: "Blog", href: "/blog" },
-  { label: "About", href: "/portfolio#about" },
+  { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },
 ];
 
@@ -112,9 +112,12 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Hire Me pill button */}
-        <Link
-          href="/#contact"
+        {/* Resume pill button */}
+        <a
+          href="/resume.pdf"
+          download
+          target="_blank"
+          rel="noopener noreferrer"
           style={{
             fontSize: "0.72rem",
             fontWeight: 700,
@@ -134,8 +137,8 @@ export default function Navbar() {
           onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.82")}
           onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
         >
-          Hire Me
-        </Link>
+          Resume
+        </a>
       </nav>
 
       {/* ── Mobile top bar ── */}
@@ -265,6 +268,22 @@ export default function Navbar() {
           >
             Get in touch
           </p>
+          <a
+            href="/resume.pdf"
+            download
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: "0.85rem",
+              fontWeight: 700,
+              color: "var(--ink)",
+              textDecoration: "none",
+              display: "block",
+              marginBottom: "0.4rem",
+            }}
+          >
+            Download Resume
+          </a>
           <a
             href="mailto:nitishpoonia@zohomail.in"
             style={{

@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import HireButton from "./HireButton";
+import ResumeButton from "./ResumeButton";
 
 const roles = [
-  "Available for new projects",
-  "Building cross-platform apps",
-  "Turning ideas into products",
-  "Shipping in weeks, not months",
+  "Open to full-time opportunities",
+  "1.5+ years shipping production apps",
+  "React Native · React · Next.js",
+  "Comfortable in unfamiliar codebases",
 ];
 
 export default function Hero() {
@@ -67,15 +67,16 @@ export default function Hero() {
             marginBottom: "clamp(2rem, 4vw, 3rem)",
           }}
         >
-          I build mobile and web products for startups and small businesses —
-          from first conversation to live in the App Store.
+          React Native and React developer with 1.5+ years shipping
+          production mobile and web apps — currently owning frontend on a
+          healthcare records app.
         </p>
 
         {[
-          { label: "Experience", value: "2+ Year" },
+          { label: "Experience", value: "1.5+ Years" },
           { label: "Apps shipped", value: "3 Production apps" },
-          { label: "Stack", value: "React Native · Next.js. · Node.js" },
-          { label: "Availability", value: "Open to projects" },
+          { label: "Stack", value: "React Native · Next.js · Node.js" },
+          { label: "Availability", value: "Open to full-time roles" },
         ].map(({ label, value }) => (
           <div
             key={label}
@@ -135,7 +136,7 @@ export default function Hero() {
             marginBottom: "1.2rem",
           }}
         >
-          AI-Augmented Developer
+          Software Developer
         </p>
 
         <h1
@@ -190,7 +191,7 @@ export default function Hero() {
 
         {/* Scroll hint */}
         <div className="fade-up delay-4" style={{ marginTop: "2.5rem" }}>
-          <HireButton size="md" label="Start a project" />
+          <ResumeButton size="md" label="Download Resume" />
         </div>
 
         <p

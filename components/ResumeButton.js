@@ -1,17 +1,12 @@
 "use client";
 
 import { CONTACT } from "@/lib/contact";
-import { MessageCircle } from "lucide-react";
+import { Download } from "lucide-react";
 
-export default function HireButton({
+export default function ResumeButton({
   size = "md",
-  label = "Let's work together",
-  url,
+  label = "Download Resume",
 }) {
-  const waUrl = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(
-    CONTACT.whatsappMessage,
-  )}`;
-
   const sizes = {
     sm: { fontSize: "0.68rem", padding: "0.6rem 1.25rem" },
     md: { fontSize: "0.72rem", padding: "0.8rem 1.75rem" },
@@ -27,9 +22,10 @@ export default function HireButton({
         alignItems: "center",
       }}
     >
-      {/* Primary — WhatsApp */}
+      {/* Primary — Resume download */}
       <a
-        href={url ?? waUrl}
+        href="/resume.pdf"
+        download
         target="_blank"
         rel="noopener noreferrer"
         style={{
@@ -57,7 +53,7 @@ export default function HireButton({
           e.currentTarget.style.color = "var(--bg)";
         }}
       >
-        <MessageCircle size={16} />
+        <Download size={16} />
         {label}
       </a>
 

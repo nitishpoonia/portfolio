@@ -67,7 +67,7 @@ export default function About() {
             color: 'var(--ink)',
             letterSpacing: '-0.01em',
           }}>
-            I build mobile and web products for startups and small businesses — from first idea to live in the App Store.
+            React Native and React developer with 1.5+ years shipping production mobile and web apps — comfortable picking up unfamiliar codebases and working independently.
           </p>
         </div>
       </div>

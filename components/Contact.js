@@ -62,15 +62,16 @@ export default function Contact() {
       }}
     >
       <SectionHeader
-        label="Start a project"
-        title="Let's build something."
-        subtitle="Available for new projects globally. Fastest response on WhatsApp — usually replies within a few hours."
+        label="Get in touch"
+        title="Let's talk."
+        subtitle="Open to full-time roles. Happy to jump on a call, answer questions over email, or send over my resume."
       />
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {/* WhatsApp — primary inverted card */}
+        {/* Resume — primary inverted card */}
         <a
-          href={waUrl}
+          href="/resume.pdf"
+          download
           target="_blank"
           rel="noopener noreferrer"
           onMouseEnter={e => {
@@ -98,15 +99,15 @@ export default function Contact() {
             fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.2em',
             textTransform: 'uppercase', color: 'rgba(247,246,242,0.45)',
             marginBottom: '0.75rem', transition: 'color 0.2s',
-          }}>WhatsApp — Fastest response</span>
+          }}>Resume — PDF</span>
           <span data-main style={{
             fontSize: 'clamp(0.95rem, 1.6vw, 1.2rem)',
             fontWeight: 700, color: 'var(--bg)',
             letterSpacing: '-0.01em', transition: 'color 0.2s',
-          }}>Message me on WhatsApp →</span>
+          }}>Download my resume →</span>
         </a>
 
-        {/* Email + GitHub — secondary row */}
+        {/* Email + GitHub + WhatsApp — secondary row */}
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           <ContactCard
             href={`mailto:${email}`}
@@ -118,6 +119,12 @@ export default function Contact() {
             href="https://github.com/nitishpoonia"
             eyebrow="GitHub"
             label="github.com/nitishpoonia"
+            external
+          />
+          <ContactCard
+            href={waUrl}
+            eyebrow="WhatsApp"
+            label="Message me"
             external
           />
         </div>
