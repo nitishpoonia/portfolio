@@ -1,213 +1,77 @@
 ---
 title: "NFC Based Employee Time Tracking"
 slug: "nfc-time-tracking"
-tagline: "Built a tamper-proof, offline-resilient attendance system powered by NFC tags"
-role: "Lead Developer"
+tagline: "An attendance system where the shift clock can't be gamed by changing the phone's time"
+role: "Sole Developer"
 company: "Vision Vivante"
-timeline: "Dec 2024 – Dec 2025"
-tags:
-  [
-    "React Native",
-    "NFC",
-    "Android Native",
-    "iOS Native",
-    "Async Storage",
-    "Node.js",
-  ]
+timeline: "Dec 2024 – Feb 2025"
+tags: ["React Native", "Native Modules", "NFC", "Offline Sync", "iOS", "Android"]
+type: "case-study"
 published: true
 ---
 
-## Overview
+## What it is
 
-NFC Time Tracker was my first professional project — built at Vision Vivante
-from December 2024 to December 2025. The app replaces manual attendance
-sheets with NFC tag scans. Workers tap their assigned tag to start or end a
-shift, and the system records the timestamp, location, and user identity
-against their profile in real time.
+A company needed staff to clock in and out across several facilities. Three NFC
+tags — start shift, start break, end shift. Each scan posts to the backend.
 
-I did not start from scratch. The authentication flow and the core NFC
-scanning were already scaffolded using the NFC Tag Manager library when I
-joined. My work was to take that foundation and build everything on top of
-it — the role system, the time integrity layer, the offline sync, and the
-multi-role navigation architecture.
+I was the only developer on it. Every structural decision was mine: folder
+layout, libraries, state, how the app talked to the server. It's live on the
+[App Store](https://apps.apple.com/in/app/eda-time-tracker/id6739802131) and
+around twenty people use it daily for their shifts. It's an internal tool, not
+a consumer app.
 
-## AI in This Project
+## The problem
 
-AI tooling played a smaller role on this project since it predates my
-current workflow, but GitHub Copilot was used for repetitive patterns —
-particularly the AsyncStorage queue implementation and the FlatList
-optimisation utilities.
+The client came back after release: staff were awarding themselves hours.
 
-The native bridge for Android and iOS time-since-boot had no useful
-AI output. That required reading the Android and iOS documentation
-directly and writing the bridge manually. This is a good example of
-where AI assistance ends and engineering judgment begins — AI is fast
-on patterns it has seen before, slow and unreliable on anything novel
-or platform-specific.
+The app was reading the phone's clock. The phone's clock belongs to the user.
+Change the system time before scanning out and you get paid for hours you
+didn't work — and the backend had no way to tell, because it was being handed a
+timestamp with nothing to check it against.
 
-## Challenge 1: Workers Could Manipulate Their Shift Times by Changing Device Time
+## What I proposed first, and why it was rejected
 
-The app was recording shift start and end times using the device's local
-clock. This meant any worker could set their phone's time backward before
-tapping in, or forward before tapping out, and the falsified timestamp would
-be sent to the backend as truth. There was no way to detect it on the server
-either, because the server received a timestamp and had no reference point
-to validate it against.
+My first answer was to detect the manipulation: notice the clock had moved,
+block the app, flag the user.
 
-### Solution
+The client rejected it outright. It punished employees for something the app
+had got wrong, and it turned a payroll tool into a surveillance one. They were
+right, and it's the more useful half of this story — the fix that ships is
+rarely the first one you're pleased with.
 
-I collaborated with the backend developer to build a server-time bridge. On
-app launch and at regular intervals, the app fetches the current UTC time
-from the server and stores the delta between server time and device time
-locally.
+## What actually worked
 
-But fetching server time alone is not enough — if the user goes offline or
-the fetch fails, you fall back to device time and the problem returns. So I
-went a level deeper and wrote a native bridge for both Android and iOS that
-exposes the device's time since last boot.
+Make the server the source of truth, and stop the in-app timer depending on the
+system clock at all.
 
-```js
-// Native bridge — returns milliseconds since device boot
-import { NativeModules } from "react-native";
-const { SystemClock } = NativeModules;
+At login the app stores two things together: the server's timestamp, and the
+device's time since boot at that same instant. From then on, the time it
+displays is that anchor plus however far time-since-boot has advanced.
 
-export async function getReliableTimestamp() {
-  const serverTime = await fetchServerTime(); // cached on last sync
-  const bootTime = await SystemClock.getElapsedRealtime();
-  const adjustedTime = serverTime + bootTime;
-  return new Date(adjustedTime);
-}
-```
+Time since boot isn't user-editable. You can set the system clock to any year
+you like and the running timer doesn't move.
 
-Time since boot cannot be changed by the user — it is maintained by the
-kernel and resets only when the device restarts. By anchoring our clock to
-boot time plus the last known server time, we run a separate internal clock
-inside the app that is completely independent of whatever the system clock
-shows. All timestamps sent to the backend come from this internal clock, not
-`new Date()`.
+<NfcTimerDemo />
 
-## Challenge 2: NFC Scans Were Lost When the Network Was Unreliable
+There's no cross-platform API for this, so I wrote a native module on each side —
+`SystemClock.elapsedRealtime()` on Android, `mach_absolute_time` on iOS — and
+bridged it to the JavaScript layer. That part had no useful AI output; it meant
+reading both platforms' docs and writing the bridge by hand.
 
-Several client sites had poor or intermittent network coverage. When a
-worker tapped their NFC tag in a low-signal area, the scan event would fail
-to reach the server and simply disappear — no record, no error shown to the
-user, no retry. From the backend's perspective the worker never clocked in.
+A reboot resets time-since-boot, which is exactly why the app re-fetches from
+the server when it relaunches. The backend returns the current time and the last
+mode change, and the app rebuilds the shift or break in progress from those two
+facts.
 
-### Solution
+## Offline
 
-I built an offline sync queue using Async Storage. Every NFC scan event is
-written to a local queue before any network request is made. When the
-request succeeds, the event is removed from the queue. When it fails or the
-device is offline, it stays in the queue.
+Some facilities had no reliable network. Scans queue on the device and sync when
+a connection returns; the next day's shift requires a sync before it starts, so
+the queue can't grow indefinitely.
 
-```js
-const QUEUE_KEY = "offline_scan_queue";
+## What's still open
 
-export async function enqueueScan(scanEvent) {
-  const raw = await AsyncStorage.getItem(QUEUE_KEY);
-  const queue = raw ? JSON.parse(raw) : [];
-  queue.push({ ...scanEvent, queuedAt: Date.now() });
-  await AsyncStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
-}
-
-export async function flushQueue(syncFn) {
-  const raw = await AsyncStorage.getItem(QUEUE_KEY);
-  const queue = raw ? JSON.parse(raw) : [];
-  if (queue.length === 0) return;
-
-  for (const event of queue) {
-    await syncFn(event);
-  }
-
-  await AsyncStorage.removeItem(QUEUE_KEY);
-}
-```
-
-When the device comes back online, the app checks whether the queue is
-empty before allowing a new scan. If there are pending events, the worker
-is shown a prompt asking them to sync their offline scans first. This keeps
-the backend records in chronological order and prevents a worker from
-doing a new scan before their previous offline scans are recorded.
-
-## Challenge 3: Role-Based UI Was Needed After Navigation Was Already Built
-
-Midway through the project the client requirement changed — after login,
-workers, managers, and admins needed to see completely different interfaces,
-not just different screens within the same navigation stack. The navigation
-was already set up as a single stack at this point, so adding branching
-logic to the existing structure would have meant spreading role checks
-across every navigator and every screen transition.
-
-### Solution
-
-Instead of patching the existing navigator, I restructured the navigation
-into separate stacks — one per role — and added a routing layer at the root
-that runs after login and directs the user to the correct stack entirely.
-
-```js
-// navigation/RootNavigator.js
-import { useAuth } from "../context/AuthContext";
-
-const ROLE_STACKS = {
-  admin: AdminStack,
-  manager: ManagerStack,
-  worker: WorkerStack,
-};
-
-export default function RootNavigator() {
-  const { user } = useAuth();
-
-  if (!user) return <AuthStack />;
-
-  const Stack = ROLE_STACKS[user.role];
-  return Stack ? <Stack /> : <FallbackScreen />;
-}
-```
-
-Each role stack is fully self-contained — its own screens, its own tab bars,
-its own deep link handling. Adding a new role means adding one new stack and
-one new entry in `ROLE_STACKS`. No existing stack is touched. This approach
-also made it straightforward to test each role in isolation during
-development.
-
-## Results
-
-- Shift times are fully tamper-proof regardless of device clock manipulation
-- NFC scans are never lost, even in zero-network environments
-- Three distinct role interfaces ship from a single codebase with clean
-  separation
-- The offline queue approach was later reused in the social media app for
-  queuing failed media uploads
-
-## Lessons Learned
-
-Starting on an existing codebase taught me to read before writing. The first
-week was entirely spent understanding what was already there before touching
-anything. The offline sync and the native time bridge were both solutions
-that came from deeply understanding the constraints first — neither would
-have been obvious without knowing the full picture of how the app was
-deployed and where it was being used.
-
-The role navigation restructure also reinforced something I now treat as a
-rule: when a requirement change makes you want to add conditionals
-everywhere, that is a signal to change the structure instead.
-
-This project was also my first time publishing an app to both the Apple App
-Store and Google Play Store. The submission process taught me things no
-documentation prepares you for — the exact icon dimensions required at each
-size, the screenshot specifications per device class, and the specific terms
-and conditions that only surface after your first rejection.
-
-Two things stood out. Publishing to Android is genuinely easier — the Play
-Store has a more straightforward review process and the tooling around
-signing and release tracks is well documented. The App Store is stricter and
-the review guidelines require careful reading before your first submission or
-you will spend days iterating on rejections for things that feel minor but
-are not negotiable.
-
-The counterintuitive part: iOS reviews faster. Despite being the harder
-store to get accepted by, Apple's review team typically responds within 24
-hours once your submission is clean. Google's review can take several days.
-If you are launching to both stores simultaneously, get your iOS submission
-right first and submit it before Android — they will likely approve around
-the same time.
+Offline **and** rebooted, together. The anchor is gone and there's no network to
+re-fetch it. I haven't solved that case, and I'd rather say so than pretend the
+design is airtight.

@@ -3,78 +3,87 @@
 import { CONTACT } from "@/lib/contact";
 import { Download } from "lucide-react";
 
-export default function ResumeButton({
-  size = "md",
-  label = "Download Resume",
-}) {
+export default function ResumeButton({ size = "md", label = "Download résumé" }) {
   const sizes = {
-    sm: { fontSize: "0.68rem", padding: "0.6rem 1.25rem" },
-    md: { fontSize: "0.72rem", padding: "0.8rem 1.75rem" },
-    lg: { fontSize: "0.8rem", padding: "1rem 2.25rem" },
+    sm: { fontSize: "0.72rem", padding: "0.6rem 1.25rem" },
+    md: { fontSize: "0.78rem", padding: "0.85rem 1.6rem" },
+    lg: { fontSize: "0.85rem", padding: "1rem 2rem" },
   };
 
   return (
     <div
       style={{
         display: "flex",
-        gap: "0.75rem",
+        gap: "1.25rem",
         flexWrap: "wrap",
         alignItems: "center",
       }}
     >
-      {/* Primary — Resume download */}
       <a
         href="/resume.pdf"
         download
         target="_blank"
         rel="noopener noreferrer"
+        className="resume-btn"
         style={{
           display: "inline-flex",
           alignItems: "center",
-          gap: "0.5rem",
-          background: "var(--ink)",
-          color: "var(--bg)",
-          border: "1.5px solid var(--ink)",
+          gap: "0.55rem",
+          background: "var(--sec-accent)",
+          color: "var(--sec-bg)",
+          border: "1px solid var(--sec-accent)",
           fontFamily: "var(--font)",
-          fontWeight: 700,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
+          fontWeight: 600,
+          letterSpacing: "0.01em",
           textDecoration: "none",
-          borderRadius: "2px",
-          transition: "all 0.2s ease",
+          borderRadius: "var(--r-pill)",
+          transition:
+            "transform var(--t-fast) var(--ease-soft), box-shadow var(--t-fast) var(--ease-soft), opacity var(--t-fast)",
           ...sizes[size],
         }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = "var(--white)";
-          e.currentTarget.style.color = "var(--ink)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = "var(--ink)";
-          e.currentTarget.style.color = "var(--bg)";
-        }}
       >
-        <Download size={16} />
+        <Download size={16} strokeWidth={2} />
         {label}
       </a>
 
-      {/* Secondary — Email */}
       <a
         href={`mailto:${CONTACT.email}`}
+        className="resume-email"
         style={{
           fontSize: sizes[size].fontSize,
           fontFamily: "var(--font)",
-          fontWeight: 700,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          color: "var(--mid)",
+          fontWeight: 500,
+          color: "var(--sec-mid)",
           textDecoration: "none",
-          transition: "color 0.2s",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.35rem",
+          transition: "color var(--t-fast) var(--ease-soft)",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--white)")}
-        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--mid)")}
       >
-        or email →
+        or email
+        <span className="resume-email-arrow" aria-hidden="true">
+          →
+        </span>
       </a>
+
+      <style>{`
+        .resume-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 22px rgba(62, 84, 73, 0.28);
+        }
+        .resume-btn:active { transform: translateY(0); }
+        .resume-email:hover { color: var(--sec-ink); }
+        .resume-email-arrow {
+          display: inline-block;
+          transition: transform var(--t-fast) var(--ease-soft);
+        }
+        .resume-email:hover .resume-email-arrow { transform: translateX(4px); }
+        @media (prefers-reduced-motion: reduce) {
+          .resume-btn:hover { transform: none; }
+          .resume-email:hover .resume-email-arrow { transform: none; }
+        }
+      `}</style>
     </div>
   );
 }

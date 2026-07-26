@@ -1,27 +1,42 @@
-import { Montserrat } from "next/font/google";
+import { Fraunces, Work_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
-const montserrat = Montserrat({
+
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-montserrat",
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-fraunces",
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+const workSans = Work_Sans({
+  subsets: ["latin"],
+  variable: "--font-worksans",
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
+});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jbmono",
+  weight: ["400", "500", "700"],
+  display: "swap",
 });
 
 export const metadata = {
   title: {
-    default: "Nitish Poonia — React Native & Frontend Developer",
+    default: "Nitish Poonia — Software Developer",
     template: "%s | Nitish Poonia",
   },
   description:
-    "React Native and React developer with 1.5+ years shipping production mobile and web apps. Open to full-time opportunities.",
+    "Software developer building mobile and web products end to end — React Native and Next.js on the front, Node and PostgreSQL behind. Open to full-time roles.",
   metadataBase: new URL("https://nitishpoonia.in"),
   alternates: {
     canonical: "https://nitishpoonia.in",
   },
   openGraph: {
-    title: "Nitish Poonia — React Native & Frontend Developer",
+    title: "Nitish Poonia — Software Developer",
     description:
-      "React Native and React developer with 1.5+ years shipping production mobile and web apps. Open to full-time opportunities.",
+      "Software developer building mobile and web products end to end — React Native and Next.js on the front, Node and PostgreSQL behind. Open to full-time roles.",
     url: "https://nitishpoonia.in",
     siteName: "Nitish Poonia",
     locale: "en_IN",
@@ -31,15 +46,15 @@ export const metadata = {
         url: "https://nitishpoonia.in/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Nitish Poonia — React Native & Frontend Developer",
+        alt: "Nitish Poonia — Software Developer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nitish Poonia — React Native & Frontend Developer",
+    title: "Nitish Poonia — Software Developer",
     description:
-      "React Native and React developer with 1.5+ years shipping production mobile and web apps. Open to full-time opportunities.",
+      "Software developer building mobile and web products end to end — React Native and Next.js on the front, Node and PostgreSQL behind. Open to full-time roles.",
     creator: "@nitishpoonia",
     images: ["https://nitishpoonia.in/og-image.png"],
   },
@@ -58,7 +73,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={montserrat.variable}>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${workSans.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>

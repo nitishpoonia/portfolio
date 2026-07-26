@@ -1,149 +1,175 @@
-'use client';
-import SectionHeader from './SectionHeader';
-import { CONTACT } from '@/lib/contact';
+"use client";
+import SectionHeader from "./SectionHeader";
+import Reveal from "./Reveal";
+import { CONTACT } from "@/lib/contact";
 
-const email = 'nitishpoonia@zohomail.in';
-const waUrl = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
+const waUrl = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(
+  CONTACT.whatsappMessage
+)}`;
 
 function ContactCard({ href, eyebrow, label, external }) {
   return (
     <a
       href={href}
-      target={external ? '_blank' : undefined}
-      rel={external ? 'noopener noreferrer' : undefined}
-      onMouseEnter={e => {
-        e.currentTarget.style.background = 'var(--ink)';
-        e.currentTarget.querySelectorAll('[data-c]').forEach(el => {
-          el.style.color = 'rgba(247,246,242,0.5)';
-        });
-        e.currentTarget.querySelectorAll('[data-main]').forEach(el => {
-          el.style.color = 'var(--bg)';
-        });
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.background = 'transparent';
-        e.currentTarget.querySelectorAll('[data-c]').forEach(el => {
-          el.style.color = 'var(--mid)';
-        });
-        e.currentTarget.querySelectorAll('[data-main]').forEach(el => {
-          el.style.color = 'var(--ink)';
-        });
-      }}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className="contact-card"
       style={{
-        flex: 1, display: 'flex', flexDirection: 'column',
-        padding: 'clamp(1.5rem, 3vw, 2.5rem)',
-        border: '1px solid var(--border)',
-        textDecoration: 'none', transition: 'background 0.2s',
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.6rem",
+        padding: "clamp(1.4rem, 3vw, 2rem)",
+        background: "var(--sec-card)",
+        border: "1px solid var(--sec-line)",
+        borderRadius: "var(--r-lg)",
+        textDecoration: "none",
+        transition:
+          "transform var(--t-med) var(--ease-soft), background var(--t-med) var(--ease-soft), border-color var(--t-med) var(--ease-soft)",
       }}
     >
-      <span data-c style={{
-        fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.2em',
-        textTransform: 'uppercase', color: 'var(--mid)',
-        marginBottom: '0.75rem', transition: 'color 0.2s',
-      }}>{eyebrow}</span>
-      <span data-main style={{
-        fontSize: 'clamp(0.85rem, 1.4vw, 1.05rem)',
-        fontWeight: 700, color: 'var(--ink)',
-        letterSpacing: '-0.01em', wordBreak: 'break-all',
-        transition: 'color 0.2s',
-      }}>{label} →</span>
+      <span
+        style={{
+          fontFamily: "var(--mono)",
+          fontSize: "0.62rem",
+          fontWeight: 500,
+          letterSpacing: "0.16em",
+          textTransform: "uppercase",
+          color: "var(--sec-mid)",
+        }}
+      >
+        {eyebrow}
+      </span>
+      <span
+        style={{
+          fontSize: "clamp(0.9rem, 1.4vw, 1.05rem)",
+          fontWeight: 500,
+          color: "var(--sec-ink)",
+          letterSpacing: "-0.01em",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "0.75rem",
+        }}
+      >
+        <span style={{ minWidth: 0, overflowWrap: "anywhere" }}>{label}</span>
+        <span
+          className="contact-arrow"
+          aria-hidden="true"
+          style={{ flexShrink: 0, color: "var(--sec-accent)" }}
+        >
+          →
+        </span>
+      </span>
     </a>
   );
 }
 
 export default function Contact() {
   return (
-    <section
-      id="contact"
-      style={{
-        padding: "var(--pad-y) var(--pad-x)",
-        maxWidth: "var(--max)",
-        margin: "0 auto",
-      }}
-    >
+    <>
       <SectionHeader
         label="Get in touch"
-        title="Let's talk."
-        subtitle="Open to full-time roles. Happy to jump on a call, answer questions over email, or send over my resume."
+        title="Let's talk"
+        subtitle="Open to full-time roles. Happy to jump on a call, answer questions over email, or send my résumé."
       />
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {/* Resume — primary inverted card */}
-        <a
-          href="/resume.pdf"
-          download
-          target="_blank"
-          rel="noopener noreferrer"
-          onMouseEnter={e => {
-            e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.querySelectorAll('[data-c]').forEach(el => { el.style.color = 'var(--mid)'; });
-            e.currentTarget.querySelectorAll('[data-main]').forEach(el => { el.style.color = 'var(--ink)'; });
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = 'var(--ink)';
-            e.currentTarget.style.borderColor = 'var(--ink)';
-            e.currentTarget.querySelectorAll('[data-c]').forEach(el => { el.style.color = 'rgba(247,246,242,0.45)'; });
-            e.currentTarget.querySelectorAll('[data-main]').forEach(el => { el.style.color = 'var(--bg)'; });
-          }}
-          style={{
-            display: 'flex', flexDirection: 'column',
-            padding: 'clamp(1.5rem, 3vw, 2.5rem)',
-            background: 'var(--ink)',
-            border: '1px solid var(--ink)',
-            textDecoration: 'none',
-            transition: 'background 0.2s, border-color 0.2s',
-          }}
-        >
-          <span data-c style={{
-            fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.2em',
-            textTransform: 'uppercase', color: 'rgba(247,246,242,0.45)',
-            marginBottom: '0.75rem', transition: 'color 0.2s',
-          }}>Resume — PDF</span>
-          <span data-main style={{
-            fontSize: 'clamp(0.95rem, 1.6vw, 1.2rem)',
-            fontWeight: 700, color: 'var(--bg)',
-            letterSpacing: '-0.01em', transition: 'color 0.2s',
-          }}>Download my resume →</span>
-        </a>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <Reveal>
+          <a
+            href="/resume.pdf"
+            download
+            target="_blank"
+            rel="noopener noreferrer"
+            className="contact-resume"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.6rem",
+              padding: "clamp(1.6rem, 3vw, 2.4rem)",
+              background: "var(--sec-accent)",
+              border: "1px solid var(--sec-accent)",
+              borderRadius: "var(--r-lg)",
+              textDecoration: "none",
+              transition: "transform var(--t-med) var(--ease-soft), box-shadow var(--t-med) var(--ease-soft)",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--mono)",
+                fontSize: "0.62rem",
+                fontWeight: 500,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: "var(--sec-bg)",
+                opacity: 0.72,
+              }}
+            >
+              Résumé — PDF
+            </span>
+            <span
+              style={{
+                fontSize: "clamp(1rem, 1.7vw, 1.25rem)",
+                fontWeight: 600,
+                color: "var(--sec-bg)",
+                letterSpacing: "-0.01em",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.45rem",
+              }}
+            >
+              Download my résumé
+              <span className="contact-arrow" aria-hidden="true">→</span>
+            </span>
+          </a>
+        </Reveal>
 
-        {/* Email + GitHub + WhatsApp — secondary row */}
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <ContactCard
-            href={`mailto:${email}`}
-            eyebrow="Email"
-            label={email}
-            external={false}
-          />
-          <ContactCard
-            href="https://github.com/nitishpoonia"
-            eyebrow="GitHub"
-            label="github.com/nitishpoonia"
-            external
-          />
-          <ContactCard
-            href={waUrl}
-            eyebrow="WhatsApp"
-            label="Message me"
-            external
-          />
-        </div>
+        <Reveal delay={0.06}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <ContactCard href={`mailto:${CONTACT.email}`} eyebrow="Email" label={CONTACT.email} />
+            <ContactCard
+              href="https://github.com/nitishpoonia"
+              eyebrow="GitHub"
+              label="github.com/nitishpoonia"
+              external
+            />
+            <ContactCard href={waUrl} eyebrow="WhatsApp" label="Message me" external />
+          </div>
+        </Reveal>
       </div>
 
-      {/* Footer */}
       <p
         style={{
-          marginTop: "clamp(3rem, 6vw, 5rem)",
+          marginTop: "clamp(3.5rem, 7vw, 6rem)",
+          fontFamily: "var(--mono)",
           fontSize: "0.62rem",
-          fontWeight: 700,
-          letterSpacing: "0.18em",
+          fontWeight: 500,
+          letterSpacing: "0.14em",
           textTransform: "uppercase",
-          color: "var(--faint)",
+          color: "var(--sec-mid)",
           textAlign: "center",
         }}
       >
         Nitish Poonia — {new Date().getFullYear()}
       </p>
-    </section>
+
+      <style>{`
+        .contact-card:hover {
+          transform: translateY(-3px);
+          background: var(--sec-card-hover);
+          border-color: var(--sec-accent);
+        }
+        .contact-resume:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+        }
+        .contact-arrow { transition: transform var(--t-fast) var(--ease-soft); }
+        .contact-card:hover .contact-arrow,
+        .contact-resume:hover .contact-arrow { transform: translateX(4px); }
+        @media (prefers-reduced-motion: reduce) {
+          .contact-card:hover, .contact-resume:hover { transform: none; }
+        }
+      `}</style>
+    </>
   );
 }

@@ -1,158 +1,106 @@
-"use client";
 import SectionHeader from "./SectionHeader";
+import Reveal from "./Reveal";
 
-// ── Update skill categories here ──────────────────────────────────────────────
 const categories = [
   {
     label: "Mobile",
-    solid: true,
     skills: [
       "React Native",
+      "Native iOS/Android module bridging",
+      "NFC",
+      "Offline queueing",
       "Async Storage",
-      "Firebase Notifications",
-      "Redux Saga",
       "React Query",
-      "NFC Integration",
-      "Stripe Payments",
-      "React Navigation",
-      "Native Modules", // ← you wrote Android + iOS native bridges
-      "Offline Sync", // ← you built the queue system
-      "App Store Submission", // ← you shipped to both stores
-      "Push Notifications", // ← Firebase Notifications implies this
+      "App Store & Play Store releases",
     ],
   },
   {
     label: "Frontend",
-    solid: true,
-    skills: [
-      "React",
-      "Next.js",
-      "Tailwind CSS",
-      "TypeScript", // ← standard in RN professional projects
-      "REST APIs", // ← you consumed APIs across all three apps
-      "SEO & Meta Tags", // ← you built this into your portfolio
-    ],
-  },
-  {
-    label: "Design",
-    solid: true,
-    skills: [
-      "Figma",
-      "UI Design", // ← you went from wireframe to implementation
-      "Responsive Design", // ← you built responsive layouts
-      "Design to Code", // ← explicitly mentioned in your experience
-    ],
+    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "REST APIs", "On-page SEO"],
   },
   {
     label: "Backend",
-    solid: false,
-    skills: [
-      "Node.js",
-      "Express",
-      "PostgreSQL",
-      "MongoDB",
-      "REST API Design", // ← you collaborated on pagination API design
-      "Cursor Pagination", // ← you implemented this specifically
-    ],
+    skills: ["Node.js", "Express", "PostgreSQL", "Redis", "bcrypt", "REST API design"],
   },
   {
-    label: "DevOps & Cloud",
-    solid: false,
-    skills: [
-      "Render",
-      "Supabase",
-      "Vercel",
-      "Git & GitHub", // ← implied by your entire workflow
-      "CI/CD via Vercel", // ← you use this for your portfolio
-    ],
+    label: "Integrations",
+    skills: ["Stripe", "OpenAI API", "Sanity CMS", "Google Sign-In"],
+  },
+  {
+    label: "Tools",
+    skills: ["Git", "GitHub", "Render", "Vercel", "Figma", "Cursor"],
   },
 ];
 
-function Pill({ label, solid }) {
-  return (
-    <span
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "var(--ink)";
-        e.currentTarget.style.color = "var(--bg)";
-        e.currentTarget.style.borderColor = "var(--ink)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = solid ? "var(--ink)" : "transparent";
-        e.currentTarget.style.color = solid ? "var(--bg)" : "var(--mid)";
-        e.currentTarget.style.borderColor = solid
-          ? "var(--ink)"
-          : "var(--border)";
-      }}
-      style={{
-        display: "inline-block",
-        padding: "0.5rem 1.1rem",
-        border: "1.5px solid",
-        borderColor: solid ? "var(--ink)" : "var(--border)",
-        background: solid ? "var(--ink)" : "transparent",
-        color: solid ? "var(--bg)" : "var(--mid)",
-        fontSize: "0.72rem",
-        fontWeight: 700,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
-        borderRadius: "2px",
-        cursor: "default",
-        transition: "all 0.18s ease",
-        fontFamily: "var(--font)",
-      }}
-    >
-      {label}
-    </span>
-  );
-}
-
 export default function Skills() {
   return (
-    <section
-      id="skills"
-      style={{
-        borderBottom: "1px solid var(--border)",
-        padding: "var(--pad-y) var(--pad-x)",
-        maxWidth: "var(--max)",
-        margin: "0 auto",
-      }}
-    >
+    <>
       <SectionHeader
-        label="Tech Stack"
-        title="Skills"
-        subtitle="Tools I reach for every day, and tools I know well enough to ship with."
+        label="Toolkit"
+        title="What I build with"
+        subtitle="Tools I reach for regularly, grouped by where they sit in a product."
       />
 
       <div
+        className="skills-grid"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "2.5rem",
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+          gap: "clamp(2rem, 4vw, 3rem)",
         }}
       >
-        {categories.map(({ label, solid, skills }) => (
-          <div key={label}>
-            <p
-              style={{
-                fontSize: "0.65rem",
-                fontWeight: 700,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: solid ? "var(--ink)" : "var(--mid)",
-                marginBottom: "1rem",
-                paddingBottom: "0.75rem",
-                borderBottom: "1px solid var(--border)",
-              }}
-            >
-              {label}
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem" }}>
-              {skills.map((s) => (
-                <Pill key={s} label={s} solid={solid} />
-              ))}
+        {categories.map(({ label, skills }, i) => (
+          <Reveal key={label} delay={i * 0.05}>
+            <div>
+              <p
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: "0.66rem",
+                  fontWeight: 500,
+                  letterSpacing: "0.16em",
+                  textTransform: "uppercase",
+                  color: "var(--sec-ink)",
+                  marginBottom: "1.1rem",
+                  paddingBottom: "0.8rem",
+                  borderBottom: "1px solid var(--sec-line)",
+                }}
+              >
+                {label}
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.55rem" }}>
+                {skills.map((s) => (
+                  <span key={s} className="skill-pill">
+                    {s}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          </Reveal>
         ))}
       </div>
-    </section>
+
+      <style>{`
+        .skill-pill {
+          display: inline-block;
+          padding: 0.5rem 1rem;
+          border: 1px solid var(--sec-line);
+          border-radius: var(--r-pill);
+          color: var(--sec-mid);
+          background: var(--sec-card);
+          font-size: 0.78rem;
+          font-weight: 500;
+          letter-spacing: 0.01em;
+          font-family: var(--font);
+          transition: color var(--t-fast) var(--ease-soft),
+                      background var(--t-fast) var(--ease-soft),
+                      border-color var(--t-fast) var(--ease-soft);
+        }
+        .skill-pill:hover {
+          color: var(--sec-bg);
+          background: var(--sec-accent);
+          border-color: var(--sec-accent);
+        }
+      `}</style>
+    </>
   );
 }

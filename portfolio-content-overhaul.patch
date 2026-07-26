@@ -1,0 +1,1685 @@
+diff --git a/.next/build-manifest.json b/.next/build-manifest.json
+index 0049ef1..9a210ac 100644
+--- a/.next/build-manifest.json
++++ b/.next/build-manifest.json
+@@ -7,14 +7,14 @@
+     "static/chunks/a6dad97d9634a72d.js"
+   ],
+   "lowPriorityFiles": [
+-    "static/qYmYn26hCz8z-6hBsTtKO/_ssgManifest.js",
+-    "static/qYmYn26hCz8z-6hBsTtKO/_buildManifest.js"
++    "static/8C-BlMoH7NCDgxzAw5OPZ/_ssgManifest.js",
++    "static/8C-BlMoH7NCDgxzAw5OPZ/_buildManifest.js"
+   ],
+   "rootMainFiles": [
+-    "static/chunks/b79d602f30593662.js",
+-    "static/chunks/806bdb8e4a6a9b95.js",
++    "static/chunks/0fd4fded1cd1ffe8.js",
++    "static/chunks/82abf2d65f5428ae.js",
+     "static/chunks/ea80403269d20319.js",
+     "static/chunks/69be39811437728d.js",
+-    "static/chunks/turbopack-f8cf5b03b2a30b7d.js"
++    "static/chunks/turbopack-11ce6043b562d54c.js"
+   ]
+ }
+\ No newline at end of file
+diff --git a/.next/server/app-paths-manifest.json b/.next/server/app-paths-manifest.json
+index e944604..ea2d31e 100644
+--- a/.next/server/app-paths-manifest.json
++++ b/.next/server/app-paths-manifest.json
+@@ -3,6 +3,7 @@
+   "/_not-found/page": "app/_not-found/page.js",
+   "/blog/[slug]/page": "app/blog/[slug]/page.js",
+   "/blog/page": "app/blog/page.js",
++  "/design/page": "app/design/page.js",
+   "/favicon.ico/route": "app/favicon.ico/route.js",
+   "/hire/page": "app/hire/page.js",
+   "/page": "app/page.js",
+diff --git a/.next/server/app/page.js b/.next/server/app/page.js
+index 10cc4e8..c3d19ad 100644
+--- a/.next/server/app/page.js
++++ b/.next/server/app/page.js
+@@ -1,13 +1,15 @@
+ var R=require("../chunks/ssr/[turbopack]_runtime.js")("server/app/page.js")
+-R.c("server/chunks/ssr/[root-of-the-server]__5d51e9e4._.js")
++R.c("server/chunks/ssr/[root-of-the-server]__ec258fdb._.js")
++R.c("server/chunks/ssr/_0ae3d377._.js")
++R.c("server/chunks/ssr/node_modules_d5c7fdc7._.js")
+ R.c("server/chunks/ssr/_6139f1ce._.js")
+ R.c("server/chunks/ssr/_dec2a44a._.js")
+-R.c("server/chunks/ssr/[root-of-the-server]__0d752ae5._.js")
++R.c("server/chunks/ssr/[root-of-the-server]__25b15832._.js")
+ R.c("server/chunks/ssr/node_modules_next_dist_07951b80._.js")
+ R.c("server/chunks/ssr/node_modules_next_dist_70ed294b._.js")
+ R.c("server/chunks/ssr/app_b9b1292a._.js")
+ R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_ece394eb.js")
+-R.c("server/chunks/ssr/[root-of-the-server]__a9dc13f7._.js")
++R.c("server/chunks/ssr/_f979836b._.js")
+ R.c("server/chunks/ssr/node_modules_next_dist_client_components_9774470f._.js")
+ R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_forbidden_45780354.js")
+ R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_15817684.js")
+diff --git a/.next/server/app/page_client-reference-manifest.js b/.next/server/app/page_client-reference-manifest.js
+index 12fa963..1d1763e 100644
+--- a/.next/server/app/page_client-reference-manifest.js
++++ b/.next/server/app/page_client-reference-manifest.js
+@@ -1,2 +1,2 @@
+ globalThis.__RSC_MANIFEST = globalThis.__RSC_MANIFEST || {};
+-globalThis.__RSC_MANIFEST["/page"] = {"moduleLoading":{"prefix":"","crossOrigin":null},"clientModules":{"[project]/node_modules/next/dist/esm/client/components/layout-router.js <module evaluation>":{"id":39756,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/layout-router.js":{"id":39756,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/render-from-template-context.js <module evaluation>":{"id":37457,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/render-from-template-context.js":{"id":37457,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/client-page.js <module evaluation>":{"id":47257,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/client-page.js":{"id":47257,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/client-segment.js <module evaluation>":{"id":92825,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/client-segment.js":{"id":92825,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/http-access-fallback/error-boundary.js <module evaluation>":{"id":68017,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/http-access-fallback/error-boundary.js":{"id":68017,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/lib/metadata/generate/icon-mark.js <module evaluation>":{"id":27201,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/lib/metadata/generate/icon-mark.js":{"id":27201,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/lib/framework/boundary-components.js <module evaluation>":{"id":97367,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/lib/framework/boundary-components.js":{"id":97367,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>":{"id":68027,"name":"*","chunks":[],"async":false},"[project]/node_modules/next/dist/client/components/builtin/global-error.js":{"id":68027,"name":"*","chunks":[],"async":false},"[project]/node_modules/@next/third-parties/dist/ThirdPartyScriptEmbed.js <module evaluation>":{"id":61316,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/@next/third-parties/dist/ThirdPartyScriptEmbed.js":{"id":61316,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/next/dist/client/script.js <module evaluation>":{"id":79520,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/next/dist/client/script.js":{"id":79520,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/@next/third-parties/dist/google/gtm.js <module evaluation>":{"id":19598,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/@next/third-parties/dist/google/gtm.js":{"id":19598,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/@next/third-parties/dist/google/ga.js <module evaluation>":{"id":54576,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/@next/third-parties/dist/google/ga.js":{"id":54576,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/components/NavBar.js <module evaluation>":{"id":90728,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/ee3daf4d164d4ed9.js"],"async":false},"[project]/components/NavBar.js":{"id":90728,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/ee3daf4d164d4ed9.js"],"async":false},"[project]/components/HireButton.js <module evaluation>":{"id":39587,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/ee3daf4d164d4ed9.js"],"async":false},"[project]/components/HireButton.js":{"id":39587,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/ee3daf4d164d4ed9.js"],"async":false}},"ssrModuleMapping":{"39756":{"*":{"id":2420,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__c735dd4e._.js","server/chunks/ssr/node_modules_next_dist_7769b563._.js"],"async":false}},"37457":{"*":{"id":24017,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__c735dd4e._.js","server/chunks/ssr/node_modules_next_dist_7769b563._.js"],"async":false}},"47257":{"*":{"id":77682,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__c735dd4e._.js","server/chunks/ssr/node_modules_next_dist_7769b563._.js"],"async":false}},"92825":{"*":{"id":97296,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__c735dd4e._.js","server/chunks/ssr/node_modules_next_dist_7769b563._.js"],"async":false}},"68017":{"*":{"id":61660,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__c735dd4e._.js","server/chunks/ssr/node_modules_next_dist_7769b563._.js"],"async":false}},"27201":{"*":{"id":60704,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__c735dd4e._.js","server/chunks/ssr/node_modules_next_dist_7769b563._.js"],"async":false}},"97367":{"*":{"id":90574,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__c735dd4e._.js","server/chunks/ssr/node_modules_next_dist_7769b563._.js"],"async":false}},"68027":{"*":{"id":40622,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__a457c799._.js"],"async":false}},"61316":{"*":{"id":93345,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js"],"async":false}},"79520":{"*":{"id":96665,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js"],"async":false}},"19598":{"*":{"id":16941,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js"],"async":false}},"54576":{"*":{"id":22942,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js"],"async":false}},"90728":{"*":{"id":8934,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js","server/chunks/ssr/_533258d2._.js","server/chunks/ssr/node_modules_next_dist_e8c7cd8f._.js"],"async":false}},"39587":{"*":{"id":72636,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js","server/chunks/ssr/_533258d2._.js","server/chunks/ssr/node_modules_next_dist_e8c7cd8f._.js"],"async":false}}},"edgeSSRModuleMapping":{},"rscModuleMapping":{"39756":{"*":{"id":26768,"name":"*","chunks":[],"async":false}},"37457":{"*":{"id":17910,"name":"*","chunks":[],"async":false}},"47257":{"*":{"id":92977,"name":"*","chunks":[],"async":false}},"92825":{"*":{"id":48552,"name":"*","chunks":[],"async":false}},"68017":{"*":{"id":83919,"name":"*","chunks":[],"async":false}},"27201":{"*":{"id":40771,"name":"*","chunks":[],"async":false}},"97367":{"*":{"id":24150,"name":"*","chunks":[],"async":false}},"68027":{"*":{"id":82509,"name":"*","chunks":[],"async":false}},"61316":{"*":{"id":53816,"name":"*","chunks":[],"async":false}},"79520":{"*":{"id":44536,"name":"*","chunks":[],"async":false}},"19598":{"*":{"id":67158,"name":"*","chunks":[],"async":false}},"54576":{"*":{"id":76208,"name":"*","chunks":[],"async":false}},"90728":{"*":{"id":80988,"name":"*","chunks":[],"async":false}},"39587":{"*":{"id":11163,"name":"*","chunks":[],"async":false}}},"edgeRscModuleMapping":{},"entryCSSFiles":{"[project]/app/favicon.ico":[],"[project]/node_modules/next/dist/client/components/builtin/global-error":[],"[project]/app/layout":[{"path":"static/chunks/dac9ffa7d3215889.css","inlined":false}],"[project]/app/page":[{"path":"static/chunks/dac9ffa7d3215889.css","inlined":false}]},"entryJSFiles":{"[project]/app/favicon.ico":["static/chunks/ff1a16fafef87110.js","static/chunks/d2be314c3ece3fbe.js"],"[project]/node_modules/next/dist/client/components/builtin/global-error":[],"[project]/app/layout":["static/chunks/de70f1d28d9014cb.js"],"[project]/app/page":["static/chunks/de70f1d28d9014cb.js","static/chunks/ee3daf4d164d4ed9.js"]}}
++globalThis.__RSC_MANIFEST["/page"] = {"moduleLoading":{"prefix":"","crossOrigin":null},"clientModules":{"[project]/node_modules/next/dist/esm/client/components/layout-router.js <module evaluation>":{"id":39756,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/layout-router.js":{"id":39756,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/render-from-template-context.js <module evaluation>":{"id":37457,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/render-from-template-context.js":{"id":37457,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/client-page.js <module evaluation>":{"id":47257,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/client-page.js":{"id":47257,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/client-segment.js <module evaluation>":{"id":92825,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/client-segment.js":{"id":92825,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/http-access-fallback/error-boundary.js <module evaluation>":{"id":68017,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/client/components/http-access-fallback/error-boundary.js":{"id":68017,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/lib/metadata/generate/icon-mark.js <module evaluation>":{"id":27201,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/lib/metadata/generate/icon-mark.js":{"id":27201,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/lib/framework/boundary-components.js <module evaluation>":{"id":97367,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/esm/lib/framework/boundary-components.js":{"id":97367,"name":"*","chunks":["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"async":false},"[project]/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>":{"id":68027,"name":"*","chunks":[],"async":false},"[project]/node_modules/next/dist/client/components/builtin/global-error.js":{"id":68027,"name":"*","chunks":[],"async":false},"[project]/node_modules/@next/third-parties/dist/ThirdPartyScriptEmbed.js <module evaluation>":{"id":61316,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/@next/third-parties/dist/ThirdPartyScriptEmbed.js":{"id":61316,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/next/dist/client/script.js <module evaluation>":{"id":79520,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/next/dist/client/script.js":{"id":79520,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/@next/third-parties/dist/google/gtm.js <module evaluation>":{"id":19598,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/@next/third-parties/dist/google/gtm.js":{"id":19598,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/@next/third-parties/dist/google/ga.js <module evaluation>":{"id":54576,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/node_modules/@next/third-parties/dist/google/ga.js":{"id":54576,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js"],"async":false},"[project]/components/NavBar.js <module evaluation>":{"id":90728,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/components/NavBar.js":{"id":90728,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/components/Hero.js <module evaluation>":{"id":45085,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/components/Hero.js":{"id":45085,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/node_modules/next/dist/client/image-component.js <module evaluation>":{"id":5500,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/node_modules/next/dist/client/image-component.js":{"id":5500,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/node_modules/next/dist/client/app-dir/link.js <module evaluation>":{"id":22016,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/node_modules/next/dist/client/app-dir/link.js":{"id":22016,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/components/Skills.js <module evaluation>":{"id":44867,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/components/Skills.js":{"id":44867,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/components/Contact.js <module evaluation>":{"id":45930,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false},"[project]/components/Contact.js":{"id":45930,"name":"*","chunks":["/_next/static/chunks/de70f1d28d9014cb.js","/_next/static/chunks/4a969541e5f0fb97.js"],"async":false}},"ssrModuleMapping":{"39756":{"*":{"id":2420,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__32661fd1._.js","server/chunks/ssr/node_modules_next_dist_esm_eedfc1fd._.js"],"async":false}},"37457":{"*":{"id":24017,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__32661fd1._.js","server/chunks/ssr/node_modules_next_dist_esm_eedfc1fd._.js"],"async":false}},"47257":{"*":{"id":77682,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__32661fd1._.js","server/chunks/ssr/node_modules_next_dist_esm_eedfc1fd._.js"],"async":false}},"92825":{"*":{"id":97296,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__32661fd1._.js","server/chunks/ssr/node_modules_next_dist_esm_eedfc1fd._.js"],"async":false}},"68017":{"*":{"id":61660,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__32661fd1._.js","server/chunks/ssr/node_modules_next_dist_esm_eedfc1fd._.js"],"async":false}},"27201":{"*":{"id":60704,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__32661fd1._.js","server/chunks/ssr/node_modules_next_dist_esm_eedfc1fd._.js"],"async":false}},"97367":{"*":{"id":90574,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__32661fd1._.js","server/chunks/ssr/node_modules_next_dist_esm_eedfc1fd._.js"],"async":false}},"68027":{"*":{"id":40622,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__a457c799._.js"],"async":false}},"61316":{"*":{"id":93345,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js"],"async":false}},"79520":{"*":{"id":96665,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js"],"async":false}},"19598":{"*":{"id":16941,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js"],"async":false}},"54576":{"*":{"id":22942,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js"],"async":false}},"90728":{"*":{"id":8934,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js","server/chunks/ssr/_fab4108e._.js","server/chunks/ssr/node_modules_next_dist_e8c7cd8f._.js","server/chunks/ssr/_e33dd129._.js"],"async":false}},"45085":{"*":{"id":81061,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js","server/chunks/ssr/_fab4108e._.js","server/chunks/ssr/node_modules_next_dist_e8c7cd8f._.js","server/chunks/ssr/_e33dd129._.js"],"async":false}},"5500":{"*":{"id":67161,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js","server/chunks/ssr/_fab4108e._.js","server/chunks/ssr/node_modules_next_dist_e8c7cd8f._.js","server/chunks/ssr/_e33dd129._.js"],"async":false}},"22016":{"*":{"id":38246,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js","server/chunks/ssr/_fab4108e._.js","server/chunks/ssr/node_modules_next_dist_e8c7cd8f._.js","server/chunks/ssr/_e33dd129._.js"],"async":false}},"44867":{"*":{"id":42228,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js","server/chunks/ssr/_fab4108e._.js","server/chunks/ssr/node_modules_next_dist_e8c7cd8f._.js","server/chunks/ssr/_e33dd129._.js"],"async":false}},"45930":{"*":{"id":96242,"name":"*","chunks":["server/chunks/ssr/[root-of-the-server]__7c712384._.js","server/chunks/ssr/_fab4108e._.js","server/chunks/ssr/node_modules_next_dist_e8c7cd8f._.js","server/chunks/ssr/_e33dd129._.js"],"async":false}}},"edgeSSRModuleMapping":{},"rscModuleMapping":{"39756":{"*":{"id":26768,"name":"*","chunks":[],"async":false}},"37457":{"*":{"id":17910,"name":"*","chunks":[],"async":false}},"47257":{"*":{"id":92977,"name":"*","chunks":[],"async":false}},"92825":{"*":{"id":48552,"name":"*","chunks":[],"async":false}},"68017":{"*":{"id":83919,"name":"*","chunks":[],"async":false}},"27201":{"*":{"id":40771,"name":"*","chunks":[],"async":false}},"97367":{"*":{"id":24150,"name":"*","chunks":[],"async":false}},"68027":{"*":{"id":82509,"name":"*","chunks":[],"async":false}},"61316":{"*":{"id":53816,"name":"*","chunks":[],"async":false}},"79520":{"*":{"id":44536,"name":"*","chunks":[],"async":false}},"19598":{"*":{"id":67158,"name":"*","chunks":[],"async":false}},"54576":{"*":{"id":76208,"name":"*","chunks":[],"async":false}},"90728":{"*":{"id":80988,"name":"*","chunks":[],"async":false}},"45085":{"*":{"id":27695,"name":"*","chunks":[],"async":false}},"5500":{"*":{"id":43489,"name":"*","chunks":[],"async":false}},"22016":{"*":{"id":84707,"name":"*","chunks":[],"async":false}},"44867":{"*":{"id":57425,"name":"*","chunks":[],"async":false}},"45930":{"*":{"id":16491,"name":"*","chunks":[],"async":false}}},"edgeRscModuleMapping":{},"entryCSSFiles":{"[project]/app/favicon.ico":[],"[project]/node_modules/next/dist/client/components/builtin/global-error":[],"[project]/app/layout":[{"path":"static/chunks/ee5ff7776e9b9de6.css","inlined":false}],"[project]/app/page":[{"path":"static/chunks/ee5ff7776e9b9de6.css","inlined":false}]},"entryJSFiles":{"[project]/app/favicon.ico":["static/chunks/ff1a16fafef87110.js","static/chunks/d2be314c3ece3fbe.js"],"[project]/node_modules/next/dist/client/components/builtin/global-error":[],"[project]/app/layout":["static/chunks/de70f1d28d9014cb.js"],"[project]/app/page":["static/chunks/de70f1d28d9014cb.js","static/chunks/4a969541e5f0fb97.js"]}}
+diff --git a/.next/server/middleware-build-manifest.js b/.next/server/middleware-build-manifest.js
+index fe90bb1..7633da5 100644
+--- a/.next/server/middleware-build-manifest.js
++++ b/.next/server/middleware-build-manifest.js
+@@ -8,11 +8,11 @@ globalThis.__BUILD_MANIFEST = {
+   ],
+   "lowPriorityFiles": [],
+   "rootMainFiles": [
+-    "static/chunks/b79d602f30593662.js",
+-    "static/chunks/806bdb8e4a6a9b95.js",
++    "static/chunks/0fd4fded1cd1ffe8.js",
++    "static/chunks/82abf2d65f5428ae.js",
+     "static/chunks/ea80403269d20319.js",
+     "static/chunks/69be39811437728d.js",
+-    "static/chunks/turbopack-f8cf5b03b2a30b7d.js"
++    "static/chunks/turbopack-11ce6043b562d54c.js"
+   ]
+ };
+ globalThis.__BUILD_MANIFEST.lowPriorityFiles = [
+diff --git a/.next/server/next-font-manifest.js b/.next/server/next-font-manifest.js
+index 49e0460..dcd0697 100644
+--- a/.next/server/next-font-manifest.js
++++ b/.next/server/next-font-manifest.js
+@@ -1 +1 @@
+-self.__NEXT_FONT_MANIFEST="{\n  \"app\": {\n    \"[project]/app/_not-found/page\": [\n      \"static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2\"\n    ],\n    \"[project]/app/blog/[slug]/page\": [\n      \"static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2\"\n    ],\n    \"[project]/app/blog/page\": [\n      \"static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2\"\n    ],\n    \"[project]/app/hire/page\": [\n      \"static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2\"\n    ],\n    \"[project]/app/page\": [\n      \"static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2\"\n    ],\n    \"[project]/app/portfolio/page\": [\n      \"static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2\"\n    ],\n    \"[project]/app/projects/[slug]/page\": [\n      \"static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2\"\n    ],\n    \"[project]/app/projects/page\": [\n      \"static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2\"\n    ]\n  },\n  \"appUsingSizeAdjust\": true,\n  \"pages\": {},\n  \"pagesUsingSizeAdjust\": false\n}"
+\ No newline at end of file
++self.__NEXT_FONT_MANIFEST="{\n  \"app\": {},\n  \"appUsingSizeAdjust\": false,\n  \"pages\": {},\n  \"pagesUsingSizeAdjust\": false\n}"
+\ No newline at end of file
+diff --git a/.next/server/next-font-manifest.json b/.next/server/next-font-manifest.json
+index b4f5d6d..7b7649c 100644
+--- a/.next/server/next-font-manifest.json
++++ b/.next/server/next-font-manifest.json
+@@ -1,31 +1,6 @@
+ {
+-  "app": {
+-    "[project]/app/_not-found/page": [
+-      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+-    ],
+-    "[project]/app/blog/[slug]/page": [
+-      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+-    ],
+-    "[project]/app/blog/page": [
+-      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+-    ],
+-    "[project]/app/hire/page": [
+-      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+-    ],
+-    "[project]/app/page": [
+-      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+-    ],
+-    "[project]/app/portfolio/page": [
+-      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+-    ],
+-    "[project]/app/projects/[slug]/page": [
+-      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+-    ],
+-    "[project]/app/projects/page": [
+-      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+-    ]
+-  },
+-  "appUsingSizeAdjust": true,
++  "app": {},
++  "appUsingSizeAdjust": false,
+   "pages": {},
+   "pagesUsingSizeAdjust": false
+ }
+\ No newline at end of file
+diff --git a/.next/server/server-reference-manifest.js b/.next/server/server-reference-manifest.js
+index 5847100..37d86af 100644
+--- a/.next/server/server-reference-manifest.js
++++ b/.next/server/server-reference-manifest.js
+@@ -1 +1 @@
+-self.__RSC_SERVER_MANIFEST="{\n  \"node\": {},\n  \"edge\": {},\n  \"encryptionKey\": \"VLXm+qtXSet9452BklYoYevsTgRCnKkbGWyXRI+0kjY=\"\n}"
+\ No newline at end of file
++self.__RSC_SERVER_MANIFEST="{\n  \"node\": {},\n  \"edge\": {},\n  \"encryptionKey\": \"cr5nd63GPBC+isJfwBepdPSScIK5Sd+ceiUI71qrGDA=\"\n}"
+\ No newline at end of file
+diff --git a/.next/server/server-reference-manifest.json b/.next/server/server-reference-manifest.json
+index dbb3549..0f4f253 100644
+--- a/.next/server/server-reference-manifest.json
++++ b/.next/server/server-reference-manifest.json
+@@ -1,5 +1,5 @@
+ {
+   "node": {},
+   "edge": {},
+-  "encryptionKey": "VLXm+qtXSet9452BklYoYevsTgRCnKkbGWyXRI+0kjY="
++  "encryptionKey": "cr5nd63GPBC+isJfwBepdPSScIK5Sd+ceiUI71qrGDA="
+ }
+\ No newline at end of file
+diff --git a/.next/trace b/.next/trace
+index c048779..a685bee 100644
+--- a/.next/trace
++++ b/.next/trace
+@@ -1 +1 @@
+-[{"name":"generate-buildid","duration":145,"timestamp":805468037161,"id":4,"parentId":1,"tags":{},"startTime":1775494670472,"traceId":"344f754551723259"},{"name":"load-custom-routes","duration":161,"timestamp":805468037362,"id":5,"parentId":1,"tags":{},"startTime":1775494670472,"traceId":"344f754551723259"},{"name":"create-dist-dir","duration":326,"timestamp":805468037536,"id":6,"parentId":1,"tags":{},"startTime":1775494670472,"traceId":"344f754551723259"},{"name":"clean","duration":16072,"timestamp":805468044630,"id":7,"parentId":1,"tags":{},"startTime":1775494670479,"traceId":"344f754551723259"},{"name":"create-pages-mapping","duration":113,"timestamp":805468080892,"id":8,"parentId":1,"tags":{},"startTime":1775494670515,"traceId":"344f754551723259"},{"name":"collect-app-files","duration":1579,"timestamp":805468081023,"id":9,"parentId":1,"tags":{},"startTime":1775494670515,"traceId":"344f754551723259"},{"name":"create-app-mapping","duration":2510,"timestamp":805468082617,"id":10,"parentId":1,"tags":{},"startTime":1775494670517,"traceId":"344f754551723259"},{"name":"create-app-layouts","duration":59,"timestamp":805468085195,"id":11,"parentId":1,"tags":{},"startTime":1775494670520,"traceId":"344f754551723259"},{"name":"collect-default-files","duration":358,"timestamp":805468086441,"id":13,"parentId":1,"tags":{},"startTime":1775494670521,"traceId":"344f754551723259"},{"name":"generate-route-types","duration":2446,"timestamp":805468086108,"id":12,"parentId":1,"tags":{},"startTime":1775494670521,"traceId":"344f754551723259"},{"name":"public-dir-conflict-check","duration":39,"timestamp":805468088574,"id":14,"parentId":1,"tags":{},"startTime":1775494670523,"traceId":"344f754551723259"},{"name":"generate-routes-manifest","duration":8878,"timestamp":805468088638,"id":15,"parentId":1,"tags":{},"startTime":1775494670523,"traceId":"344f754551723259"},{"name":"run-turbopack","duration":20102789,"timestamp":805468133388,"id":17,"parentId":1,"tags":{},"startTime":1775494670568,"traceId":"344f754551723259"},{"name":"run-typescript","duration":114540,"timestamp":805488257169,"id":19,"parentId":1,"tags":{},"startTime":1775494690692,"traceId":"344f754551723259"},{"name":"generate-required-server-files","duration":885,"timestamp":805488371990,"id":21,"parentId":1,"tags":{},"startTime":1775494690807,"traceId":"344f754551723259"},{"name":"check-static-error-page","duration":1090,"timestamp":805488383330,"id":23,"parentId":22,"tags":{},"startTime":1775494690818,"traceId":"344f754551723259"},{"name":"is-page-static","duration":294366,"timestamp":805488392634,"id":36,"parentId":25,"tags":{},"startTime":1775494690827,"traceId":"344f754551723259"},{"name":"check-page","duration":302870,"timestamp":805488384172,"id":25,"parentId":22,"tags":{"page":"/_global-error"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"is-page-static","duration":296722,"timestamp":805488430755,"id":39,"parentId":34,"tags":{},"startTime":1775494690865,"traceId":"344f754551723259"},{"name":"check-page","duration":343147,"timestamp":805488384390,"id":34,"parentId":22,"tags":{"page":"/robots.txt"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"is-page-static","duration":354608,"timestamp":805488393049,"id":37,"parentId":24,"tags":{},"startTime":1775494690828,"traceId":"344f754551723259"},{"name":"check-page","duration":364172,"timestamp":805488383754,"id":24,"parentId":22,"tags":{"page":"/_not-found"},"startTime":1775494690818,"traceId":"344f754551723259"},{"name":"is-page-static","duration":307596,"timestamp":805488444385,"id":41,"parentId":29,"tags":{},"startTime":1775494690879,"traceId":"344f754551723259"},{"name":"check-page","duration":367730,"timestamp":805488384315,"id":29,"parentId":22,"tags":{"page":"/hire"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"is-page-static","duration":359409,"timestamp":805488397998,"id":38,"parentId":28,"tags":{},"startTime":1775494690833,"traceId":"344f754551723259"},{"name":"check-page","duration":373187,"timestamp":805488384302,"id":28,"parentId":22,"tags":{"page":"/favicon.ico"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"is-page-static","duration":313221,"timestamp":805488444879,"id":42,"parentId":31,"tags":{},"startTime":1775494690880,"traceId":"344f754551723259"},{"name":"check-page","duration":373768,"timestamp":805488384342,"id":31,"parentId":22,"tags":{"page":"/portfolio"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"is-page-static","duration":316753,"timestamp":805488445325,"id":43,"parentId":27,"tags":{},"startTime":1775494690880,"traceId":"344f754551723259"},{"name":"check-page","duration":377811,"timestamp":805488384282,"id":27,"parentId":22,"tags":{"page":"/blog"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"is-page-static","duration":340850,"timestamp":805488431155,"id":40,"parentId":35,"tags":{},"startTime":1775494690866,"traceId":"344f754551723259"},{"name":"check-page","duration":387758,"timestamp":805488384405,"id":35,"parentId":22,"tags":{"page":"/sitemap.xml"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"is-page-static","duration":326551,"timestamp":805488445707,"id":44,"parentId":30,"tags":{},"startTime":1775494690880,"traceId":"344f754551723259"},{"name":"check-page","duration":387946,"timestamp":805488384330,"id":30,"parentId":22,"tags":{"page":"/"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"is-page-static","duration":359141,"timestamp":805488446615,"id":47,"parentId":33,"tags":{},"startTime":1775494690881,"traceId":"344f754551723259"},{"name":"check-page","duration":421407,"timestamp":805488384373,"id":33,"parentId":22,"tags":{"page":"/projects"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"is-page-static","duration":481200,"timestamp":805488445872,"id":46,"parentId":32,"tags":{},"startTime":1775494690881,"traceId":"344f754551723259"},{"name":"check-page","duration":542755,"timestamp":805488384356,"id":32,"parentId":22,"tags":{"page":"/projects/[slug]"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"is-page-static","duration":492715,"timestamp":805488445832,"id":45,"parentId":26,"tags":{},"startTime":1775494690881,"traceId":"344f754551723259"},{"name":"check-page","duration":554309,"timestamp":805488384257,"id":26,"parentId":22,"tags":{"page":"/blog/[slug]"},"startTime":1775494690819,"traceId":"344f754551723259"},{"name":"static-check","duration":555566,"timestamp":805488383015,"id":22,"parentId":1,"tags":{},"startTime":1775494690818,"traceId":"344f754551723259"},{"name":"write-routes-manifest","duration":267,"timestamp":805488939015,"id":49,"parentId":1,"tags":{},"startTime":1775494691374,"traceId":"344f754551723259"},{"name":"load-dotenv","duration":11,"timestamp":805488947717,"id":52,"parentId":51,"tags":{},"startTime":1775494691382,"traceId":"344f754551723259"},{"name":"run-export-path-map","duration":244,"timestamp":805488949953,"id":53,"parentId":51,"tags":{},"startTime":1775494691385,"traceId":"344f754551723259"},{"name":"next-export","duration":1529397,"timestamp":805488947213,"id":51,"parentId":1,"tags":{},"startTime":1775494691382,"traceId":"344f754551723259"},{"name":"move-exported-app-not-found-","duration":510,"timestamp":805490482926,"id":54,"parentId":50,"tags":{},"startTime":1775494692918,"traceId":"344f754551723259"},{"name":"move-exported-app-global-error-","duration":302,"timestamp":805490483479,"id":55,"parentId":50,"tags":{},"startTime":1775494692918,"traceId":"344f754551723259"},{"name":"static-generation","duration":1543666,"timestamp":805488941209,"id":50,"parentId":1,"tags":{},"startTime":1775494691376,"traceId":"344f754551723259"},{"name":"write-routes-manifest","duration":455,"timestamp":805490485039,"id":56,"parentId":1,"tags":{},"startTime":1775494692920,"traceId":"344f754551723259"},{"name":"print-tree-view","duration":1308,"timestamp":805490498172,"id":57,"parentId":1,"tags":{},"startTime":1775494692933,"traceId":"344f754551723259"},{"name":"telemetry-flush","duration":413631,"timestamp":805490499490,"id":58,"parentId":1,"tags":{},"startTime":1775494692934,"traceId":"344f754551723259"},{"name":"next-build","duration":23535525,"timestamp":805467377701,"id":1,"tags":{"buildMode":"default","version":"16.1.6","bundler":"turbopack","has-custom-webpack-config":"false","use-build-worker":"true"},"startTime":1775494669812,"traceId":"344f754551723259"}]
++[{"name":"generate-buildid","duration":265,"timestamp":201750234,"id":4,"parentId":1,"tags":{},"startTime":1784996405319,"traceId":"10d81d74bdbdb7b2"},{"name":"load-custom-routes","duration":2096,"timestamp":201750589,"id":5,"parentId":1,"tags":{},"startTime":1784996405320,"traceId":"10d81d74bdbdb7b2"},{"name":"create-dist-dir","duration":1913,"timestamp":201752717,"id":6,"parentId":1,"tags":{},"startTime":1784996405322,"traceId":"10d81d74bdbdb7b2"},{"name":"clean","duration":6878,"timestamp":201755035,"id":7,"parentId":1,"tags":{},"startTime":1784996405324,"traceId":"10d81d74bdbdb7b2"},{"name":"create-pages-mapping","duration":197,"timestamp":201840511,"id":8,"parentId":1,"tags":{},"startTime":1784996405410,"traceId":"10d81d74bdbdb7b2"},{"name":"collect-app-files","duration":10165,"timestamp":201840831,"id":9,"parentId":1,"tags":{},"startTime":1784996405410,"traceId":"10d81d74bdbdb7b2"},{"name":"create-app-mapping","duration":6718,"timestamp":201851023,"id":10,"parentId":1,"tags":{},"startTime":1784996405420,"traceId":"10d81d74bdbdb7b2"},{"name":"create-app-layouts","duration":144,"timestamp":201857773,"id":11,"parentId":1,"tags":{},"startTime":1784996405427,"traceId":"10d81d74bdbdb7b2"},{"name":"collect-default-files","duration":526,"timestamp":201859895,"id":13,"parentId":1,"tags":{},"startTime":1784996405429,"traceId":"10d81d74bdbdb7b2"},{"name":"generate-route-types","duration":10339,"timestamp":201859351,"id":12,"parentId":1,"tags":{},"startTime":1784996405428,"traceId":"10d81d74bdbdb7b2"},{"name":"public-dir-conflict-check","duration":80,"timestamp":201869730,"id":14,"parentId":1,"tags":{},"startTime":1784996405439,"traceId":"10d81d74bdbdb7b2"},{"name":"generate-routes-manifest","duration":1750,"timestamp":201869875,"id":15,"parentId":1,"tags":{},"startTime":1784996405439,"traceId":"10d81d74bdbdb7b2"},{"name":"run-turbopack","duration":15521083,"timestamp":201874540,"id":17,"parentId":1,"tags":{},"startTime":1784996405444,"traceId":"10d81d74bdbdb7b2"},{"name":"run-typescript","duration":265117,"timestamp":217425991,"id":19,"parentId":1,"tags":{},"startTime":1784996420995,"traceId":"10d81d74bdbdb7b2"},{"name":"generate-required-server-files","duration":1472,"timestamp":217691730,"id":21,"parentId":1,"tags":{},"startTime":1784996421261,"traceId":"10d81d74bdbdb7b2"},{"name":"check-static-error-page","duration":10184,"timestamp":217726347,"id":23,"parentId":22,"tags":{},"startTime":1784996421295,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":714646,"timestamp":217738328,"id":37,"parentId":24,"tags":{},"startTime":1784996421307,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":725963,"timestamp":217727105,"id":24,"parentId":22,"tags":{"page":"/_not-found"},"startTime":1784996421296,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":714991,"timestamp":217738651,"id":38,"parentId":25,"tags":{},"startTime":1784996421308,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":726103,"timestamp":217727938,"id":25,"parentId":22,"tags":{"page":"/_global-error"},"startTime":1784996421297,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":763931,"timestamp":217739326,"id":39,"parentId":29,"tags":{},"startTime":1784996421308,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":771061,"timestamp":217732262,"id":29,"parentId":22,"tags":{"page":"/favicon.ico"},"startTime":1784996421301,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":778438,"timestamp":217739846,"id":40,"parentId":35,"tags":{},"startTime":1784996421309,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":781912,"timestamp":217736418,"id":35,"parentId":22,"tags":{"page":"/robots.txt"},"startTime":1784996421305,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":796605,"timestamp":217739947,"id":41,"parentId":36,"tags":{},"startTime":1784996421309,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":800114,"timestamp":217736475,"id":36,"parentId":22,"tags":{"page":"/sitemap.xml"},"startTime":1784996421305,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":782821,"timestamp":217762533,"id":42,"parentId":30,"tags":{},"startTime":1784996421332,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":813078,"timestamp":217732306,"id":30,"parentId":22,"tags":{"page":"/hire"},"startTime":1784996421301,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":788222,"timestamp":217762579,"id":43,"parentId":32,"tags":{},"startTime":1784996421332,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":814609,"timestamp":217736241,"id":32,"parentId":22,"tags":{"page":"/portfolio"},"startTime":1784996421305,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":1244156,"timestamp":217762607,"id":44,"parentId":26,"tags":{},"startTime":1784996421332,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":1278605,"timestamp":217728237,"id":26,"parentId":22,"tags":{"page":"/blog/[slug]"},"startTime":1784996421297,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":1249686,"timestamp":217762622,"id":45,"parentId":27,"tags":{},"startTime":1784996421332,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":1284054,"timestamp":217728303,"id":27,"parentId":22,"tags":{"page":"/blog"},"startTime":1784996421297,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":1278159,"timestamp":217762675,"id":46,"parentId":28,"tags":{},"startTime":1784996421332,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":1308776,"timestamp":217732096,"id":28,"parentId":22,"tags":{"page":"/design"},"startTime":1784996421301,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":1294014,"timestamp":217762789,"id":47,"parentId":31,"tags":{},"startTime":1784996421332,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":1320705,"timestamp":217736132,"id":31,"parentId":22,"tags":{"page":"/"},"startTime":1784996421305,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":1299618,"timestamp":217764361,"id":48,"parentId":33,"tags":{},"startTime":1784996421333,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":1327693,"timestamp":217736346,"id":33,"parentId":22,"tags":{"page":"/projects/[slug]"},"startTime":1784996421305,"traceId":"10d81d74bdbdb7b2"},{"name":"is-page-static","duration":1304258,"timestamp":217764430,"id":49,"parentId":34,"tags":{},"startTime":1784996421333,"traceId":"10d81d74bdbdb7b2"},{"name":"check-page","duration":1332330,"timestamp":217736389,"id":34,"parentId":22,"tags":{"page":"/projects"},"startTime":1784996421305,"traceId":"10d81d74bdbdb7b2"},{"name":"static-check","duration":1342989,"timestamp":217725758,"id":22,"parentId":1,"tags":{},"startTime":1784996421295,"traceId":"10d81d74bdbdb7b2"},{"name":"write-routes-manifest","duration":252,"timestamp":219069389,"id":51,"parentId":1,"tags":{},"startTime":1784996422638,"traceId":"10d81d74bdbdb7b2"},{"name":"load-dotenv","duration":34,"timestamp":219077348,"id":54,"parentId":53,"tags":{},"startTime":1784996422646,"traceId":"10d81d74bdbdb7b2"},{"name":"run-export-path-map","duration":406,"timestamp":219081955,"id":55,"parentId":53,"tags":{},"startTime":1784996422651,"traceId":"10d81d74bdbdb7b2"},{"name":"next-export","duration":3315291,"timestamp":219076490,"id":53,"parentId":1,"tags":{},"startTime":1784996422645,"traceId":"10d81d74bdbdb7b2"},{"name":"move-exported-app-not-found-","duration":684,"timestamp":222395023,"id":56,"parentId":52,"tags":{},"startTime":1784996425964,"traceId":"10d81d74bdbdb7b2"},{"name":"move-exported-app-global-error-","duration":482,"timestamp":222395825,"id":57,"parentId":52,"tags":{},"startTime":1784996425965,"traceId":"10d81d74bdbdb7b2"},{"name":"static-generation","duration":3325096,"timestamp":219072939,"id":52,"parentId":1,"tags":{},"startTime":1784996422642,"traceId":"10d81d74bdbdb7b2"},{"name":"write-routes-manifest","duration":473,"timestamp":222398300,"id":58,"parentId":1,"tags":{},"startTime":1784996425967,"traceId":"10d81d74bdbdb7b2"},{"name":"print-tree-view","duration":7161,"timestamp":222412819,"id":59,"parentId":1,"tags":{},"startTime":1784996425982,"traceId":"10d81d74bdbdb7b2"},{"name":"telemetry-flush","duration":494302,"timestamp":222419996,"id":60,"parentId":1,"tags":{},"startTime":1784996425989,"traceId":"10d81d74bdbdb7b2"},{"name":"next-build","duration":21186218,"timestamp":201728108,"id":1,"tags":{"buildMode":"default","version":"16.1.6","bundler":"turbopack","has-custom-webpack-config":"false","use-build-worker":"true"},"startTime":1784996405297,"traceId":"10d81d74bdbdb7b2"}]
+diff --git a/app/layout.js b/app/layout.js
+index a6c8463..2caea1c 100644
+--- a/app/layout.js
++++ b/app/layout.js
+@@ -9,19 +9,19 @@ const montserrat = Montserrat({
+ 
+ export const metadata = {
+   title: {
+-    default: "Nitish Poonia — React Native & Frontend Developer",
++    default: "Nitish Poonia — Software Developer",
+     template: "%s | Nitish Poonia",
+   },
+   description:
+-    "React Native and React developer with 1.5+ years shipping production mobile and web apps. Open to full-time opportunities.",
++    "Software developer building mobile and web products end to end — React Native and Next.js on the front, Node and PostgreSQL behind. Open to full-time roles.",
+   metadataBase: new URL("https://nitishpoonia.in"),
+   alternates: {
+     canonical: "https://nitishpoonia.in",
+   },
+   openGraph: {
+-    title: "Nitish Poonia — React Native & Frontend Developer",
++    title: "Nitish Poonia — Software Developer",
+     description:
+-      "React Native and React developer with 1.5+ years shipping production mobile and web apps. Open to full-time opportunities.",
++      "Software developer building mobile and web products end to end — React Native and Next.js on the front, Node and PostgreSQL behind. Open to full-time roles.",
+     url: "https://nitishpoonia.in",
+     siteName: "Nitish Poonia",
+     locale: "en_IN",
+@@ -31,15 +31,15 @@ export const metadata = {
+         url: "https://nitishpoonia.in/og-image.png",
+         width: 1200,
+         height: 630,
+-        alt: "Nitish Poonia — React Native & Frontend Developer",
++        alt: "Nitish Poonia — Software Developer",
+       },
+     ],
+   },
+   twitter: {
+     card: "summary_large_image",
+-    title: "Nitish Poonia — React Native & Frontend Developer",
++    title: "Nitish Poonia — Software Developer",
+     description:
+-      "React Native and React developer with 1.5+ years shipping production mobile and web apps. Open to full-time opportunities.",
++      "Software developer building mobile and web products end to end — React Native and Next.js on the front, Node and PostgreSQL behind. Open to full-time roles.",
+     creator: "@nitishpoonia",
+     images: ["https://nitishpoonia.in/og-image.png"],
+   },
+diff --git a/app/page.js b/app/page.js
+index 8367a3e..fb5fde2 100644
+--- a/app/page.js
++++ b/app/page.js
+@@ -7,23 +7,23 @@ import Skills from "@/components/Skills";
+ import Contact from "@/components/Contact";
+ 
+ export const metadata = {
+-  title: "Nitish Poonia — React Native & Frontend Developer",
++  title: "Nitish Poonia — Software Developer",
+   description:
+-    "React Native and React developer with 1.5+ years shipping production mobile and web apps. Currently building on a healthcare records app. Open to full-time roles.",
++    "Software developer building mobile and web products end to end — React Native and Next.js on the front, Node and PostgreSQL behind. Open to full-time roles.",
+   alternates: { canonical: "https://nitishpoonia.in" },
+   openGraph: {
+-    title: "Nitish Poonia — React Native & Frontend Developer",
++    title: "Nitish Poonia — Software Developer",
+     description:
+-      "React Native and React developer with 1.5+ years shipping production mobile and web apps. Currently building on a healthcare records app. Open to full-time roles.",
++      "Software developer building mobile and web products end to end — React Native and Next.js on the front, Node and PostgreSQL behind. Open to full-time roles.",
+     url: "https://nitishpoonia.in",
+     type: "website",
+     siteName: "Nitish Poonia",
+   },
+   twitter: {
+     card: "summary_large_image",
+-    title: "Nitish Poonia — React Native & Frontend Developer",
++    title: "Nitish Poonia — Software Developer",
+     description:
+-      "React Native and React developer with 1.5+ years shipping production mobile and web apps. Open to full-time roles.",
++      "Software developer — React Native, Next.js, Node and PostgreSQL. Open to full-time roles.",
+     creator: "@nitishpoonia",
+   },
+ };
+diff --git a/components/About.js b/components/About.js
+index 0b19f01..642a773 100644
+--- a/components/About.js
++++ b/components/About.js
+@@ -67,7 +67,7 @@ export default function About() {
+             color: 'var(--ink)',
+             letterSpacing: '-0.01em',
+           }}>
+-            React Native and React developer with 1.5+ years shipping production mobile and web apps — comfortable picking up unfamiliar codebases and working independently.
++            Software developer, two years in — building mobile and web products end to end, and comfortable picking up a large codebase I didn&apos;t write and shipping into it.
+           </p>
+         </div>
+       </div>
+diff --git a/components/Experience.js b/components/Experience.js
+index 816abc9..7025e59 100644
+--- a/components/Experience.js
++++ b/components/Experience.js
+@@ -4,31 +4,35 @@ import SectionHeader from "./SectionHeader";
+ const experiences = [
+   {
+     company: "Arthtech Supports",
+-    role: "Software Developer — MDR (MyDigiRecords)",
++    role: "Software Developer",
+     period: "Mar 2026 – Present",
+     responsibilities: [
+-      "Took ownership of an existing production React Native app via knowledge transfer after the prior developer left.",
+-      "Fixed a production Android crash (Fragment$InstantiationException) affecting live users.",
+-      "Implemented multi-device session management, including authentication failure monitoring and notification tap handling.",
+-      "Own incremental feature development and frontend bug resolution on the app.",
++      "Built an AI chat module into GoalMogul, an existing production React app, using the OpenAI API to take a user from a stated goal to an accountability partner chosen from their contacts.",
++      "Replaced scattered fetch calls with a single axios client and a token-refresh interceptor, removing duplicate and dead requests and the auth token being attached by hand in every call.",
++      "On MDR, a React Native medical records app, built a security flow for repeated failed logins — on the next successful login the user sees the attempt and can end all other sessions and reset their password.",
++      "Traced paying users being blocked from the face-scan vitals module to a subscription gate implemented inconsistently across the app, and made a single gate authoritative.",
++      "Wrote signup, login, emailed-token password reset and profile CRUD endpoints in Express and PostgreSQL, with bcrypt hashing and Redis-backed rate limiting.",
++      "Mentor a junior frontend developer and set branching and commit conventions for a three-developer frontend team.",
+     ],
+   },
+   {
+     company: "Vision Vivante",
+     role: "Software Developer",
+-    period: "Dec 2024 – Jan 2026",
++    period: "Dec 2024 – Feb 2026",
+     responsibilities: [
+-      "Built and shipped a production NFC attendance app in React Native, deployed across multiple company facilities.",
+-      "Owned frontend, API integration, and built two native modules for an OS-independent clock system to prevent device time manipulation.",
+-      "Built frontend to 70–80% completion across three additional products — a hotel booking platform, a gaming app, and an agri social platform — in a fast-moving, under-resourced environment; owned full-stack development independently on the gaming app.",
++      "Sole developer on an NFC time tracking app, used daily by around 20 staff and live on the App Store — every structural decision, from folder layout to libraries, was mine.",
++      "Wrote native iOS and Android modules so shift timing survived device clock changes, and queued scans on-device where facilities had no network.",
++      "Built the booking frontend for a multi-supplier hotel app — search, filtering, guest details, Google sign-in — and integrated Stripe for one-off payments.",
++      "Built a social feed for an agriculture lecturer and his students: infinite scroll, likes and comments with React Query optimistic updates, and polled messaging.",
+     ],
+   },
+   {
+-    company: "Self-Employed",
+-    role: "Freelance Web Developer",
+-    period: "2026 – Present",
++    company: "Freelance",
++    role: "Web Developer",
++    period: "2025 – Present",
+     responsibilities: [
+-      "Building a client website using Next.js and Sanity.io as a headless CMS, handling requirements, design implementation, and content modeling directly with the client.",
++      "nivasaantarika.in — Next.js site for an interior designer, with Sanity as the CMS so she edits her own content without a developer.",
++      "keshavpackersmovers.com — designed in Figma and approved with the client, then built with on-page SEO and an enquiry form that emails through.",
+     ],
+   },
+ ];
+diff --git a/components/Hero.js b/components/Hero.js
+index 7e52228..8d05e84 100644
+--- a/components/Hero.js
++++ b/components/Hero.js
+@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
+ import ResumeButton from "./ResumeButton";
+ 
+ const roles = [
+-  "Open to full-time opportunities",
+-  "1.5+ years shipping production apps",
+-  "React Native · React · Next.js",
++  "Open to full-time roles",
++  "Two years shipping production apps",
++  "React Native · Next.js · Node · Postgres",
+   "Comfortable in unfamiliar codebases",
+ ];
+ 
+@@ -67,15 +67,15 @@ export default function Hero() {
+             marginBottom: "clamp(2rem, 4vw, 3rem)",
+           }}
+         >
+-          React Native and React developer with 1.5+ years shipping
+-          production mobile and web apps — currently owning frontend on a
+-          healthcare records app.
++          Software developer, two years in. I build mobile and web products
++          end to end — React Native and Next.js on the front, Node and
++          Postgres behind — mostly inside large codebases I didn&apos;t write.
+         </p>
+ 
+         {[
+-          { label: "Experience", value: "1.5+ Years" },
+-          { label: "Apps shipped", value: "3 Production apps" },
+-          { label: "Stack", value: "React Native · Next.js · Node.js" },
++          { label: "Experience", value: "2 Years" },
++          { label: "Shipped", value: "EDA Time Tracker · App Store" },
++          { label: "Stack", value: "React Native · Next.js · Node · Postgres" },
+           { label: "Availability", value: "Open to full-time roles" },
+         ].map(({ label, value }) => (
+           <div
+diff --git a/components/Skills.js b/components/Skills.js
+index aa3c840..f270f4f 100644
+--- a/components/Skills.js
++++ b/components/Skills.js
+@@ -8,17 +8,12 @@ const categories = [
+     solid: true,
+     skills: [
+       "React Native",
++      "Native Modules (iOS + Android)",
++      "NFC",
++      "Offline Queueing",
+       "Async Storage",
+-      "Firebase Notifications",
+-      "Redux Saga",
+       "React Query",
+-      "NFC Integration",
+-      "Stripe Payments",
+-      "React Navigation",
+-      "Native Modules", // ← you wrote Android + iOS native bridges
+-      "Offline Sync", // ← you built the queue system
+-      "App Store Submission", // ← you shipped to both stores
+-      "Push Notifications", // ← Firebase Notifications implies this
++      "App Store & Play Store Releases",
+     ],
+   },
+   {
+@@ -27,20 +22,10 @@ const categories = [
+     skills: [
+       "React",
+       "Next.js",
++      "TypeScript",
+       "Tailwind CSS",
+-      "TypeScript", // ← standard in RN professional projects
+-      "REST APIs", // ← you consumed APIs across all three apps
+-      "SEO & Meta Tags", // ← you built this into your portfolio
+-    ],
+-  },
+-  {
+-    label: "Design",
+-    solid: true,
+-    skills: [
+-      "Figma",
+-      "UI Design", // ← you went from wireframe to implementation
+-      "Responsive Design", // ← you built responsive layouts
+-      "Design to Code", // ← explicitly mentioned in your experience
++      "REST APIs",
++      "SEO & Meta Tags",
+     ],
+   },
+   {
+@@ -50,21 +35,20 @@ const categories = [
+       "Node.js",
+       "Express",
+       "PostgreSQL",
+-      "MongoDB",
+-      "REST API Design", // ← you collaborated on pagination API design
+-      "Cursor Pagination", // ← you implemented this specifically
++      "Redis",
++      "REST API Design",
++      "bcrypt",
+     ],
+   },
+   {
+-    label: "DevOps & Cloud",
++    label: "Integrations",
+     solid: false,
+-    skills: [
+-      "Render",
+-      "Supabase",
+-      "Vercel",
+-      "Git & GitHub", // ← implied by your entire workflow
+-      "CI/CD via Vercel", // ← you use this for your portfolio
+-    ],
++    skills: ["Stripe", "OpenAI API", "Sanity CMS", "Google Sign-In"],
++  },
++  {
++    label: "Tools & Cloud",
++    solid: false,
++    skills: ["Git & GitHub", "Render", "Vercel", "Figma", "Cursor"],
+   },
+ ];
+ 
+diff --git a/content/projects/campus-social-platform.mdx b/content/projects/campus-social-platform.mdx
+index 955c915..cdd76d5 100644
+--- a/content/projects/campus-social-platform.mdx
++++ b/content/projects/campus-social-platform.mdx
+@@ -1,374 +1,33 @@
+ ---
+-title: "Campus Social Media Platform"
++title: "Farmer's Feed — Social Platform"
+ slug: "campus-social-platform"
+-tagline: "A full-featured social platform for students and teachers — feeds, messaging, groups, and rich media posts built with TypeScript and React Query"
++tagline: "A feed for an agriculture lecturer and his students — posts, likes, comments and messaging"
+ role: "Frontend Developer"
+ company: "Vision Vivante"
+-timeline: "Dec 2024 – Dec 2025"
+-tags:
+-  [
+-    "React Native",
+-    "TypeScript",
+-    "React Query",
+-    "Optimistic Updates",
+-    "Rich Text",
+-  ]
++timeline: "2025"
++tags: ["React Native", "TypeScript", "React Query", "Optimistic Updates"]
++type: "case-study"
+ published: true
+ ---
+ 
+-## Overview
++## What it is
+ 
+-The Campus Social Platform was my third professional project at Vision
+-Vivante and the most feature-complete app I had worked on up to that point.
+-It is a social network built specifically for educational institutions —
+-students and teachers get a shared space for a home feed, direct and group
+-messaging, community groups, user profiles, notifications, and rich media
+-posts with text formatting, images, and attachments.
++A client — an agriculture lecturer — wanted something he and his students could
++use the way they already used Facebook. Posts, likes, comments, messages.
+ 
+-By this point in my career the fundamentals were solid. Navigation setup,
+-auth flows, folder structure — none of that required much thought. What this
+-project gave me was exposure to things I had not touched before: TypeScript
+-in a production codebase, React Query for server state, optimistic updates
+-for real-time feel, rich text input, and backend responses with a complexity
+-level I had not encountered on the previous two apps.
++## What I built
+ 
+-## AI in This Project
++- The feed, with infinite scroll
++- Likes and comments using React Query optimistic updates, so a tap registers
++  immediately rather than waiting on the round trip
++- Messaging, handled by polling rather than sockets
+ 
+-The TypeScript interfaces and adapter functions in this project were
+-largely scaffolded with Copilot, which significantly accelerated the
+-normalisation layer between the complex backend responses and the UI
+-components. The structure was correct. The field mappings required
+-manual verification against the actual API documentation.
++This was my first time using React Query, and optimistic updates were the reason
++to reach for it: on a slow connection, a like that takes a second to appear feels
++broken even when nothing is wrong.
+ 
+-The optimistic update implementation for likes and comments required
+-careful reasoning about React Query's cache invalidation behaviour.
+-Copilot produced a version that worked in the happy path but did not
+-correctly handle the rollback on error. I rewrote the onError handler
+-manually after testing edge cases.
++## What it didn't have
+ 
+-## Challenge 1: Adopting TypeScript Mid-Career for the First Time
+-
+-The previous two apps were JavaScript. This project was TypeScript from the
+-start. I had read about TypeScript but had never used it in a real codebase
+-under delivery pressure.
+-
+-### Solution
+-
+-The honest experience was that TypeScript slowed me down in the first two
+-weeks. Every component prop needed a type, every API response needed an
+-interface, and the compiler surfaced errors I would have previously only
+-found at runtime — sometimes in ways I did not immediately understand how
+-to fix.
+-
+-What changed my view was the first time TypeScript caught a real bug before
+-it reached the app. I had passed a `userId` where a `postId` was expected —
+-both were strings, so JavaScript would have accepted it silently. TypeScript
+-flagged it at compile time. That one catch saved a debugging session.
+-
+-The pattern that made TypeScript manageable was typing API responses at the
+-boundary and letting inference handle the rest. Rather than annotating every
+-variable, I defined interfaces for what came back from the backend and let
+-TypeScript figure out everything downstream from there.
+-
+-```ts
+-// types/post.ts — typed at the boundary
+-interface Author {
+-  id: string;
+-  name: string;
+-  avatarUrl: string;
+-  role: "student" | "teacher";
+-}
+-
+-interface Post {
+-  id: string;
+-  author: Author;
+-  content: string;
+-  mediaUrls: string[];
+-  likesCount: number;
+-  commentsCount: number;
+-  likedByMe: boolean;
+-  createdAt: string;
+-}
+-
+-interface FeedResponse {
+-  posts: Post[];
+-  nextCursor: string | null;
+-  hasNextPage: boolean;
+-}
+-```
+-
+-Once the interfaces were defined, TypeScript handled the rest. Component
+-props were inferred, hook return types were inferred, and the compiler
+-pointed to exactly the right line whenever I made a mistake.
+-
+-## Challenge 2: Normalising Complex Backend Responses
+-
+-The backend responses on this project were significantly more complex than
+-anything I had worked with before. A single feed post response included
+-the post content, the author object, nested comment previews, reaction
+-summaries, group context if the post was in a group, and attachment
+-metadata. The shape of the response was not designed around what the UI
+-needed — it was designed around what the database could return efficiently.
+-
+-Consuming this directly in components meant deeply nested property access
+-everywhere, conditional checks at every level, and UI components that knew
+-too much about the backend data structure.
+-
+-### Solution
+-
+-I introduced a normalisation layer between the API response and the UI —
+-a set of adapter functions that transformed the raw response into the
+-shape the components actually needed. Components never touched the raw
+-API response.
+-
+-```ts
+-// lib/adapters/post.ts
+-import { Post, FeedResponse } from "../types/post";
+-
+-const adaptAuthor = (raw: any): Author => ({
+-  id: raw.user_id,
+-  name: `${raw.first_name} ${raw.last_name}`,
+-  avatarUrl: raw.profile_picture_url ?? "",
+-  role: raw.user_type === "EDUCATOR" ? "teacher" : "student",
+-});
+-
+-const adaptPost = (raw: any): Post => ({
+-  id: raw.post_id,
+-  author: adaptAuthor(raw.posted_by),
+-  content: raw.post_body ?? "",
+-  mediaUrls: (raw.attachments ?? []).map((a: any) => a.file_url),
+-  likesCount: raw.reaction_count ?? 0,
+-  commentsCount: raw.comment_count ?? 0,
+-  likedByMe: raw.viewer_has_reacted ?? false,
+-  createdAt: raw.created_at,
+-});
+-
+-export const adaptFeedResponse = (raw: any): FeedResponse => ({
+-  posts: (raw.data ?? []).map(adaptPost),
+-  nextCursor: raw.pagination?.next_cursor ?? null,
+-  hasNextPage: raw.pagination?.has_more ?? false,
+-});
+-```
+-
+-Every component now received clean, predictable, typed data. When the
+-backend changed a field name — which happened twice during development —
+-I updated one adapter function and nothing else changed. The components
+-were completely isolated from the backend data shape.
+-
+-## Challenge 3: Optimistic Updates for Likes and Comments
+-
+-A social feed lives and dies by how responsive interactions feel. If tapping
+-a like button requires a network round trip before the UI updates, the app
+-feels broken compared to Instagram or Twitter where the like registers
+-instantly.
+-
+-The challenge is that optimistic updates require rolling back gracefully if
+-the network request fails — showing the like, then un-showing it if the
+-server rejects it, without confusing the user.
+-
+-### Solution
+-
+-React Query's `useMutation` hook has built-in support for optimistic updates
+-through its `onMutate`, `onError`, and `onSettled` callbacks. The pattern
+-is to update the cache immediately in `onMutate`, store the previous state,
+-and restore it in `onError` if the request fails.
+-
+-```ts
+-const useLikePost = (postId: string) => {
+-  const queryClient = useQueryClient();
+-
+-  return useMutation({
+-    mutationFn: () => api.likePost(postId),
+-
+-    onMutate: async () => {
+-      // Cancel any in-flight refetches
+-      await queryClient.cancelQueries({ queryKey: ["feed"] });
+-
+-      // Snapshot previous state for rollback
+-      const previousFeed = queryClient.getQueryData<FeedResponse>(["feed"]);
+-
+-      // Optimistically update the cache
+-      queryClient.setQueryData<FeedResponse>(["feed"], (old) => {
+-        if (!old) return old;
+-        return {
+-          ...old,
+-          posts: old.posts.map((post) =>
+-            post.id === postId
+-              ? {
+-                  ...post,
+-                  likedByMe: true,
+-                  likesCount: post.likesCount + 1,
+-                }
+-              : post,
+-          ),
+-        };
+-      });
+-
+-      return { previousFeed };
+-    },
+-
+-    onError: (err, _, context) => {
+-      // Roll back to the snapshot on failure
+-      if (context?.previousFeed) {
+-        queryClient.setQueryData(["feed"], context.previousFeed);
+-      }
+-    },
+-
+-    onSettled: () => {
+-      // Sync with server after success or failure
+-      queryClient.invalidateQueries({ queryKey: ["feed"] });
+-    },
+-  });
+-};
+-```
+-
+-The result is a like interaction that feels instant. Tapping the heart
+-immediately increments the count and fills the icon. If the server rejects
+-the request — rate limiting, network failure, auth error — the UI rolls
+-back silently and the user can try again.
+-
+-## Challenge 4: Rich Text Input
+-
+-Posts on the platform supported text formatting — bold, italic, mentions,
+-and hashtags — alongside media attachments. React Native's built-in
+-`TextInput` does not support any of this. It is a plain text field.
+-
+-### Solution
+-
+-I used `react-native-rich-editor` which provides a WebView-based rich text
+-editor and a toolbar component for formatting controls. The editor outputs
+-HTML which is stored and rendered consistently across posts.
+-
+-```tsx
+-import {
+-  RichEditor,
+-  RichToolbar,
+-  actions,
+-} from "react-native-pell-rich-editor";
+-import { useRef } from "react";
+-
+-const PostComposer = ({ onSubmit }: { onSubmit: (html: string) => void }) => {
+-  const editorRef = useRef<RichEditor>(null);
+-
+-  return (
+-    <View style={{ flex: 1 }}>
+-      <RichToolbar
+-        editor={editorRef}
+-        actions={[
+-          actions.setBold,
+-          actions.setItalic,
+-          actions.insertBulletsList,
+-          actions.insertLink,
+-        ]}
+-      />
+-      <RichEditor
+-        ref={editorRef}
+-        placeholder="What's on your mind?"
+-        onChange={(html) => {
+-          // html is stored and sent to backend
+-        }}
+-        style={{ flex: 1, minHeight: 200 }}
+-      />
+-      <Button
+-        title="Post"
+-        onPress={async () => {
+-          const html = await editorRef.current?.getContentHtml();
+-          if (html) onSubmit(html);
+-        }}
+-      />
+-    </View>
+-  );
+-};
+-```
+-
+-The WebView approach means the editor behaves like a browser text field —
+-keyboard handling, selection, and formatting all work natively without custom
+-implementation. The tradeoff is a slight performance overhead from the WebView
+-and some styling limitations since the editor's interior is an iframe.
+-
+-## Challenge 5: Feature-Based Folder Structure
+-
+-The first two apps used a layer-based folder structure — all screens in one
+-folder, all components in another, all hooks in another. At the scale of the
+-campus app, with eight major features each containing their own screens,
+-components, hooks, and types, this structure became unnavigable. Finding
+-the hook for the messaging feature meant scanning through a hooks folder
+-containing hooks for every other feature as well.
+-
+-### Solution
+-
+-I switched to a feature-based structure where everything related to a feature
+-lives together.
+-
+-```
+-src/
+-  features/
+-    feed/
+-      components/
+-        PostCard.tsx
+-        PostSkeleton.tsx
+-        FeedList.tsx
+-      hooks/
+-        useFeed.ts
+-        useLikePost.ts
+-      screens/
+-        FeedScreen.tsx
+-      types/
+-        post.types.ts
+-      adapters/
+-        post.adapter.ts
+-    messaging/
+-      components/
+-      hooks/
+-      screens/
+-    groups/
+-    profile/
+-    notifications/
+-  shared/
+-    components/
+-    hooks/
+-    lib/
+-  navigation/
+-  types/
+-```
+-
+-Each feature is a self-contained module. Adding a new feature means adding
+-a new folder. Deleting a feature means deleting a folder. Shared components
+-and utilities live in `shared/` and are explicitly imported rather than
+-implicitly assumed to belong to any feature.
+-
+-This structure also made it easier to work on the app alongside the NFC
+-project. When switching context between the two codebases, the feature
+-folders made it immediately obvious where to look for any piece of code
+-without having to remember the full file tree.
+-
+-## Results
+-
+-- TypeScript caught multiple bugs before they reached testing, including
+-  mismatched ID types that would have caused silent data corruption
+-- Optimistic updates on likes and comments made interactions feel instant
+-  regardless of network conditions
+-- The adapter pattern isolated the UI completely from two backend field
+-  name changes during development — zero component updates required
+-- Feature-based folder structure made the codebase navigable across eight
+-  distinct features without cross-contamination
+-
+-## Lessons Learned
+-
+-TypeScript's upfront cost is real. The first two weeks were slower because
+-of it. The payoff is that bugs which would have reached production on a
+-JavaScript codebase get caught at compile time. For a team project or any
+-codebase that will be maintained past the initial delivery, the tradeoff is
+-clearly worth it.
+-
+-The adapter pattern was the most transferable learning from this project.
+-Every project I work on now has a normalisation layer between the API and
+-the UI. Backend responses are designed for database efficiency, not UI
+-convenience — treating them as if they were the same thing is what creates
+-deeply nested conditional rendering and fragile components that break every
+-time the backend changes a field name.
+-
+-Optimistic updates should be the default for any interaction the user
+-expects to be instant — likes, follows, reactions, read receipts. The
+-React Query implementation is not much more code than a regular mutation
+-and the UX difference is significant.
++No offline support. Worth stating plainly — it was a connected-only app, and the
++polling approach for messages was a pragmatic choice rather than the right
++long-term one.
+diff --git a/content/projects/hotel-booking.mdx b/content/projects/hotel-booking.mdx
+index 8728ff5..3c05f79 100644
+--- a/content/projects/hotel-booking.mdx
++++ b/content/projects/hotel-booking.mdx
+@@ -1,217 +1,30 @@
+ ---
+ title: "Hotel Booking App"
+ slug: "hotel-booking"
+-tagline: "A full-featured hotel discovery and booking platform with Stripe payments and a seamless guest checkout flow"
+-role: "Lead Developer"
++tagline: "Booking frontend across multiple hotel suppliers, with Stripe checkout"
++role: "Frontend Developer"
+ company: "Vision Vivante"
+-timeline: "April 2025 – Dec 2025"
+-tags: ["React Native", "Stripe", "Node.js", "React Navigation", "FlatList"]
++timeline: "Apr 2025 – Dec 2025"
++tags: ["React Native", "Stripe", "REST APIs", "Google Sign-In"]
++type: "case-study"
+ published: true
+ ---
+ 
+-## Overview
++## What it is
+ 
+-The Hotel Booking App was my second professional project at Vision Vivante,
+-built in parallel with the NFC Time Tracker. Users can search, filter, and
+-book hotels with Stripe card payments. A guest flow lets anyone browse and
+-reach checkout without an account — authentication is only triggered at the
+-point of payment.
++A hotel booking app pulling inventory from several supplier APIs. I built the
++frontend flow end to end: search, filtering, selecting a hotel, entering guest
++details, signing in with Google, and paying.
+ 
+-What made this project unique in terms of how I worked on it was the
+-parallel delivery. I managed my day in two blocks, switching between the
+-NFC app and this one as tasks came in for each. It was the first time I had
+-to context-switch at a professional level and maintain momentum on two
+-separate codebases simultaneously.
++## Multiple suppliers, one UI
+ 
+-The original scope was much larger — the plan included search for hotels,
+-flights, cars, and more. That scope was dropped early on and the focus
+-narrowed to hotels only. This left some traces in the initial project
+-structure that I had to clean up as the requirements became clearer.
++Each supplier returned room data in its own shape. Rather than let that spread
++into the screens as per-supplier conditionals, the responses were converted into
++a single shape before the UI saw them, so the booking flow didn't need to know
++where a result came from.
+ 
+-## AI in This Project
++## Stripe
+ 
+-Copilot was used for the Stripe payment integration scaffolding and
+-the guest-to-authenticated redirect flow. The cursor pagination
+-implementation for the hotels list was drafted with AI assistance
+-and then reviewed and adjusted — the initial output used offset
+-pagination which was incorrect for our use case, and required
+-manual correction.
+-
+-This is a pattern I see consistently: AI produces a working solution
+-to the generic version of the problem. The specific constraints of
+-your actual product require human review to catch the mismatch.
+-
+-## Challenge 1: Project Structure Was Set Up for a Scope That Changed
+-
+-The initial project structure was designed to accommodate hotels, flights,
+-cars, and other travel verticals. When the scope was reduced to hotels only,
+-the folder structure, navigation hierarchy, and shared components were
+-already partially built around the broader vision. This created dead code,
+-confusing module boundaries, and navigation routes that went nowhere.
+-
+-### Solution
+-
+-Rather than leaving the unused structure in place, I refactored the project
+-to reflect what was actually being built. Unused navigator stacks were
+-removed, shared components were consolidated, and the folder structure was
+-reorganised around the hotel domain only. It was not glamorous work but it
+-made every subsequent feature faster to build because the codebase matched
+-the actual product. This was an early lesson in not letting a changed
+-requirement silently accumulate technical debt.
+-
+-## Challenge 2: No Pagination on the Hotels List
+-
+-The initial API returned all hotels in a single response. In development
+-with a small dataset this was fine. As the data grew it became a performance
+-and UX problem — slow initial load, a massive FlatList rendering everything
+-at once, and no way to progressively load results.
+-
+-### Solution
+-
+-I collaborated with the backend developer to design and implement cursor-based
+-pagination for the hotels endpoint. On the frontend I applied the same
+-FlatList optimisations I had developed on the NFC app — memoised item
+-components, stable `keyExtractor` and `renderItem` references, tuned
+-`windowSize`, and `getItemLayout` for fixed-height hotel cards.
+-
+-```js
+-const keyExtractor = (item) => item.id.toString();
+-
+-const renderHotelCard = ({ item }) => <HotelCard hotel={item} />;
+-
+-<FlatList
+-  data={hotels}
+-  keyExtractor={keyExtractor}
+-  renderItem={renderHotelCard}
+-  onEndReached={hasNextPage ? loadMore : null}
+-  onEndReachedThreshold={0.5}
+-  windowSize={5}
+-  getItemLayout={(_, index) => ({
+-    length: CARD_HEIGHT,
+-    offset: CARD_HEIGHT * index,
+-    index,
+-  })}
+-  ListFooterComponent={loadingMore ? <ActivityIndicator /> : null}
+-/>;
+-```
+-
+-The combination of server-side pagination and client-side virtualisation
+-meant the list stayed performant regardless of how many hotels were in the
+-database.
+-
+-## Challenge 3: Stripe Card Payment Integration
+-
+-This was my first time integrating a payment gateway into a mobile app. The
+-requirement was to use Stripe's legacy card payment flow — collecting card
+-details directly and processing them through the backend.
+-
+-### Solution
+-
+-The flow works in three steps. The app collects card details using Stripe's
+-CardField component, sends them to the backend to create a PaymentIntent,
+-then confirms the payment on the client using the returned client secret.
+-
+-```js
+-import { useStripe, CardField } from "@stripe/stripe-react-native";
+-
+-export default function PaymentScreen({ bookingId, amount }) {
+-  const { confirmPayment } = useStripe();
+-
+-  const handlePay = async () => {
+-    // Step 1 — Create PaymentIntent on backend
+-    const { clientSecret } = await createPaymentIntent({ bookingId, amount });
+-
+-    // Step 2 — Confirm payment on client
+-    const { error, paymentIntent } = await confirmPayment(clientSecret, {
+-      paymentMethodType: "Card",
+-    });
+-
+-    if (error) {
+-      Alert.alert("Payment failed", error.message);
+-      return;
+-    }
+-
+-    // Step 3 — Confirm booking on backend
+-    await confirmBooking(bookingId, paymentIntent.id);
+-  };
+-
+-  return (
+-    <>
+-      <CardField
+-        postalCodeEnabled={false}
+-        style={{ height: 50, marginVertical: 16 }}
+-      />
+-      <Button title="Pay Now" onPress={handlePay} />
+-    </>
+-  );
+-}
+-```
+-
+-## Challenge 4: Guest Booking Flow With Redirect Back After Authentication
+-
+-The app needed to allow users to browse hotels and begin the booking process
+-without an account. The friction of requiring sign-up upfront would have
+-killed conversion. But payment requires identity, so authentication had to
+-happen at checkout.
+-
+-The problem is what happens after the user authenticates. A naive
+-implementation drops them back on the home screen and they have to find
+-their hotel again. That is a broken experience.
+-
+-### Solution
+-
+-I implemented a redirect flow that captures the user's position in the
+-booking journey before sending them to authentication, then returns them
+-to exactly that step after sign-in or sign-up completes.
+-
+-```js
+-// When guest tries to proceed to payment
+-const handleGuestCheckout = (hotelId, roomId, bookingDetails) => {
+-  navigation.navigate("Auth", {
+-    screen: "Login",
+-    params: {
+-      redirectTo: "BookingConfirm",
+-      redirectParams: { hotelId, roomId, bookingDetails },
+-    },
+-  });
+-};
+-
+-// Inside the auth flow, after successful login
+-const handleAuthSuccess = () => {
+-  const { redirectTo, redirectParams } = route.params ?? {};
+-
+-  if (redirectTo) {
+-    navigation.replace(redirectTo, redirectParams);
+-  } else {
+-    navigation.replace("Home");
+-  }
+-};
+-```
+-
+-The user taps "Book Now", gets redirected to login, signs in, and lands
+-directly on the booking confirmation screen with all their previous
+-selections intact. No lost context, no starting over.
+-
+-## Results
+-
+-- Hotel list handles large datasets smoothly with cursor pagination and
+-  FlatList optimisation
+-- Stripe payment flow tested and working end to end
+-- Guest users can complete a booking without ever being dropped out of
+-  their flow
+-- Project structure refactored early enough that it did not slow down
+-  feature delivery
+-
+-## Lessons Learned
+-
+-Managing two projects simultaneously taught me to be deliberate about
+-context switching. Unstructured switching between codebases is expensive —
+-you spend the first fifteen minutes of every switch just remembering where
+-you were. Working in dedicated time blocks made both projects move faster
+-than trying to interleave them throughout the day.
+-
+-The scope change early in this project also reinforced that a changed
+-requirement is not just a product decision — it has a structural cost in
+-the codebase if you do not act on it immediately. Cleaning up the unused
+-travel verticals structure the week the scope changed took half a day.
+-Leaving it would have cost far more spread across every feature built after.
++This was my first payment integration — one-off booking payments, including the
++failure and retry paths. Not subscriptions, and not refunds; I'd rather scope it
++honestly than imply the whole billing surface.
+diff --git a/content/projects/nfc-time-tracking.mdx b/content/projects/nfc-time-tracking.mdx
+index 4788f86..de1cc67 100644
+--- a/content/projects/nfc-time-tracking.mdx
++++ b/content/projects/nfc-time-tracking.mdx
+@@ -1,213 +1,75 @@
+ ---
+ title: "NFC Based Employee Time Tracking"
+ slug: "nfc-time-tracking"
+-tagline: "Built a tamper-proof, offline-resilient attendance system powered by NFC tags"
+-role: "Lead Developer"
++tagline: "An attendance system where the shift clock can't be gamed by changing the phone's time"
++role: "Sole Developer"
+ company: "Vision Vivante"
+-timeline: "Dec 2024 – Dec 2025"
+-tags:
+-  [
+-    "React Native",
+-    "NFC",
+-    "Android Native",
+-    "iOS Native",
+-    "Async Storage",
+-    "Node.js",
+-  ]
++timeline: "Dec 2024 – Feb 2025"
++tags: ["React Native", "Native Modules", "NFC", "Offline Sync", "iOS", "Android"]
++type: "case-study"
+ published: true
+ ---
+ 
+-## Overview
+-
+-NFC Time Tracker was my first professional project — built at Vision Vivante
+-from December 2024 to December 2025. The app replaces manual attendance
+-sheets with NFC tag scans. Workers tap their assigned tag to start or end a
+-shift, and the system records the timestamp, location, and user identity
+-against their profile in real time.
+-
+-I did not start from scratch. The authentication flow and the core NFC
+-scanning were already scaffolded using the NFC Tag Manager library when I
+-joined. My work was to take that foundation and build everything on top of
+-it — the role system, the time integrity layer, the offline sync, and the
+-multi-role navigation architecture.
+-
+-## AI in This Project
+-
+-AI tooling played a smaller role on this project since it predates my
+-current workflow, but GitHub Copilot was used for repetitive patterns —
+-particularly the AsyncStorage queue implementation and the FlatList
+-optimisation utilities.
+-
+-The native bridge for Android and iOS time-since-boot had no useful
+-AI output. That required reading the Android and iOS documentation
+-directly and writing the bridge manually. This is a good example of
+-where AI assistance ends and engineering judgment begins — AI is fast
+-on patterns it has seen before, slow and unreliable on anything novel
+-or platform-specific.
+-
+-## Challenge 1: Workers Could Manipulate Their Shift Times by Changing Device Time
+-
+-The app was recording shift start and end times using the device's local
+-clock. This meant any worker could set their phone's time backward before
+-tapping in, or forward before tapping out, and the falsified timestamp would
+-be sent to the backend as truth. There was no way to detect it on the server
+-either, because the server received a timestamp and had no reference point
+-to validate it against.
+-
+-### Solution
+-
+-I collaborated with the backend developer to build a server-time bridge. On
+-app launch and at regular intervals, the app fetches the current UTC time
+-from the server and stores the delta between server time and device time
+-locally.
+-
+-But fetching server time alone is not enough — if the user goes offline or
+-the fetch fails, you fall back to device time and the problem returns. So I
+-went a level deeper and wrote a native bridge for both Android and iOS that
+-exposes the device's time since last boot.
+-
+-```js
+-// Native bridge — returns milliseconds since device boot
+-import { NativeModules } from "react-native";
+-const { SystemClock } = NativeModules;
+-
+-export async function getReliableTimestamp() {
+-  const serverTime = await fetchServerTime(); // cached on last sync
+-  const bootTime = await SystemClock.getElapsedRealtime();
+-  const adjustedTime = serverTime + bootTime;
+-  return new Date(adjustedTime);
+-}
+-```
+-
+-Time since boot cannot be changed by the user — it is maintained by the
+-kernel and resets only when the device restarts. By anchoring our clock to
+-boot time plus the last known server time, we run a separate internal clock
+-inside the app that is completely independent of whatever the system clock
+-shows. All timestamps sent to the backend come from this internal clock, not
+-`new Date()`.
+-
+-## Challenge 2: NFC Scans Were Lost When the Network Was Unreliable
+-
+-Several client sites had poor or intermittent network coverage. When a
+-worker tapped their NFC tag in a low-signal area, the scan event would fail
+-to reach the server and simply disappear — no record, no error shown to the
+-user, no retry. From the backend's perspective the worker never clocked in.
+-
+-### Solution
+-
+-I built an offline sync queue using Async Storage. Every NFC scan event is
+-written to a local queue before any network request is made. When the
+-request succeeds, the event is removed from the queue. When it fails or the
+-device is offline, it stays in the queue.
+-
+-```js
+-const QUEUE_KEY = "offline_scan_queue";
+-
+-export async function enqueueScan(scanEvent) {
+-  const raw = await AsyncStorage.getItem(QUEUE_KEY);
+-  const queue = raw ? JSON.parse(raw) : [];
+-  queue.push({ ...scanEvent, queuedAt: Date.now() });
+-  await AsyncStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+-}
+-
+-export async function flushQueue(syncFn) {
+-  const raw = await AsyncStorage.getItem(QUEUE_KEY);
+-  const queue = raw ? JSON.parse(raw) : [];
+-  if (queue.length === 0) return;
+-
+-  for (const event of queue) {
+-    await syncFn(event);
+-  }
+-
+-  await AsyncStorage.removeItem(QUEUE_KEY);
+-}
+-```
+-
+-When the device comes back online, the app checks whether the queue is
+-empty before allowing a new scan. If there are pending events, the worker
+-is shown a prompt asking them to sync their offline scans first. This keeps
+-the backend records in chronological order and prevents a worker from
+-doing a new scan before their previous offline scans are recorded.
+-
+-## Challenge 3: Role-Based UI Was Needed After Navigation Was Already Built
+-
+-Midway through the project the client requirement changed — after login,
+-workers, managers, and admins needed to see completely different interfaces,
+-not just different screens within the same navigation stack. The navigation
+-was already set up as a single stack at this point, so adding branching
+-logic to the existing structure would have meant spreading role checks
+-across every navigator and every screen transition.
+-
+-### Solution
+-
+-Instead of patching the existing navigator, I restructured the navigation
+-into separate stacks — one per role — and added a routing layer at the root
+-that runs after login and directs the user to the correct stack entirely.
+-
+-```js
+-// navigation/RootNavigator.js
+-import { useAuth } from "../context/AuthContext";
+-
+-const ROLE_STACKS = {
+-  admin: AdminStack,
+-  manager: ManagerStack,
+-  worker: WorkerStack,
+-};
+-
+-export default function RootNavigator() {
+-  const { user } = useAuth();
+-
+-  if (!user) return <AuthStack />;
+-
+-  const Stack = ROLE_STACKS[user.role];
+-  return Stack ? <Stack /> : <FallbackScreen />;
+-}
+-```
+-
+-Each role stack is fully self-contained — its own screens, its own tab bars,
+-its own deep link handling. Adding a new role means adding one new stack and
+-one new entry in `ROLE_STACKS`. No existing stack is touched. This approach
+-also made it straightforward to test each role in isolation during
+-development.
+-
+-## Results
+-
+-- Shift times are fully tamper-proof regardless of device clock manipulation
+-- NFC scans are never lost, even in zero-network environments
+-- Three distinct role interfaces ship from a single codebase with clean
+-  separation
+-- The offline queue approach was later reused in the social media app for
+-  queuing failed media uploads
+-
+-## Lessons Learned
+-
+-Starting on an existing codebase taught me to read before writing. The first
+-week was entirely spent understanding what was already there before touching
+-anything. The offline sync and the native time bridge were both solutions
+-that came from deeply understanding the constraints first — neither would
+-have been obvious without knowing the full picture of how the app was
+-deployed and where it was being used.
+-
+-The role navigation restructure also reinforced something I now treat as a
+-rule: when a requirement change makes you want to add conditionals
+-everywhere, that is a signal to change the structure instead.
+-
+-This project was also my first time publishing an app to both the Apple App
+-Store and Google Play Store. The submission process taught me things no
+-documentation prepares you for — the exact icon dimensions required at each
+-size, the screenshot specifications per device class, and the specific terms
+-and conditions that only surface after your first rejection.
+-
+-Two things stood out. Publishing to Android is genuinely easier — the Play
+-Store has a more straightforward review process and the tooling around
+-signing and release tracks is well documented. The App Store is stricter and
+-the review guidelines require careful reading before your first submission or
+-you will spend days iterating on rejections for things that feel minor but
+-are not negotiable.
+-
+-The counterintuitive part: iOS reviews faster. Despite being the harder
+-store to get accepted by, Apple's review team typically responds within 24
+-hours once your submission is clean. Google's review can take several days.
+-If you are launching to both stores simultaneously, get your iOS submission
+-right first and submit it before Android — they will likely approve around
+-the same time.
++## What it is
++
++A company needed staff to clock in and out across several facilities. Three NFC
++tags — start shift, start break, end shift. Each scan posts to the backend.
++
++I was the only developer on it. Every structural decision was mine: folder
++layout, libraries, state, how the app talked to the server. It's live on the
++[App Store](https://apps.apple.com/in/app/eda-time-tracker/id6739802131) and
++around twenty people use it daily for their shifts. It's an internal tool, not
++a consumer app.
++
++## The problem
++
++The client came back after release: staff were awarding themselves hours.
++
++The app was reading the phone's clock. The phone's clock belongs to the user.
++Change the system time before scanning out and you get paid for hours you
++didn't work — and the backend had no way to tell, because it was being handed a
++timestamp with nothing to check it against.
++
++## What I proposed first, and why it was rejected
++
++My first answer was to detect the manipulation: notice the clock had moved,
++block the app, flag the user.
++
++The client rejected it outright. It punished employees for something the app
++had got wrong, and it turned a payroll tool into a surveillance one. They were
++right, and it's the more useful half of this story — the fix that ships is
++rarely the first one you're pleased with.
++
++## What actually worked
++
++Make the server the source of truth, and stop the in-app timer depending on the
++system clock at all.
++
++At login the app stores two things together: the server's timestamp, and the
++device's time since boot at that same instant. From then on, the time it
++displays is that anchor plus however far time-since-boot has advanced.
++
++Time since boot isn't user-editable. You can set the system clock to any year
++you like and the running timer doesn't move.
++
++There's no cross-platform API for this, so I wrote a native module on each side —
++`SystemClock.elapsedRealtime()` on Android, `mach_absolute_time` on iOS — and
++bridged it to the JavaScript layer. That part had no useful AI output; it meant
++reading both platforms' docs and writing the bridge by hand.
++
++A reboot resets time-since-boot, which is exactly why the app re-fetches from
++the server when it relaunches. The backend returns the current time and the last
++mode change, and the app rebuilds the shift or break in progress from those two
++facts.
++
++## Offline
++
++Some facilities had no reliable network. Scans queue on the device and sync when
++a connection returns; the next day's shift requires a sync before it starts, so
++the queue can't grow indefinitely.
++
++## What's still open
++
++Offline **and** rebooted, together. The anchor is gone and there's no network to
++re-fetch it. I haven't solved that case, and I'd rather say so than pretend the
++design is airtight.
+diff --git a/content/projects/study-center-management.mdx b/content/projects/study-center-management.mdx
+index b3f1b58..6a752c3 100644
+--- a/content/projects/study-center-management.mdx
++++ b/content/projects/study-center-management.mdx
+@@ -1,296 +1,40 @@
+ ---
+-title: "Self Study Center Management SaaS"
+-slug: "library-saas"
+-tagline: "A full-stack SaaS built solo — from React Native frontend to Node.js backend — helping self-study center owners replace paper registers with a real management system"
+-role: "Full-Stack Developer & Product Owner"
+-company: "Independent"
+-timeline: "Dec 2025 - Present"
+-tags:
+-  ["React Native", "Node.js", "Express", "PostgreSQL", "Neon", "Render", "SaaS"]
++title: "Library Management SaaS"
++slug: "study-center-management"
++tagline: "Enrollment and seat management for self-study centres — auth, paginated student listings, and seat matching against shift times"
++role: "Backend Developer"
++company: "Side project, with a friend"
++timeline: "Dec 2025 – Paused"
++tags: ["Node.js", "Express", "PostgreSQL", "Render", "React Native"]
+ type: "product"
+-status: "Currently Building"
+ published: true
+ ---
+ 
+-## Overview
++## What it is
+ 
+-This is my first full-stack project — and the first time I have owned every
+-layer of a product, from database schema to App Store submission. A connection
+-reached out after noticing that self-study centers in his area were still
+-managing everything on paper. He had the problem, I had the time and the
+-motivation to learn backend development properly on a real production app.
+-That conversation became this project.
++Self-study centres near a friend of mine were still running on paper registers —
++who's enrolled, who's paid, which seats are free. He had the problem and the idea;
++I built the backend.
+ 
+-The app lets a library or self-study center owner sign up, create their
+-center, and immediately start managing students, memberships, payments, and
+-expenses from their phone. No spreadsheets, no paper registers, no WhatsApp
+-reminders.
++## What I built
+ 
+-## What Is Built and Shipping
++- Authentication
++- Student listing with server-side pagination
++- Seat-availability matching: given a student's shift start and end times, work
++  out which seats are actually free in that window
++- Backend deployed on Render
+ 
+-Every core feature of the MVP is complete and running in closed beta on
+-Google Play.
++The seat matching is the interesting part. It isn't a lookup — a seat is only
++free relative to a time range, and two students' shifts can overlap partially,
++so availability has to be computed against the requested window rather than
++stored as a flag.
+ 
+-The owner signs up and creates their library. They land on a dashboard
+-showing total revenue, total expenses, a list of students with overdue
+-memberships, and a list of memberships expiring within the next few days.
+-From there they can add students, record membership payments, log expenses,
+-and track the financial health of their center in real time.
++## Status
+ 
+-Push notifications fire automatically for overdue and near-expiring
+-memberships — the owner does not have to check manually, the app tells them
+-who to follow up with.
++Paused. I stepped away partway through, and it isn't mine alone — it was a
++shared project and the idea was my friend's.
+ 
+-The trial and subscription model is also fully implemented. New owners get
+-30 trial seats. When the trial expires, read operations continue working —
+-they can still see all their data — but all write operations are blocked
+-until they activate a paid membership. No payment gateway is integrated yet;
+-activation happens by contacting support directly. This was a deliberate MVP
+-decision to reduce complexity and launch faster.
+-
+-## AI in This Project
+-
+-I used GitHub Copilot throughout the backend development — particularly
+-for boilerplate Express routes, Prisma schema generation, and repetitive
+-CRUD operations. Every generated function was reviewed before being
+-committed. Where Copilot produced incorrect logic — especially around
+-the subscription check middleware — I rewrote it manually.
+-
+-For UI direction, I used Stitch to generate initial screen layouts which
+-I then refined in Figma. The final screens reflect my design decisions,
+-not the AI's first output.
+-
+-This approach cut development time significantly without producing a
+-codebase I do not understand. Every line that ships is a line I have read.
+-
+-## Challenge 1: Learning Backend Development Without a Safety Net
+-
+-Every previous project I had worked on gave me a backend developer to
+-collaborate with. I consumed APIs, handled auth flows, managed state — but
+-the server, the database, and the deployment were always someone else's
+-problem. This project removed that safety net entirely.
+-
+-### Solution
+-
+-I chose the most straightforward stack I could justify: Node.js and Express
+-for the API, PostgreSQL for the database. Not because they were the most
+-exciting choices but because they are well-documented, widely used, and have
+-a massive amount of learning material available. When you are learning
+-backend for the first time on a real production app, boring and reliable is
+-the right call.
+-
+-What surprised me most was how much I enjoyed the data modelling. Designing
+-the relationships between owners, libraries, students, memberships, and
+-expenses in Postgres — making sure the foreign keys were right, thinking
+-about what queries would be slow, designing the schema so that the dashboard
+-query would not require ten joins — was a different kind of problem than
+-anything I had done on the frontend. It was addictive in a way I did not
+-expect.
+-
+-```js
+-// Membership status query — one round trip for the dashboard
+-const getDashboardData = async (libraryId) => {
+-  const [revenue, expenses, overdue, expiring] = await Promise.all([
+-    db.query(
+-      `SELECT COALESCE(SUM(amount), 0) as total
+-       FROM payments WHERE library_id = $1`,
+-      [libraryId],
+-    ),
+-    db.query(
+-      `SELECT COALESCE(SUM(amount), 0) as total
+-       FROM expenses WHERE library_id = $1`,
+-      [libraryId],
+-    ),
+-    db.query(
+-      `SELECT s.name, m.end_date
+-       FROM memberships m
+-       JOIN students s ON s.id = m.student_id
+-       WHERE m.library_id = $1
+-       AND m.end_date < NOW()
+-       AND m.status = 'active'
+-       ORDER BY m.end_date ASC`,
+-      [libraryId],
+-    ),
+-    db.query(
+-      `SELECT s.name, m.end_date
+-       FROM memberships m
+-       JOIN students s ON s.id = m.student_id
+-       WHERE m.library_id = $1
+-       AND m.end_date BETWEEN NOW() AND NOW() + INTERVAL '7 days'
+-       AND m.status = 'active'
+-       ORDER BY m.end_date ASC`,
+-      [libraryId],
+-    ),
+-  ]);
+-
+-  return {
+-    revenue: revenue.rows[0].total,
+-    expenses: expenses.rows[0].total,
+-    overdue: overdue.rows,
+-    expiring: expiring.rows,
+-  };
+-};
+-```
+-
+-## Challenge 2: Supabase Stopped Working Mid-Development
+-
+-I had chosen Supabase to host the PostgreSQL database — it has a generous
+-free tier, a clean dashboard, and I had used it before on smaller projects.
+-Everything was working fine until mid-development when the app suddenly
+-could not reach the database at all. No warning, no email, no error from
+-Supabase itself. After debugging for longer than I would like to admit,
+-I found that the Indian government had blocked Supabase at the DNS level.
+-The connection was not timing out or throwing a network error — it was
+-simply being silently dropped.
+-
+-### Solution
+-
+-I migrated the database to Neon, which offers a PostgreSQL-compatible hosted
+-database on a free tier and was reachable from India without issues. Because
+-I was using standard PostgreSQL and had not used any Supabase-specific
+-features beyond the hosted database itself, the migration was a
+-`pg_dump` and `pg_restore` followed by updating the connection string in my
+-environment variables. The app was back online the same day.
+-
+-The lesson was not to assume any third-party service is reachable from your
+-target market. India has an unpredictable history of blocking cloud services
+-and developer tools — Supabase was not the first and will not be the last.
+-I now check reachability from an Indian network before committing to any
+-infrastructure dependency.
+-
+-```bash
+-# Dump from Supabase
+-pg_dump "postgresql://user:pass@supabase-host/db" > backup.sql
+-
+-# Restore to Neon
+-psql "postgresql://user:pass@neon-host/db" < backup.sql
+-```
+-
+-## Challenge 3: Implementing Write Blocking After Trial Expiry
+-
+-The trial model required that when an owner's 30 trial memberships were
+-consumed or their trial period expired, all write operations — adding
+-students, recording payments, logging expenses — would stop working, while
+-read operations continued. The owner could still see their data, just not
+-add to it.
+-
+-Doing this on the frontend alone would have been insecure — any determined
+-user could bypass a client-side check. The enforcement needed to live on the
+-backend.
+-
+-### Solution
+-
+-I added a middleware function that runs on every write route and checks the
+-owner's subscription status before allowing the request through.
+-
+-```js
+-// middleware/checkSubscription.js
+-export const checkSubscription = async (req, res, next) => {
+-  const { ownerId } = req.user;
+-
+-  const owner = await db.query(
+-    `SELECT subscription_status, trial_seats_used, trial_seats_limit
+-     FROM owners WHERE id = $1`,
+-    [ownerId],
+-  );
+-
+-  const { subscription_status, trial_seats_used, trial_seats_limit } =
+-    owner.rows[0];
+-
+-  if (subscription_status === "active") return next();
+-
+-  if (subscription_status === "trial" && trial_seats_used < trial_seats_limit) {
+-    return next();
+-  }
+-
+-  return res.status(403).json({
+-    error: "subscription_required",
+-    message:
+-      "Your trial has expired. Contact support to activate your membership.",
+-  });
+-};
+-
+-// Applied to all write routes
+-router.post("/students", checkSubscription, addStudent);
+-router.post("/payments", checkSubscription, recordPayment);
+-router.post("/expenses", checkSubscription, addExpense);
+-router.put("/students/:id", checkSubscription, updateStudent);
+-```
+-
+-On the frontend, the `subscription_required` error code triggers a
+-specific UI state — not a generic error toast but a dedicated screen
+-explaining the trial has ended and showing contact details to activate.
+-
+-## Challenge 4: First Backend Deployment
+-
+-Deploying a React Native app to the stores was something I had done before.
+-Deploying a Node.js server and keeping it running was new territory.
+-
+-### Solution
+-
+-I chose Render for the backend deployment. The free tier spins down after
+-inactivity but for a closed beta with a small number of testers, the cold
+-start delay is acceptable. The deployment process is straightforward —
+-connect the GitHub repository, set environment variables, and Render
+-handles the rest on every push to main.
+-
+-The more interesting part was environment management. Local development,
+-the Render deployment, and eventually a production environment all need
+-different database URLs, JWT secrets, and API keys. Setting up a proper
+-`.env` structure and making sure secrets never touched the repository was
+-the first real ops discipline I had to build from scratch.
+-
+-```
+-# .env.example — committed to repo
+-DATABASE_URL=
+-JWT_SECRET=
+-PORT=3000
+-NODE_ENV=development
+-
+-# Actual .env — gitignored
+-DATABASE_URL=postgresql://user:pass@neon-host/db
+-JWT_SECRET=your-actual-secret
+-```
+-
+-## Distribution — Closed Beta on Google Play
+-
+-The app is live on a closed testing track on Google Play. I set up a Google
+-Developer account specifically for this project, configured the testing
+-track, and manage the tester list manually. New owners who want access
+-contact me directly.
+-
+-Closed beta before public launch serves two purposes. First, it limits
+-exposure while the product is still being refined based on real usage.
+-Second, it lets me validate that the trial-to-paid conversion flow works
+-correctly before integrating a payment gateway. There is no point building
+-Stripe integration before knowing whether anyone wants to pay.
+-
+-## What Is Next
+-
+-The immediate next step is integrating a payment gateway so owners can
+-self-serve their subscription without contacting me. Once that is in and
+-validated, the app moves to open testing and eventually public release.
+-
+-A web dashboard for owners who prefer to manage from a desktop is also on
+-the roadmap — the backend is already built, it would just need a Next.js
+-frontend consuming the same API.
+-
+-## Lessons Learned
+-
+-Building the full stack for the first time made me significantly better at
+-the frontend. When you design the API yourself, you make different decisions
+-about how the frontend consumes it. You stop thinking about API responses
+-as something that just exists and start thinking about what shape of data
+-makes the frontend code cleanest.
+-
+-The Supabase incident reinforced that infrastructure assumptions need to be
+-validated for your specific market. Reachability from India, payment methods
+-used in India, app store policies in India — none of these are the same as
+-building for a Western audience, and they all need to be explicitly checked,
+-not assumed.
+-
+-Shipping a payment-free MVP was the right call. The write-blocking system
+-enforces the commercial model without requiring Stripe to be integrated on
+-day one. When I do add payments, the enforcement middleware does not change
+-— only the condition that lifts the block changes from "contact support" to
+-"subscription active in database".
++I'm listing it because the work is real and running, not because it's finished.
++If I return to it, the parts I'd want to get right are the ones it hasn't hit
++yet: two people claiming the same seat at the same instant, recurring billing,
++and keeping one centre's data properly separate from another's.

@@ -1,296 +1,40 @@
 ---
-title: "Self Study Center Management SaaS"
-slug: "library-saas"
-tagline: "A full-stack SaaS built solo — from React Native frontend to Node.js backend — helping self-study center owners replace paper registers with a real management system"
-role: "Full-Stack Developer & Product Owner"
-company: "Independent"
-timeline: "Dec 2025 - Present"
-tags:
-  ["React Native", "Node.js", "Express", "PostgreSQL", "Neon", "Render", "SaaS"]
+title: "Library Management SaaS"
+slug: "study-center-management"
+tagline: "Enrollment and seat management for self-study centres — auth, paginated student listings, and seat matching against shift times"
+role: "Backend Developer"
+company: "Side project, with a friend"
+timeline: "Dec 2025 – Paused"
+tags: ["Node.js", "Express", "PostgreSQL", "Render", "React Native"]
 type: "product"
-status: "Currently Building"
 published: true
 ---
 
-## Overview
+## What it is
 
-This is my first full-stack project — and the first time I have owned every
-layer of a product, from database schema to App Store submission. A connection
-reached out after noticing that self-study centers in his area were still
-managing everything on paper. He had the problem, I had the time and the
-motivation to learn backend development properly on a real production app.
-That conversation became this project.
+Self-study centres near a friend of mine were still running on paper registers —
+who's enrolled, who's paid, which seats are free. He had the problem and the idea;
+I built the backend.
 
-The app lets a library or self-study center owner sign up, create their
-center, and immediately start managing students, memberships, payments, and
-expenses from their phone. No spreadsheets, no paper registers, no WhatsApp
-reminders.
+## What I built
 
-## What Is Built and Shipping
+- Authentication
+- Student listing with server-side pagination
+- Seat-availability matching: given a student's shift start and end times, work
+  out which seats are actually free in that window
+- Backend deployed on Render
 
-Every core feature of the MVP is complete and running in closed beta on
-Google Play.
+The seat matching is the interesting part. It isn't a lookup — a seat is only
+free relative to a time range, and two students' shifts can overlap partially,
+so availability has to be computed against the requested window rather than
+stored as a flag.
 
-The owner signs up and creates their library. They land on a dashboard
-showing total revenue, total expenses, a list of students with overdue
-memberships, and a list of memberships expiring within the next few days.
-From there they can add students, record membership payments, log expenses,
-and track the financial health of their center in real time.
+## Status
 
-Push notifications fire automatically for overdue and near-expiring
-memberships — the owner does not have to check manually, the app tells them
-who to follow up with.
+Paused. I stepped away partway through, and it isn't mine alone — it was a
+shared project and the idea was my friend's.
 
-The trial and subscription model is also fully implemented. New owners get
-30 trial seats. When the trial expires, read operations continue working —
-they can still see all their data — but all write operations are blocked
-until they activate a paid membership. No payment gateway is integrated yet;
-activation happens by contacting support directly. This was a deliberate MVP
-decision to reduce complexity and launch faster.
-
-## AI in This Project
-
-I used GitHub Copilot throughout the backend development — particularly
-for boilerplate Express routes, Prisma schema generation, and repetitive
-CRUD operations. Every generated function was reviewed before being
-committed. Where Copilot produced incorrect logic — especially around
-the subscription check middleware — I rewrote it manually.
-
-For UI direction, I used Stitch to generate initial screen layouts which
-I then refined in Figma. The final screens reflect my design decisions,
-not the AI's first output.
-
-This approach cut development time significantly without producing a
-codebase I do not understand. Every line that ships is a line I have read.
-
-## Challenge 1: Learning Backend Development Without a Safety Net
-
-Every previous project I had worked on gave me a backend developer to
-collaborate with. I consumed APIs, handled auth flows, managed state — but
-the server, the database, and the deployment were always someone else's
-problem. This project removed that safety net entirely.
-
-### Solution
-
-I chose the most straightforward stack I could justify: Node.js and Express
-for the API, PostgreSQL for the database. Not because they were the most
-exciting choices but because they are well-documented, widely used, and have
-a massive amount of learning material available. When you are learning
-backend for the first time on a real production app, boring and reliable is
-the right call.
-
-What surprised me most was how much I enjoyed the data modelling. Designing
-the relationships between owners, libraries, students, memberships, and
-expenses in Postgres — making sure the foreign keys were right, thinking
-about what queries would be slow, designing the schema so that the dashboard
-query would not require ten joins — was a different kind of problem than
-anything I had done on the frontend. It was addictive in a way I did not
-expect.
-
-```js
-// Membership status query — one round trip for the dashboard
-const getDashboardData = async (libraryId) => {
-  const [revenue, expenses, overdue, expiring] = await Promise.all([
-    db.query(
-      `SELECT COALESCE(SUM(amount), 0) as total
-       FROM payments WHERE library_id = $1`,
-      [libraryId],
-    ),
-    db.query(
-      `SELECT COALESCE(SUM(amount), 0) as total
-       FROM expenses WHERE library_id = $1`,
-      [libraryId],
-    ),
-    db.query(
-      `SELECT s.name, m.end_date
-       FROM memberships m
-       JOIN students s ON s.id = m.student_id
-       WHERE m.library_id = $1
-       AND m.end_date < NOW()
-       AND m.status = 'active'
-       ORDER BY m.end_date ASC`,
-      [libraryId],
-    ),
-    db.query(
-      `SELECT s.name, m.end_date
-       FROM memberships m
-       JOIN students s ON s.id = m.student_id
-       WHERE m.library_id = $1
-       AND m.end_date BETWEEN NOW() AND NOW() + INTERVAL '7 days'
-       AND m.status = 'active'
-       ORDER BY m.end_date ASC`,
-      [libraryId],
-    ),
-  ]);
-
-  return {
-    revenue: revenue.rows[0].total,
-    expenses: expenses.rows[0].total,
-    overdue: overdue.rows,
-    expiring: expiring.rows,
-  };
-};
-```
-
-## Challenge 2: Supabase Stopped Working Mid-Development
-
-I had chosen Supabase to host the PostgreSQL database — it has a generous
-free tier, a clean dashboard, and I had used it before on smaller projects.
-Everything was working fine until mid-development when the app suddenly
-could not reach the database at all. No warning, no email, no error from
-Supabase itself. After debugging for longer than I would like to admit,
-I found that the Indian government had blocked Supabase at the DNS level.
-The connection was not timing out or throwing a network error — it was
-simply being silently dropped.
-
-### Solution
-
-I migrated the database to Neon, which offers a PostgreSQL-compatible hosted
-database on a free tier and was reachable from India without issues. Because
-I was using standard PostgreSQL and had not used any Supabase-specific
-features beyond the hosted database itself, the migration was a
-`pg_dump` and `pg_restore` followed by updating the connection string in my
-environment variables. The app was back online the same day.
-
-The lesson was not to assume any third-party service is reachable from your
-target market. India has an unpredictable history of blocking cloud services
-and developer tools — Supabase was not the first and will not be the last.
-I now check reachability from an Indian network before committing to any
-infrastructure dependency.
-
-```bash
-# Dump from Supabase
-pg_dump "postgresql://user:pass@supabase-host/db" > backup.sql
-
-# Restore to Neon
-psql "postgresql://user:pass@neon-host/db" < backup.sql
-```
-
-## Challenge 3: Implementing Write Blocking After Trial Expiry
-
-The trial model required that when an owner's 30 trial memberships were
-consumed or their trial period expired, all write operations — adding
-students, recording payments, logging expenses — would stop working, while
-read operations continued. The owner could still see their data, just not
-add to it.
-
-Doing this on the frontend alone would have been insecure — any determined
-user could bypass a client-side check. The enforcement needed to live on the
-backend.
-
-### Solution
-
-I added a middleware function that runs on every write route and checks the
-owner's subscription status before allowing the request through.
-
-```js
-// middleware/checkSubscription.js
-export const checkSubscription = async (req, res, next) => {
-  const { ownerId } = req.user;
-
-  const owner = await db.query(
-    `SELECT subscription_status, trial_seats_used, trial_seats_limit
-     FROM owners WHERE id = $1`,
-    [ownerId],
-  );
-
-  const { subscription_status, trial_seats_used, trial_seats_limit } =
-    owner.rows[0];
-
-  if (subscription_status === "active") return next();
-
-  if (subscription_status === "trial" && trial_seats_used < trial_seats_limit) {
-    return next();
-  }
-
-  return res.status(403).json({
-    error: "subscription_required",
-    message:
-      "Your trial has expired. Contact support to activate your membership.",
-  });
-};
-
-// Applied to all write routes
-router.post("/students", checkSubscription, addStudent);
-router.post("/payments", checkSubscription, recordPayment);
-router.post("/expenses", checkSubscription, addExpense);
-router.put("/students/:id", checkSubscription, updateStudent);
-```
-
-On the frontend, the `subscription_required` error code triggers a
-specific UI state — not a generic error toast but a dedicated screen
-explaining the trial has ended and showing contact details to activate.
-
-## Challenge 4: First Backend Deployment
-
-Deploying a React Native app to the stores was something I had done before.
-Deploying a Node.js server and keeping it running was new territory.
-
-### Solution
-
-I chose Render for the backend deployment. The free tier spins down after
-inactivity but for a closed beta with a small number of testers, the cold
-start delay is acceptable. The deployment process is straightforward —
-connect the GitHub repository, set environment variables, and Render
-handles the rest on every push to main.
-
-The more interesting part was environment management. Local development,
-the Render deployment, and eventually a production environment all need
-different database URLs, JWT secrets, and API keys. Setting up a proper
-`.env` structure and making sure secrets never touched the repository was
-the first real ops discipline I had to build from scratch.
-
-```
-# .env.example — committed to repo
-DATABASE_URL=
-JWT_SECRET=
-PORT=3000
-NODE_ENV=development
-
-# Actual .env — gitignored
-DATABASE_URL=postgresql://user:pass@neon-host/db
-JWT_SECRET=your-actual-secret
-```
-
-## Distribution — Closed Beta on Google Play
-
-The app is live on a closed testing track on Google Play. I set up a Google
-Developer account specifically for this project, configured the testing
-track, and manage the tester list manually. New owners who want access
-contact me directly.
-
-Closed beta before public launch serves two purposes. First, it limits
-exposure while the product is still being refined based on real usage.
-Second, it lets me validate that the trial-to-paid conversion flow works
-correctly before integrating a payment gateway. There is no point building
-Stripe integration before knowing whether anyone wants to pay.
-
-## What Is Next
-
-The immediate next step is integrating a payment gateway so owners can
-self-serve their subscription without contacting me. Once that is in and
-validated, the app moves to open testing and eventually public release.
-
-A web dashboard for owners who prefer to manage from a desktop is also on
-the roadmap — the backend is already built, it would just need a Next.js
-frontend consuming the same API.
-
-## Lessons Learned
-
-Building the full stack for the first time made me significantly better at
-the frontend. When you design the API yourself, you make different decisions
-about how the frontend consumes it. You stop thinking about API responses
-as something that just exists and start thinking about what shape of data
-makes the frontend code cleanest.
-
-The Supabase incident reinforced that infrastructure assumptions need to be
-validated for your specific market. Reachability from India, payment methods
-used in India, app store policies in India — none of these are the same as
-building for a Western audience, and they all need to be explicitly checked,
-not assumed.
-
-Shipping a payment-free MVP was the right call. The write-blocking system
-enforces the commercial model without requiring Stripe to be integrated on
-day one. When I do add payments, the enforcement middleware does not change
-— only the condition that lifts the block changes from "contact support" to
-"subscription active in database".
+I'm listing it because the work is real and running, not because it's finished.
+If I return to it, the parts I'd want to get right are the ones it hasn't hit
+yet: two people claiming the same seat at the same instant, recurring billing,
+and keeping one centre's data properly separate from another's.

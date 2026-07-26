@@ -1,252 +1,226 @@
 "use client";
-import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import ResumeButton from "./ResumeButton";
 
-const roles = [
-  "Open to full-time opportunities",
-  "1.5+ years shipping production apps",
-  "React Native · React · Next.js",
-  "Comfortable in unfamiliar codebases",
+const NAME_LINES = ["Nitish", "Poonia"];
+
+const FACTS = [
+  { label: "Focus", value: "Mobile & web, end to end" },
+  { label: "Stack", value: "React Native · Next.js · Node · Postgres" },
+  { label: "Shipped", value: "EDA Time Tracker · App Store" },
+  { label: "Availability", value: "Open to full-time roles" },
 ];
 
+/** One line of the name, revealed by a masked rise from below its own clip. */
+function MaskLine({ children, delay, reduce }) {
+  if (reduce) {
+    return <span style={{ display: "block" }}>{children}</span>;
+  }
+  return (
+    <span style={{ display: "block", overflow: "hidden", paddingBottom: "0.06em" }}>
+      <motion.span
+        style={{ display: "block", willChange: "transform" }}
+        initial={{ y: "108%" }}
+        animate={{ y: "0%" }}
+        transition={{ duration: 0.85, delay, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+}
+
+function FadeIn({ children, delay, reduce, style }) {
+  return (
+    <motion.div
+      style={style}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
+      animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: reduce ? 0 : delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export default function Hero() {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [displayed, setDisplayed] = useState("");
-  const [deleting, setDeleting] = useState(false);
-
-  useEffect(() => {
-    const target = roles[roleIndex];
-    let timeout;
-
-    if (!deleting && displayed.length < target.length) {
-      timeout = setTimeout(
-        () => setDisplayed(target.slice(0, displayed.length + 1)),
-        65,
-      );
-    } else if (!deleting && displayed.length === target.length) {
-      timeout = setTimeout(() => setDeleting(true), 2200);
-    } else if (deleting && displayed.length > 0) {
-      timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 35);
-    } else if (deleting && displayed.length === 0) {
-      setDeleting(false);
-      setRoleIndex((roleIndex + 1) % roles.length);
-    }
-
-    return () => clearTimeout(timeout);
-  }, [displayed, deleting, roleIndex]);
+  const reduce = useReducedMotion();
 
   return (
     <section
       id="hero"
+      className="band band-0"
       style={{
         minHeight: "100vh",
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        borderBottom: "1px solid var(--border)",
+        display: "flex",
+        alignItems: "center",
       }}
     >
-      {/* ── LEFT: Facts panel ── */}
       <div
-        className="hero-facts"
+        className="hero-grid"
         style={{
-          borderRight: "1px solid var(--border)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          padding:
-            "clamp(1.5rem, 5vw, 9rem) var(--pad-x) clamp(2.5rem, 5vw, 4rem)",
+          maxWidth: "var(--max)",
+          margin: "0 auto",
+          width: "100%",
+          padding: "clamp(7rem, 14vh, 11rem) var(--pad-x) clamp(3rem, 8vh, 5rem)",
+          display: "grid",
+          gridTemplateColumns: "1.35fr 1fr",
+          gap: "clamp(2.5rem, 6vw, 6rem)",
+          alignItems: "end",
         }}
       >
-        <p
-          style={{
-            fontSize: "clamp(0.85rem, 1.3vw, 1rem)",
-            fontWeight: 300,
-            lineHeight: 1.85,
-            color: "var(--mid)",
-            maxWidth: "34ch",
-            marginBottom: "clamp(2rem, 4vw, 3rem)",
-          }}
-        >
-          React Native and React developer with 1.5+ years shipping
-          production mobile and web apps — currently owning frontend on a
-          healthcare records app.
-        </p>
-
-        {[
-          { label: "Experience", value: "1.5+ Years" },
-          { label: "Apps shipped", value: "3 Production apps" },
-          { label: "Stack", value: "React Native · Next.js · Node.js" },
-          { label: "Availability", value: "Open to full-time roles" },
-        ].map(({ label, value }) => (
-          <div
-            key={label}
-            style={{
-              borderTop: "1px solid var(--border)",
-              padding: "1rem 0",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "baseline",
-              gap: "1rem",
-            }}
-          >
-            <span
+        {/* ── Left: identity ── */}
+        <div>
+          <FadeIn reduce={reduce} delay={0.05}>
+            <p
               style={{
-                fontSize: "0.63rem",
-                fontWeight: 700,
+                fontFamily: "var(--mono)",
+                fontSize: "0.72rem",
                 letterSpacing: "0.16em",
                 textTransform: "uppercase",
-                color: "var(--mid)",
-                flexShrink: 0,
+                color: "var(--sec-mid)",
+                marginBottom: "1.4rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.6rem",
               }}
             >
-              {label}
-            </span>
-            <span
+              <span
+                style={{
+                  width: "7px",
+                  height: "7px",
+                  borderRadius: "var(--r-pill)",
+                  background: "var(--sec-accent)",
+                  display: "inline-block",
+                }}
+              />
+              Software Developer
+            </p>
+          </FadeIn>
+
+          <h1
+            style={{
+              fontFamily: "var(--display)",
+              fontSize: "clamp(3.4rem, 11vw, 8.5rem)",
+              fontWeight: 400,
+              lineHeight: 0.92,
+              letterSpacing: "-0.02em",
+              color: "var(--sec-ink)",
+              margin: "0 0 clamp(1.6rem, 4vw, 2.4rem)",
+            }}
+          >
+            {NAME_LINES.map((line, i) => (
+              <MaskLine key={line} delay={0.15 + i * 0.09} reduce={reduce}>
+                {line}
+              </MaskLine>
+            ))}
+          </h1>
+
+          <FadeIn reduce={reduce} delay={0.5}>
+            <p
               style={{
-                fontSize: "0.82rem",
-                fontWeight: 700,
-                color: "var(--ink)",
-                letterSpacing: "-0.01em",
-                textAlign: "right",
+                fontSize: "clamp(1rem, 1.6vw, 1.2rem)",
+                fontWeight: 400,
+                lineHeight: 1.7,
+                color: "var(--sec-ink)",
+                maxWidth: "46ch",
+                marginBottom: "0.9rem",
               }}
             >
-              {value}
-            </span>
-          </div>
-        ))}
-      </div>
+              I build mobile and web products end to end — React Native and
+              Next.js on the front, Node and PostgreSQL behind.
+            </p>
+            <p
+              style={{
+                fontSize: "clamp(0.95rem, 1.5vw, 1.1rem)",
+                lineHeight: 1.7,
+                color: "var(--sec-mid)",
+                maxWidth: "46ch",
+                marginBottom: "clamp(2rem, 4vw, 2.75rem)",
+              }}
+            >
+              Most of my work happens inside large existing codebases I
+              didn&apos;t write.
+            </p>
 
-      <div
-        className="hero-text"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          padding:
-            "clamp(1.5rem, 5vw, 9rem) var(--pad-x) clamp(2.5rem, 5vw, 4rem)",
-        }}
-      >
-        <p
-          className="fade-up delay-1"
-          style={{
-            fontSize: "0.65rem",
-            fontWeight: 700,
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            color: "var(--mid)",
-            marginBottom: "1.2rem",
-          }}
-        >
-          Software Developer
-        </p>
+            <ResumeButton size="md" label="Download résumé" />
+          </FadeIn>
+        </div>
 
-        <h1
-          className="fade-up delay-2"
+        {/* ── Right: facts card ── */}
+        <FadeIn
+          reduce={reduce}
+          delay={0.6}
           style={{
-            fontSize: "clamp(3.2rem, 6.5vw, 7rem)",
-            fontWeight: 900,
-            lineHeight: 0.95,
-            letterSpacing: "-0.03em",
-            color: "var(--ink)",
-            marginBottom: "clamp(1.5rem, 4vw, 3rem)",
-          }}
-        >
-          Nitish
-          <br />
-          Poonia
-        </h1>
-
-        {/* Typewriter */}
-        <div
-          className="fade-up delay-3"
-          style={{
-            borderTop: "1px solid var(--border)",
-            paddingTop: "1.5rem",
+            background: "var(--sec-card)",
+            border: "1px solid var(--sec-line)",
+            borderRadius: "var(--r-lg)",
+            padding: "clamp(1.5rem, 3vw, 2.25rem)",
+            boxShadow: "var(--sec-shadow)",
+            backdropFilter: "blur(2px)",
           }}
         >
           <p
             style={{
-              fontSize: "0.65rem",
-              fontWeight: 700,
-              letterSpacing: "0.18em",
+              fontFamily: "var(--mono)",
+              fontSize: "0.62rem",
+              letterSpacing: "0.16em",
               textTransform: "uppercase",
-              color: "var(--mid)",
-              marginBottom: "0.6rem",
+              color: "var(--sec-mid)",
+              marginBottom: "1.25rem",
             }}
           >
-            Currently
+            At a glance
           </p>
-          <p
-            style={{
-              fontSize: "clamp(1.1rem, 2.2vw, 1.6rem)",
-              fontWeight: 700,
-              color: "var(--ink)",
-              minHeight: "2.2em",
-              letterSpacing: "-0.01em",
-            }}
-          >
-            {displayed}
-            <span className="cursor" />
-          </p>
-        </div>
-
-        {/* Scroll hint */}
-        <div className="fade-up delay-4" style={{ marginTop: "2.5rem" }}>
-          <ResumeButton size="md" label="Download Resume" />
-        </div>
-
-        <p
-          style={{
-            marginTop: "1.5rem",
-            fontSize: "0.6rem",
-            fontWeight: 700,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--mid)",
-          }}
-        >
-          Scroll to explore ↓
-        </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+            {FACTS.map(({ label, value }, i) => (
+              <div
+                key={label}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.3rem",
+                  padding: "0.9rem 0",
+                  borderTop: i === 0 ? "none" : "1px solid var(--sec-line)",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--mono)",
+                    fontSize: "0.6rem",
+                    fontWeight: 500,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "var(--sec-mid)",
+                  }}
+                >
+                  {label}
+                </span>
+                <span
+                  style={{
+                    fontSize: "0.92rem",
+                    fontWeight: 500,
+                    color: "var(--sec-ink)",
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  {value}
+                </span>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
       </div>
 
-      {/* Responsive: stack on mobile */}
       <style>{`
-      .hero-text {
-    justify-content: flex-end; /* default = laptop */
-  }
-  @media (max-width: 768px) {
-
-.hero-text {
-      justify-content: flex-start;
-    }
-
-  #hero {
-    grid-template-columns: 1fr !important;
-  }
-
-  #hero > div:first-child {
-    border-right: none !important;
-    border-bottom: 1px solid var(--border);
-    padding: 1.5rem var(--pad-x) 1.5rem !important;
-    justify-content: flex-start !important;
-  }
-
-  #hero > div:last-child {
-    padding: 1.5rem var(--pad-x) 2rem !important;
-    justify-content: flex-start !important;
-
-  }
-
-  /* ← Add these two */
-  #hero h1 {
-    margin-bottom: 1rem !important;
-    font-size: clamp(2.4rem, 10vw, 3.5rem) !important;
-  }
-
-  #hero .fade-up.delay-3 {
-    padding-top: 1rem !important;
-  }
-}
-`}</style>
+        @media (max-width: 860px) {
+          #hero .hero-grid {
+            grid-template-columns: 1fr !important;
+            align-items: start !important;
+            gap: 2.5rem !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

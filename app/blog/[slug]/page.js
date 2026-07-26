@@ -1,7 +1,7 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
-import Link from "next/link";
 import rehypePrettyCode from "rehype-pretty-code";
+import Navbar from "@/components/NavBar";
 import BackButton from "@/components/BackButton";
 
 const mdxOptions = {
@@ -63,72 +63,77 @@ export default async function PostPage({ params }) {
   const post = await getPostBySlug(slug);
 
   return (
-    <main
-      style={{
-        maxWidth: "720px",
-        margin: "0 auto",
-        padding: "calc(var(--pad-y) + 4rem) var(--pad-x) var(--pad-y)",
-      }}
-    >
-      <BackButton />
-
-      {/* Header */}
-      <div
-        style={{
-          marginBottom: "clamp(2.5rem, 5vw, 4rem)",
-          borderBottom: "1px solid var(--border)",
-          paddingBottom: "2rem",
-        }}
-      >
-        <p
+    <>
+      <Navbar />
+      <main className="band band-0" style={{ minHeight: "100vh" }}>
+        <div
           style={{
-            fontSize: "0.65rem",
-            fontWeight: 700,
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            color: "var(--mid)",
-            marginBottom: "1rem",
+            maxWidth: "720px",
+            margin: "0 auto",
+            padding: "calc(var(--pad-y) + 4rem) var(--pad-x) var(--pad-y)",
           }}
         >
-          {new Date(post.date).toLocaleDateString("en-IN", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}{" "}
-          · {post.readingTime}
-        </p>
-        <h1
-          style={{
-            fontSize: "clamp(1.8rem, 4vw, 3rem)",
-            fontWeight: 900,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.1,
-            color: "var(--ink)",
-          }}
-        >
-          {post.title}
-        </h1>
-        <p
-          style={{
-            marginTop: "1rem",
-            fontSize: "1.05rem",
-            fontWeight: 300,
-            color: "var(--mid)",
-            lineHeight: 1.7,
-          }}
-        >
-          {post.description}
-        </p>
-      </div>
+          <BackButton />
 
-      {/* MDX Content */}
-      <div className="prose">
-        <MDXRemote source={post.content} options={mdxOptions} />
-      </div>
+          <div
+            style={{
+              marginBottom: "clamp(2.5rem, 5vw, 4rem)",
+              borderBottom: "1px solid var(--sec-line)",
+              paddingBottom: "2rem",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "var(--mono)",
+                fontSize: "0.66rem",
+                fontWeight: 500,
+                letterSpacing: "0.08em",
+                color: "var(--sec-mid)",
+                marginBottom: "1.25rem",
+              }}
+            >
+              {new Date(post.date).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}{" "}
+              · {post.readingTime}
+            </p>
+            <h1
+              style={{
+                fontFamily: "var(--display)",
+                fontSize: "clamp(2rem, 4.5vw, 3.2rem)",
+                fontWeight: 400,
+                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+                color: "var(--sec-ink)",
+                textWrap: "balance",
+              }}
+            >
+              {post.title}
+            </h1>
+            <p
+              style={{
+                marginTop: "1.1rem",
+                fontSize: "clamp(1.05rem, 1.7vw, 1.2rem)",
+                fontWeight: 400,
+                color: "var(--sec-mid)",
+                lineHeight: 1.6,
+              }}
+            >
+              {post.description}
+            </p>
+          </div>
 
-      <div style={{ marginTop: "4rem" }}>
-        <BackButton />
-      </div>
-    </main>
+          <div className="prose">
+            <MDXRemote source={post.content} options={mdxOptions} />
+          </div>
+
+          <div style={{ marginTop: "4rem" }}>
+            <BackButton />
+          </div>
+        </div>
+      </main>
+    </>
   );
 }

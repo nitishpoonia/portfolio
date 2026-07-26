@@ -1,32 +1,26 @@
 import Link from "next/link";
 import SectionHeader from "./SectionHeader";
+import Reveal from "./Reveal";
 import { getHomeProjects } from "@/lib/project";
 
 function ProjectCard({ project }) {
   return (
     <Link
       href={project.link}
-      className={`home-project-card ${project.isBuilding ? "is-building" : ""}`}
+      className="home-project-card"
       style={{
-        padding: "clamp(1.5rem, 3vw, 2.5rem)",
-        borderRight: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
-        transition: "background 0.25s ease, border-color 0.25s ease",
-        cursor: project.link ? "pointer" : "default",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        padding: "clamp(1.5rem, 3vw, 2.1rem)",
+        background: "var(--sec-card)",
+        border: "1px solid var(--sec-line)",
+        borderRadius: "var(--r-lg)",
         textDecoration: "none",
+        transition:
+          "transform var(--t-med) var(--ease-soft), background var(--t-med) var(--ease-soft), border-color var(--t-med) var(--ease-soft)",
       }}
     >
-      <div
-        style={{
-          border: project.isBuilding
-            ? "1.5px solid var(--ink)"
-            : "1px solid var(--border)",
-          minHeight: "180px",
-          marginBottom: "1.5rem",
-          borderRadius: "6px",
-          transition: "border-color 0.25s ease",
-        }}
-      ></div>
       <div
         style={{
           display: "flex",
@@ -36,68 +30,52 @@ function ProjectCard({ project }) {
           marginBottom: "1.5rem",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
-          <span
-            data-num
-            style={{
-              fontSize: "0.65rem",
-              fontWeight: 700,
-              letterSpacing: "0.2em",
-              color: "var(--faint)",
-              transition: "color 0.25s",
-            }}
-          >
-            {project.number}
-          </span>
-          <span
-            data-invert
-            style={{
-              fontSize: "0.62rem",
-              fontWeight: 700,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: "var(--mid)",
-              transition: "color 0.25s",
-            }}
-          >
-            {project.timeline}
-          </span>
-          {project.isBuilding && (
-            <span className="build-badge">Currently Building</span>
-          )}
-        </div>
-        {project.link && (
-          <span
-            data-invert
-            style={{ fontSize: "0.7rem", transition: "color 0.25s" }}
-          >
-            →
-          </span>
-        )}
+        <span
+          style={{
+            fontFamily: "var(--mono)",
+            fontSize: "0.64rem",
+            fontWeight: 500,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--sec-mid)",
+          }}
+        >
+          {project.timeline}
+        </span>
+        <span
+          className="card-arrow"
+          aria-hidden="true"
+          style={{
+            fontSize: "0.95rem",
+            color: "var(--sec-accent)",
+            transition: "transform var(--t-med) var(--ease-soft)",
+          }}
+        >
+          →
+        </span>
       </div>
 
       <h3
-        data-title
         style={{
-          fontSize: "clamp(1.1rem, 1.8vw, 1.45rem)",
-          fontWeight: 800,
-          letterSpacing: "-0.02em",
-          color: "var(--ink)",
-          marginBottom: "0.5rem",
-          transition: "color 0.25s",
+          fontFamily: "var(--display)",
+          fontSize: "clamp(1.25rem, 2vw, 1.6rem)",
+          fontWeight: 500,
+          letterSpacing: "-0.01em",
+          color: "var(--sec-ink)",
+          marginBottom: "0.6rem",
+          lineHeight: 1.1,
         }}
       >
         {project.title}
       </h3>
 
       <p
-        data-invert
         style={{
-          fontSize: "0.85rem",
-          color: "var(--mid)",
-          marginBottom: "1.75rem",
+          fontSize: "0.9rem",
+          color: "var(--sec-mid)",
+          marginBottom: "1.6rem",
           lineHeight: 1.6,
-          transition: "color 0.25s",
+          flexGrow: 1,
         }}
       >
         {project.tagline}
@@ -108,23 +86,22 @@ function ProjectCard({ project }) {
           listStyle: "none",
           display: "flex",
           flexWrap: "wrap",
-          gap: "0.6rem",
+          gap: "0.5rem",
         }}
       >
         {project.tags.map((tag) => (
           <li
             key={tag}
-            data-invert
             style={{
-              fontSize: "0.66rem",
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "var(--mid)",
+              fontFamily: "var(--mono)",
+              fontSize: "0.64rem",
+              fontWeight: 500,
+              letterSpacing: "0.04em",
+              color: "var(--sec-mid)",
               lineHeight: 1.2,
-              border: "1px solid var(--border)",
-              padding: "0.35rem 0.65rem",
-              transition: "color 0.25s",
+              border: "1px solid var(--sec-line)",
+              borderRadius: "var(--r-pill)",
+              padding: "0.35rem 0.7rem",
             }}
           >
             {tag}
@@ -139,119 +116,71 @@ export default function Projects() {
   const projects = getHomeProjects();
 
   return (
-    <section
-      id="projects"
-      style={{
-        borderBottom: "1px solid var(--border)",
-      }}
-    >
+    <>
+      <SectionHeader
+        label="Work"
+        title="Selected projects"
+        subtitle="Internal tools, client apps, and freelance sites. The detailed ones open into a full case study — how the problem was framed and what actually shipped."
+      />
+
       <div
+        className="card-grid"
         style={{
-          padding: "var(--pad-y) var(--pad-x) 0",
-          maxWidth: "var(--max)",
-          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "clamp(1rem, 2vw, 1.5rem)",
         }}
       >
-        <SectionHeader
-          label="Work"
-          title="Projects"
-          subtitle="Built at Vision Vivante (Dec 2024 – Jan 2025) — from first wireframe to shipped product."
-        />
+        {projects.map((p, i) => (
+          <Reveal key={p.number} delay={(i % 2) * 0.06} style={{ height: "100%" }}>
+            <ProjectCard project={p} />
+          </Reveal>
+        ))}
       </div>
 
-      {/* Card grid */}
-      <div
-        style={{
-          maxWidth: "var(--max)",
-          margin: "0 auto",
-          padding: "0 var(--pad-x)",
-        }}
-      >
-        <div
-          className="card-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            borderTop: "1px solid var(--border)",
-            borderLeft: "1px solid var(--border)",
-            marginTop: 0,
-          }}
-        >
-          {projects.map((p) => (
-            <ProjectCard key={p.number} project={p} />
-          ))}
-        </div>
-        <div style={{ padding: "2rem 0", textAlign: "right" }}>
-          <Link
-            href="/projects"
-            style={{
-              fontSize: "0.68rem",
-              fontWeight: 700,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "var(--mid)",
-              textDecoration: "none",
-              border: "1px solid var(--border)",
-              padding: "0.5rem 0.75rem",
-            }}
-          >
-            View all projects →
+      <div style={{ marginTop: "2.5rem" }}>
+        <Reveal>
+          <Link href="/projects" className="view-all">
+            View all projects
+            <span className="view-all-arrow" aria-hidden="true">→</span>
           </Link>
-        </div>
+        </Reveal>
       </div>
+
       <style>{`
         .home-project-card:hover {
-          background: var(--ink);
-          border-color: var(--ink);
+          transform: translateY(-4px);
+          background: var(--sec-card-hover);
+          border-color: var(--sec-accent);
         }
-        .home-project-card:hover [data-invert] {
-          color: rgba(247, 246, 242, 0.55) !important;
-        }
-        .home-project-card:hover [data-title] {
-          color: var(--bg) !important;
-        }
-        .home-project-card:hover [data-num] {
-          color: rgba(247, 246, 242, 0.34) !important;
-        }
-        .home-project-card.is-building {
-          border-right: 1.5px solid var(--ink) !important;
-          border-bottom: 1.5px solid var(--ink) !important;
-        }
-        .home-project-card.is-building .build-badge {
+        .home-project-card:hover .card-arrow { transform: translateX(4px); }
+        .home-project-card > * { flex-shrink: 0; }
+        .view-all {
           display: inline-flex;
           align-items: center;
-          gap: 0.35rem;
-          font-size: 0.56rem;
-          font-weight: 700;
-          letter-spacing: 0.13em;
+          gap: 0.5rem;
+          font-family: var(--mono);
+          font-size: 0.74rem;
+          font-weight: 500;
+          letter-spacing: 0.06em;
           text-transform: uppercase;
-          border: 1.5px solid var(--ink);
-          color: var(--ink);
-          padding: 0.22rem 0.45rem;
+          color: var(--sec-ink);
+          text-decoration: none;
+          border: 1px solid var(--sec-line);
+          border-radius: var(--r-pill);
+          padding: 0.7rem 1.3rem;
+          transition: background var(--t-fast) var(--ease-soft), border-color var(--t-fast) var(--ease-soft);
         }
-        .home-project-card.is-building .build-badge::before {
-          content: "";
-          width: 6px;
-          height: 6px;
-          border-radius: 999px;
-          background: #4ade80;
-          flex-shrink: 0;
+        .view-all:hover { background: var(--sec-card-hover); border-color: var(--sec-accent); }
+        .view-all-arrow { transition: transform var(--t-fast) var(--ease-soft); }
+        .view-all:hover .view-all-arrow { transform: translateX(4px); }
+        @media (max-width: 640px) {
+          .card-grid { grid-template-columns: 1fr !important; }
         }
-        .home-project-card.is-building:hover .build-badge {
-          border-color: rgba(247, 246, 242, 0.45);
-          color: rgba(247, 246, 242, 0.75);
-        }
-        @media (max-width: 900px) {
-          #projects .card-grid {
-            grid-template-columns: 1fr 1fr !important;
-          }
-        }
-        @media (max-width: 600px) {
-          #projects .card-grid {
-            grid-template-columns: 1fr !important;
-          }
+        @media (prefers-reduced-motion: reduce) {
+          .home-project-card:hover { transform: none; }
         }
       `}</style>
-    </section>
+    </>
   );
 }

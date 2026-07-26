@@ -17,8 +17,8 @@ export default function sitemap() {
   return [
     { url: "https://nitishpoonia.in", lastModified: new Date() },
     { url: "https://nitishpoonia.in/projects", lastModified: new Date() },
-    { url: "https://nitishpoonia.in/design", lastModified: new Date() },
     { url: "https://nitishpoonia.in/blog", lastModified: new Date() },
+    { url: "https://nitishpoonia.in/hire", lastModified: new Date() },
     ...postUrls,
     ...projectUrls,
   ];

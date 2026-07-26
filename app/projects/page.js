@@ -1,17 +1,17 @@
 import { getAllProjects } from "@/lib/project";
 import ProjectCard from "./ProjectCard";
-import Link from "next/link";
+import Navbar from "@/components/NavBar";
 import BackButton from "@/components/BackButton";
 
 export const metadata = {
   title: "Projects & Case Studies — Nitish Poonia | React Native Developer",
   description:
-    "Full case studies of production apps built by Nitish Poonia — NFC attendance tracking, hotel booking with Stripe, a campus social platform, and a full-stack SaaS product.",
+    "Case studies and projects by Nitish Poonia — NFC attendance tracking, hotel booking with Stripe, a campus social feed, and a study-centre SaaS backend.",
   alternates: { canonical: "https://nitishpoonia.in/projects" },
   openGraph: {
     title: "Projects & Case Studies — Nitish Poonia | React Native Developer",
     description:
-      "Full case studies of production apps built by Nitish Poonia — NFC attendance tracking, hotel booking with Stripe, a campus social platform, and a full-stack SaaS product.",
+      "Case studies and projects by Nitish Poonia — NFC attendance tracking, hotel booking with Stripe, a campus social feed, and a study-centre SaaS backend.",
     url: "https://nitishpoonia.in/projects",
     type: "website",
     siteName: "Nitish Poonia",
@@ -20,244 +20,168 @@ export const metadata = {
     card: "summary_large_image",
     title: "Projects & Case Studies — Nitish Poonia | React Native Developer",
     description:
-      "Full case studies of production apps built by Nitish Poonia — NFC attendance tracking, hotel booking with Stripe, a campus social platform, and a full-stack SaaS product.",
+      "Case studies and projects by Nitish Poonia — NFC attendance tracking, hotel booking with Stripe, a campus social feed, and a study-centre SaaS backend.",
     creator: "@nitishpoonia",
   },
 };
 
 export default function ProjectsPage() {
   const projects = getAllProjects();
-  const featured = projects.find((p) => p.type === "product");
-  const regular = projects.filter((p) => p.type !== "product");
 
-  return (
-    <main
-      style={{
-        maxWidth: "var(--max)",
-        margin: "0 auto",
-        padding: "calc(var(--pad-y) + 4rem) var(--pad-x) var(--pad-y)",
-      }}
-    >
-      <BackButton />
-      {/* Page header */}
-      <div style={{ marginBottom: "clamp(3rem, 6vw, 5rem)" }}>
-        <p
-          style={{
-            fontSize: "0.65rem",
-            fontWeight: 700,
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            color: "var(--mid)",
-            marginBottom: "1rem",
-          }}
-        >
-          Case Studies
-        </p>
-        <h1
-          style={{
-            fontSize: "clamp(2.4rem, 5.5vw, 5rem)",
-            fontWeight: 900,
-            letterSpacing: "-0.03em",
-            lineHeight: 0.95,
-            color: "var(--ink)",
-          }}
-        >
-          Projects
-        </h1>
-        <p
-          style={{
-            marginTop: "1.25rem",
-            fontSize: "clamp(0.9rem, 1.4vw, 1.05rem)",
-            color: "var(--mid)",
-            lineHeight: 1.7,
-            maxWidth: "52ch",
-          }}
-        >
-          Full case studies — the real challenges, the decisions made, and what
-          shipped.
-        </p>
-      </div>
-
-      {/* ── Featured product build ── */}
-      {featured && (
-        <>
-          <p
-            style={{
-              fontSize: "0.62rem",
-              fontWeight: 700,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "var(--mid)",
-              marginBottom: "0.75rem",
-            }}
-          >
-            Currently Building
-          </p>
-
-          <FeaturedCard project={featured} />
-
-          <p
-            style={{
-              fontSize: "0.62rem",
-              fontWeight: 700,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "var(--mid)",
-              margin: "3.5rem 0 0.75rem",
-            }}
-          >
-            Client Work
-          </p>
-        </>
-      )}
-
-      {/* ── Regular list ── */}
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        {regular.map((project, i) => (
-          <ProjectCard key={project.slug} project={project} index={i} />
-        ))}
-      </div>
-
-      <Link
-        href="/portfolio"
-        style={{
-          display: "inline-block",
-          marginTop: "3.5rem",
-          fontSize: "0.68rem",
-          fontWeight: 700,
-          letterSpacing: "0.15em",
-          textTransform: "uppercase",
-          color: "var(--mid)",
-          textDecoration: "none",
-        }}
-      >
-        ← Back to portfolio
-      </Link>
-    </main>
-  );
-}
-
-// ── Featured card — server component safe (no hover handlers)
-// uses CSS classes for interaction
-function FeaturedCard({ project }) {
   return (
     <>
-      <style>{`
-        .featured-card {
-          display: block;
-          text-decoration: none;
-          border: 1.5px solid var(--ink);
-          background: var(--ink);
-          padding: clamp(2rem, 4vw, 3rem);
-          transition: background 0.25s ease;
-          position: relative;
-        }
-        .featured-card:hover {
-          background: var(--bg);
-        }
-        .featured-card .fc-label {
-          font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em;
-          text-transform: uppercase; color: rgba(247,246,242,0.45);
-          transition: color 0.25s;
-        }
-        .featured-card:hover .fc-label { color: var(--mid); }
-
-        .featured-card .fc-title {
-          font-size: clamp(1.8rem, 3.5vw, 3rem);
-          font-weight: 900; letter-spacing: -0.03em; line-height: 1;
-          color: var(--bg); transition: color 0.25s;
-          margin-bottom: 0.75rem;
-        }
-        .featured-card:hover .fc-title { color: var(--ink); }
-
-        .featured-card .fc-tagline {
-          font-size: clamp(0.85rem, 1.2vw, 0.95rem);
-          color: rgba(247,246,242,0.45); line-height: 1.7;
-          transition: color 0.25s; max-width: 52ch;
-        }
-        .featured-card:hover .fc-tagline { color: var(--mid); }
-
-        .featured-card .fc-tag {
-          font-size: 0.6rem; font-weight: 700;
-          letter-spacing: 0.08em; text-transform: uppercase;
-          padding: 0.35rem 0.8rem;
-          border: 1px solid rgba(247,246,242,0.15);
-          color: rgba(247,246,242,0.45);
-          transition: border-color 0.25s, color 0.25s;
-        }
-        .featured-card:hover .fc-tag {
-          border-color: var(--border);
-          color: var(--mid);
-        }
-        .featured-card .fc-arrow {
-          font-size: 0.7rem; font-weight: 700;
-          color: rgba(247,246,242,0.5);
-          transition: color 0.25s;
-        }
-        .featured-card:hover .fc-arrow { color: var(--ink); }
-
-        .fc-inner {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          gap: 2rem;
-          align-items: end;
-          margin-top: 1.75rem;
-        }
-        @media (max-width: 640px) {
-          .fc-inner { grid-template-columns: 1fr; }
-          .fc-tags  { justify-content: flex-start !important; }
-        }
-      `}</style>
-
-      <a href={`/projects/${project.slug}`} className="featured-card">
-        {/* Top row */}
+      <Navbar />
+      <main className="band band-0" style={{ minHeight: "100vh" }}>
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1.75rem",
+            maxWidth: "var(--max)",
+            margin: "0 auto",
+            padding: "calc(var(--pad-y) + 4rem) var(--pad-x) var(--pad-y)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-            <span
+          <BackButton />
+
+          <div style={{ marginBottom: "clamp(2.75rem, 6vw, 4.5rem)" }}>
+            <p
               style={{
-                width: "7px",
-                height: "7px",
-                borderRadius: "50%",
-                background: "#4ade80",
-                display: "inline-block",
-                flexShrink: 0,
+                fontFamily: "var(--mono)",
+                fontSize: "0.66rem",
+                fontWeight: 500,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "var(--sec-mid)",
+                marginBottom: "1rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.6rem",
               }}
-            />
-            <span className="fc-label">Independent Build · In Progress</span>
+            >
+              <span
+                aria-hidden="true"
+                style={{ width: "18px", height: "1px", background: "var(--sec-accent)" }}
+              />
+              Work
+            </p>
+            <h1
+              style={{
+                fontFamily: "var(--display)",
+                fontSize: "clamp(2.4rem, 5.5vw, 4.5rem)",
+                fontWeight: 400,
+                letterSpacing: "-0.02em",
+                lineHeight: 1,
+                color: "var(--sec-ink)",
+              }}
+            >
+              Projects
+            </h1>
+            <p
+              style={{
+                marginTop: "1.25rem",
+                fontSize: "clamp(0.95rem, 1.4vw, 1.1rem)",
+                color: "var(--sec-mid)",
+                lineHeight: 1.7,
+                maxWidth: "54ch",
+              }}
+            >
+              Internal tools, client apps, and freelance sites. The detailed ones
+              open into a full case study — how the problem was framed and what
+              actually shipped.
+            </p>
           </div>
-          <span className="fc-arrow">View case study →</span>
-        </div>
 
-        <div className="fc-inner">
-          <div>
-            <h2 className="fc-title">{project.title}</h2>
-            <p className="fc-tagline">{project.tagline}</p>
-          </div>
-
-          <div
-            className="fc-tags"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "0.5rem",
-              justifyContent: "flex-end",
-            }}
-          >
-            {project.tags.map((tag) => (
-              <span key={tag} className="fc-tag">
-                {tag}
-              </span>
+          <div className="idx-grid">
+            {projects.map((project) => (
+              <ProjectCard key={project.slug} project={project} />
             ))}
           </div>
         </div>
-      </a>
+      </main>
+
+      <style>{`
+        .idx-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: clamp(1rem, 2vw, 1.5rem);
+        }
+        .idx-card {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          padding: clamp(1.5rem, 3vw, 2.1rem);
+          background: var(--sec-card);
+          border: 1px solid var(--sec-line);
+          border-radius: var(--r-lg);
+          text-decoration: none;
+          box-shadow: var(--sec-shadow);
+          transition: transform var(--t-med) var(--ease-soft), border-color var(--t-med) var(--ease-soft), background var(--t-med) var(--ease-soft);
+        }
+        .idx-card:hover {
+          transform: translateY(-4px);
+          border-color: var(--sec-accent);
+          background: var(--sec-card-hover);
+        }
+        .idx-card-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 0.8rem;
+          margin-bottom: 1.4rem;
+        }
+        .idx-meta {
+          font-family: var(--mono);
+          font-size: 0.64rem;
+          font-weight: 500;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: var(--sec-mid);
+        }
+        .idx-arrow {
+          font-size: 0.95rem;
+          color: var(--sec-accent);
+          transition: transform var(--t-med) var(--ease-soft);
+        }
+        .idx-card:hover .idx-arrow { transform: translateX(4px); }
+        .idx-title {
+          font-family: var(--display);
+          font-size: clamp(1.3rem, 2vw, 1.65rem);
+          font-weight: 500;
+          letter-spacing: -0.01em;
+          line-height: 1.1;
+          color: var(--sec-ink);
+          margin-bottom: 0.6rem;
+        }
+        .idx-tagline {
+          font-size: 0.92rem;
+          color: var(--sec-mid);
+          line-height: 1.6;
+          margin-bottom: 1.6rem;
+          flex-grow: 1;
+        }
+        .idx-tags {
+          list-style: none;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          padding: 0;
+          margin: 0;
+        }
+        .idx-tags li {
+          font-family: var(--mono);
+          font-size: 0.63rem;
+          font-weight: 500;
+          letter-spacing: 0.04em;
+          color: var(--sec-mid);
+          border: 1px solid var(--sec-line);
+          border-radius: var(--r-pill);
+          padding: 0.33rem 0.7rem;
+        }
+        @media (max-width: 640px) {
+          .idx-grid { grid-template-columns: 1fr; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .idx-card:hover { transform: none; }
+        }
+      `}</style>
     </>
   );
 }
