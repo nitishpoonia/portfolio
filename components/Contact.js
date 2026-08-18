@@ -134,6 +134,12 @@ export default function Contact() {
               external
             />
             <ContactCard href={waUrl} eyebrow="WhatsApp" label="Message me" external />
+            <ContactCard
+              href="https://youtube.com/@nitishpoonia"
+              eyebrow="YouTube"
+              label="@nitishpoonia"
+              external
+            />
           </div>
         </Reveal>
       </div>
