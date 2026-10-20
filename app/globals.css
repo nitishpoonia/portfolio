@@ -47,6 +47,9 @@
   --r-xl:   32px;
   --r-pill: 999px;
 
+  /* ── Frosted glass ──────────────────────────── */
+  --glass-blur: blur(18px) saturate(160%);
+
   /* ── Easing / timing ────────────────────────── */
   --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
@@ -128,6 +131,18 @@ body {
   --sec-card: rgba(255, 250, 240, 0.05);
   --sec-card-hover: rgba(255, 250, 240, 0.10);
   --sec-shadow: none;
+}
+
+/* ── Glass surface ───────────────────────────────
+   Reads the per-band --sec-* tokens, so it adapts to whichever
+   .band-N it sits in. Blur only shows if something sits behind it. */
+.glass {
+  background: var(--sec-card);
+  border: 1px solid var(--sec-line);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sec-shadow);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
 }
 
 /* ── Focus visibility (keyboard) ─────────────── */
