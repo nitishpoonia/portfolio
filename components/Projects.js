@@ -112,8 +112,8 @@ function ProjectCard({ project }) {
   );
 }
 
-export default function Projects() {
-  const projects = getHomeProjects();
+export default async function Projects() {
+  const projects = await getHomeProjects();
 
   return (
     <>

@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -21,6 +22,7 @@ const mdxOptions = {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
+  if (!post) notFound();
 
   const fullTitle = `${post.title} | Nitish Poonia`;
   const description =
@@ -53,7 +55,7 @@ export async function generateMetadata({ params }) {
 
 // Pre-generates all post pages at build time
 export async function generateStaticParams() {
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
   return posts.map((p) => ({ slug: p.slug }));
 }
 
@@ -61,6 +63,7 @@ export default async function PostPage({ params }) {
   const { slug } = await params;
 
   const post = await getPostBySlug(slug);
+  if (!post) notFound();
 
   return (
     <>

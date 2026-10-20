@@ -1,15 +1,15 @@
 import { getAllPosts } from "@/lib/posts";
 import { getAllProjects } from "@/lib/project";
 
-export default function sitemap() {
-  const posts = getAllPosts();
+export default async function sitemap() {
+  const posts = await getAllPosts();
 
   const postUrls = posts.map((post) => ({
     url: `https://nitishpoonia.in/blog/${post.slug}`,
     lastModified: new Date(post.date),
   }));
 
-  const projectUrls = getAllProjects().map((p) => ({
+  const projectUrls = (await getAllProjects()).map((p) => ({
     url: `https://nitishpoonia.in/projects/${p.slug}`,
     lastModified: new Date(),
   }));
