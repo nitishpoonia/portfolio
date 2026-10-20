@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/db-setup.mjs",
     "build": "next build",
     "start": "next start",
-    "db:setup": "node --env-file=.env.local scripts/db-setup.mjs",
+    "db:setup": "node scripts/db-setup.mjs",
     "db:seed": "node --env-file=.env.local scripts/db-seed.mjs"
   },
   "dependencies": {
