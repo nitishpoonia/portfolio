@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { getAllProjects, getProjectBySlug } from "@/lib/project";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
@@ -20,6 +21,7 @@ const mdxComponents = { NfcTimerDemo };
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
+  if (!project) notFound();
 
   const fullTitle = `${project.title} — Case Study | Nitish Poonia`;
   const description =
@@ -48,7 +50,7 @@ export async function generateMetadata({ params }) {
 }
 
 export async function generateStaticParams() {
-  const projects = getAllProjects();
+  const projects = await getAllProjects();
   return projects.map((p) => ({ slug: p.slug }));
 }
 
@@ -63,6 +65,7 @@ const metaLabel = {
 export default async function ProjectPage({ params }) {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
+  if (!project) notFound();
 
   return (
     <main
