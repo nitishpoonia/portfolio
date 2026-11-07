@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/db-setup.mjs",
+    "prebuild": "node scripts/db-setup.mjs && node scripts/db-seed-if-empty.mjs",
     "build": "next build",
     "start": "next start",
     "db:setup": "node scripts/db-setup.mjs",
