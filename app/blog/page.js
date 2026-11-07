@@ -3,6 +3,7 @@ import BlogTabs from "./BlogTabs";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import PageHeader from "@/components/PageHeader";
+import { PenLine } from "lucide-react";
 
 const DESCRIPTION =
   "Articles on React Native performance, FlatList optimisation, cursor pagination, image loading and building products end to end, written from real production work.";
@@ -29,6 +30,7 @@ export default async function BlogPage() {
       <Navbar />
       <main className="page-main page-narrow">
         <PageHeader
+          icon={PenLine}
           eyebrow="Writing"
           title="Notes from building"
           lede="Things I worked out while shipping: React Native performance, pagination, image loading. Plus the occasional note from away from the screen."

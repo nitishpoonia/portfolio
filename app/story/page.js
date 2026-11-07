@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Mail, ArrowRight } from "lucide-react";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import { CHAPTERS } from "@/lib/story";
@@ -53,8 +54,8 @@ export default async function StoryPage() {
           <h2 id="end-h" className="h2">That’s the story so far.</h2>
           <p>The next chapter is open. If it could be with you, say hello.</p>
           <div className="btn-row">
-            <a href={`mailto:${contact.email}`} className="pill-btn pill-btn-dark">Email me</a>
-            <Link href="/projects" className="pill-btn pill-btn-line">See my work</Link>
+            <a href={`mailto:${contact.email}`} className="pill-btn pill-btn-dark"><Mail size={17} strokeWidth={1.9} aria-hidden="true" />Email me</a>
+            <Link href="/projects" className="pill-btn pill-btn-line">See my work<ArrowRight size={17} strokeWidth={1.9} aria-hidden="true" /></Link>
           </div>
         </section>
       </main>

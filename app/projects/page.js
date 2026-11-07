@@ -3,6 +3,7 @@ import ProjectCard from "./ProjectCard";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import PageHeader from "@/components/PageHeader";
+import { Layers } from "lucide-react";
 
 const DESCRIPTION =
   "Case studies and projects by Nitish Poonia: NFC attendance tracking, hotel booking with Stripe, a campus social feed, a study-centre SaaS backend, and client websites.";
@@ -29,6 +30,7 @@ export default async function ProjectsPage() {
       <Navbar />
       <main className="page-main">
         <PageHeader
+          icon={Layers}
           eyebrow="Work"
           title="Things I’ve built"
           lede="Internal tools, client apps and freelance sites. Each one opens into a case study: how the problem was framed and what actually shipped."
