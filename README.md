@@ -1,64 +1,39 @@
-# Nitish Poonia — Portfolio
+# nitishpoonia.in
 
-Built with **Next.js 14**, **Tailwind CSS**, and **Montserrat** font.
+Personal site: story, work, writing, and a small admin ("Studio") for publishing posts and case studies.
 
-## Getting Started
+## Stack
+
+- Next.js 16 (App Router), React 19
+- Plain CSS in `app/globals.css` for the public site (black-and-white glass design)
+- Tailwind CSS for the `/studio` admin only (preflight disabled)
+- Neon Postgres for posts, projects and site settings
+- Tiptap rich-text editor in Studio; content rendered with `next-mdx-remote`
+
+## Run locally
 
 ```bash
 npm install
+cp .env.example .env.local   # then fill in the values below
+npm run db:setup             # creates tables (safe to re-run)
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Environment variables:
 
-## Adding Your Portrait
+| Name | What it is |
+| --- | --- |
+| `DATABASE_URL` | Neon connection string |
+| `STUDIO_PASSWORD` | Password for `/studio/login` |
+| `STUDIO_SESSION_SECRET` | 32+ random characters for signing the session cookie |
 
-1. Place your photo at `/public/portrait.jpg`
-2. In `app/page.js`, find the comment `TO ADD YOUR PHOTO` in the Hero section
-3. Replace the placeholder `<div>` with:
+## Where things live
 
-```jsx
-import Image from 'next/image'  // add at top of file
-
-// Replace placeholder div with:
-<Image
-  src="/portrait.jpg"
-  alt="Nitish Poonia"
-  fill
-  className="object-cover object-top grayscale"
-  priority
-/>
-```
-
-## Reusable Components
-
-| Component | Purpose |
-|-----------|---------|
-| `SectionLabel` | Small uppercase label above headings |
-| `Divider` | Thin horizontal rule between sections |
-| `SkillPill` | Skill tag — `proficient` prop for filled style |
-| `ProjectCard` | Expandable project card with feature list |
-| `NavBar` | Sticky nav that fades in on scroll |
-
-## Adding a New Project
-
-In `app/page.js`, add an object to the `projects` array:
-
-```js
-{
-  number: 4,
-  title: 'Your Project Title',
-  summary: 'One line description.',
-  slug: 'your-project-slug',      // for future detail pages
-  features: ['Feature one', 'Feature two'],
-}
-```
-
-## Deploy to Vercel
-
-```bash
-npm install -g vercel
-vercel
-```
-
-Or connect your GitHub repo at [vercel.com](https://vercel.com) for automatic deploys.
+| Path | What |
+| --- | --- |
+| `lib/story.js` | Story chapters, "Now building" card, skills, photo collage, social links |
+| `lib/contact.js` | Fallback contact details (Studio → Settings overrides these) |
+| `lib/site.js` | `getContact()`: merges Studio settings over the fallback |
+| `app/studio/*` | Admin: posts, projects, settings. Protected by `proxy.js` |
+| `db/schema.sql` | Database tables |
+| `content/` | Original MDX files, used only by `npm run db:seed` |

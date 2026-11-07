@@ -3,15 +3,16 @@ import Image from "next/image";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import { CHAPTERS } from "@/lib/story";
-import { CONTACT } from "@/lib/contact";
+import { getContact } from "@/lib/site";
 
 export const metadata = {
   title: "How I got here",
-  description: "The path from Jalandhar to building mobile and web products, one chapter at a time.",
+  description: "The path from Jalandhar to building mobile, web and now AI products, one chapter at a time.",
   alternates: { canonical: "https://nitishpoonia.in/story" },
 };
 
-export default function StoryPage() {
+export default async function StoryPage() {
+  const contact = await getContact();
   return (
     <div className="page-shell">
       <Navbar />
@@ -52,7 +53,7 @@ export default function StoryPage() {
           <h2 id="end-h" className="h2">That’s the story so far.</h2>
           <p>The next chapter is open. If it could be with you, say hello.</p>
           <div className="btn-row">
-            <a href={`mailto:${CONTACT.email}`} className="pill-btn pill-btn-dark">Email me</a>
+            <a href={`mailto:${contact.email}`} className="pill-btn pill-btn-dark">Email me</a>
             <Link href="/projects" className="pill-btn pill-btn-line">See my work</Link>
           </div>
         </section>

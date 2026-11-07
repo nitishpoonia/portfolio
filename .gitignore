@@ -4,3 +4,6 @@ docs
 # env
 .env*.local
 .env
+
+# OS files
+.DS_Store

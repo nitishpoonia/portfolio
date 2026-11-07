@@ -19,7 +19,7 @@ const tabs = [
 export default async function StudioLayout({ children }) {
   const authed = await isAdmin();
   return (
-    <div className="min-h-screen bg-[#F2F2F2] text-[#0A0A0A]" style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+    <div className="studio-root min-h-screen bg-[#F2F2F2] text-[#0A0A0A]" style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
       {authed && (
         <header className={`${glass} sticky top-3 z-10 mx-3 mt-3 flex flex-wrap items-center justify-between gap-2 !rounded-full px-3 py-1.5 md:mx-auto md:max-w-3xl`}>
           <nav aria-label="Studio" className="flex flex-wrap">

@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { CONTACT } from "@/lib/contact";
 import { SOCIAL } from "@/lib/story";
+import { getContact } from "@/lib/site";
 
-export default function SiteFooter() {
+export default async function SiteFooter() {
+  const contact = await getContact();
   return (
     <footer className="site-footer">
       <div className="glass site-footer-inner">
@@ -17,9 +18,10 @@ export default function SiteFooter() {
           {SOCIAL.map((s) => (
             <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a>
           ))}
-          <a href={`https://wa.me/${CONTACT.whatsapp}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <a href={`mailto:${contact.email}`}>Email</a>
+          <a href={`https://wa.me/${contact.whatsapp}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
           <Link href="/uses">Uses</Link>
-          <Link href="/studio">Studio</Link>
+          <Link href="/studio" rel="nofollow">Studio</Link>
         </nav>
       </div>
     </footer>

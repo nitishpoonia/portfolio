@@ -1,3 +1,9 @@
+/* Tailwind: only used by the /studio admin. Preflight is off (see
+   tailwind.config.js) so the public site's own reset stays in charge. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -75,63 +81,6 @@ body {
 ::selection { background: var(--accent-deep); color: #F2F2F2; }
 
 ::-webkit-scrollbar { width: 0; }
-
-/* ── Per-band token sets ─────────────────────────
-   A .band element paints its own background + text, and exposes the
-   generic --sec-* tokens so child components render correctly at any depth. */
-.band {
-  background: var(--sec-bg);
-  color: var(--sec-ink);
-  transition: background var(--t-med) linear;
-}
-.band-0 {
-  --sec-bg: var(--soil-0); --sec-ink: #0A0A0A; --sec-mid: #55555A;
-  --sec-accent: var(--accent-deep);
-  --sec-line: rgba(10, 10, 10, 0.14);
-  --sec-card: rgba(255, 255, 255, 0.45);
-  --sec-card-hover: rgba(255, 255, 255, 0.78);
-  --sec-shadow: 0 2px 22px rgba(10, 10, 10, 0.08);
-}
-.band-1 {
-  --sec-bg: var(--soil-1); --sec-ink: #0A0A0A; --sec-mid: #3C3C41;
-  --sec-accent: #0A0A0A;
-  --sec-line: rgba(10, 10, 10, 0.16);
-  --sec-card: rgba(255, 255, 255, 0.40);
-  --sec-card-hover: rgba(255, 255, 255, 0.72);
-  --sec-shadow: 0 2px 22px rgba(10, 10, 10, 0.10);
-}
-.band-2 {
-  --sec-bg: var(--soil-2); --sec-ink: #F2F2F2; --sec-mid: #CFCFD3;
-  --sec-accent: #F2F2F2;
-  --sec-line: rgba(242, 242, 242, 0.20);
-  --sec-card: rgba(255, 255, 255, 0.10);
-  --sec-card-hover: rgba(255, 255, 255, 0.18);
-  --sec-shadow: none;
-}
-.band-3 {
-  --sec-bg: var(--soil-3); --sec-ink: #F2F2F2; --sec-mid: #B9B9BE;
-  --sec-accent: var(--accent-lite);
-  --sec-line: rgba(242, 242, 242, 0.16);
-  --sec-card: rgba(255, 255, 255, 0.06);
-  --sec-card-hover: rgba(255, 255, 255, 0.13);
-  --sec-shadow: none;
-}
-.band-4 {
-  --sec-bg: var(--soil-4); --sec-ink: #F2F2F2; --sec-mid: #A0A0A6;
-  --sec-accent: var(--accent-lite);
-  --sec-line: rgba(242, 242, 242, 0.14);
-  --sec-card: rgba(255, 255, 255, 0.05);
-  --sec-card-hover: rgba(255, 255, 255, 0.11);
-  --sec-shadow: none;
-}
-.band-5 {
-  --sec-bg: var(--soil-5); --sec-ink: #F2F2F2; --sec-mid: #9A9AA0;
-  --sec-accent: var(--accent-lite);
-  --sec-line: rgba(242, 242, 242, 0.12);
-  --sec-card: rgba(255, 255, 255, 0.05);
-  --sec-card-hover: rgba(255, 255, 255, 0.10);
-  --sec-shadow: none;
-}
 
 /* ── Glass surface ───────────────────────────────
    Reads the per-band --sec-* tokens, so it adapts to whichever
@@ -250,34 +199,6 @@ body {
 }
 .prose [data-rehype-pretty-code-title] + pre { border-radius: 0 0 var(--r-md) var(--r-md); }
 
-/* ── Back button (softened) ──────────────────── */
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 1.1rem;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--mid);
-  font-size: 0.74rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: background var(--t-fast) var(--ease-soft),
-              color var(--t-fast) var(--ease-soft),
-              border-color var(--t-fast) var(--ease-soft),
-              transform var(--t-fast) var(--ease-soft);
-  margin-bottom: 2.5rem;
-  font-family: var(--font);
-}
-.back-btn:hover {
-  background: var(--accent-deep);
-  color: #F2F2F2;
-  border-color: var(--accent-deep);
-  transform: translateX(-2px);
-}
-
 /* ── Reduced motion ──────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -288,6 +209,10 @@ body {
   }
   .cursor { animation: none; opacity: 1; }
 }
+
+/* Studio: the border reset Tailwind's preflight would normally provide */
+.studio-root *, .studio-root ::before, .studio-root ::after { border-width: 0; border-style: solid; border-color: currentColor; }
+.studio-root img { max-width: 100%; height: auto; }
 
 /* Studio rich-text editor */
 .prose-studio h2{font-size:1.5rem;font-weight:600;margin:1.2em 0 .4em}
@@ -327,7 +252,7 @@ a { color: inherit; }
   box-shadow: 0 8px 32px rgba(10,10,10,.07);
   -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%);
 }
-.site-nav-logo { width: 32px; height: 32px; border-radius: 999px; background: #0A0A0A; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
+.site-nav-logo { flex: 0 0 auto; text-decoration: none; width: 32px; height: 32px; border-radius: 999px; background: #0A0A0A; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
 .site-nav-links { display: flex; flex-wrap: wrap; }
 .site-nav-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 999px; font-size: 14px; text-decoration: none; }
 .site-nav-link:hover { background: rgba(10,10,10,.05); }
@@ -373,6 +298,7 @@ a { color: inherit; }
 .card strong { font-size: 20px; letter-spacing: -.02em; }
 .list-panel { list-style: none; margin-top: 1rem; border-radius: 28px; overflow: hidden; }
 .list-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; padding: 12px 22px; text-decoration: none; border-bottom: 1px solid rgba(10,10,10,.08); }
+.list-row .mono { flex: 0 0 auto; white-space: nowrap; }
 .list-row:hover { background: rgba(10,10,10,.04); }
 .list-panel li:last-child .list-row { border-bottom: 0; }
 
@@ -409,3 +335,79 @@ a { color: inherit; }
   .tl-card { animation: tlRise linear both; animation-timeline: --row; animation-range: entry 8% entry 55%; }
 }
 @media (prefers-reduced-motion: reduce) { .tl-fill, .tl-dot, .tl-card { animation: none !important; } }
+
+
+/* ═════════ Inner pages (shared) ═════════ */
+.page-narrow { max-width: 780px; }
+.page-head { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: clamp(104px, 13vw, 140px) 0 clamp(28px, 4vw, 40px); }
+.page-head h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.02; font-weight: 600; letter-spacing: -.04em; text-wrap: balance; }
+.page-lede { max-width: 58ch; font-size: clamp(16px, 1.8vw, 19px); line-height: 1.55; color: #3C3C41; text-wrap: pretty; }
+.crumb { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(10,10,10,.14); background: rgba(255,255,255,.5); font-size: 13px; font-weight: 500; text-decoration: none; color: #3C3C41; }
+.crumb:hover { background: rgba(255,255,255,.85); color: #0A0A0A; }
+.h3 { font-size: clamp(19px, 2.2vw, 24px); font-weight: 600; letter-spacing: -.02em; margin-bottom: 12px; }
+.empty { padding: 32px 0; color: #55555A; }
+.btn-row-start { justify-content: flex-start; margin-top: 1rem; }
+.card-grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.card-arrow { color: #55555A; transition: transform .2s var(--ease-soft); }
+.card:hover .card-arrow { transform: translateX(4px); color: #0A0A0A; }
+.card-grow { flex: 1; line-height: 1.55; }
+.badge { flex: 0 0 auto; padding: 4px 10px; border-radius: 999px; background: #0A0A0A; color: #fff; font-size: 11px; font-weight: 600; }
+
+/* article (case studies + posts) */
+.article { padding: clamp(22px, 5vw, 56px); border-radius: 36px; }
+.article.prose > :first-child { margin-top: 0; }
+.article.prose > :last-child { margin-bottom: 0; }
+.article-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; padding: 28px 0 40px; }
+
+/* blog list */
+.tab-count { margin-left: 8px; font-family: var(--mono); font-size: 11px; opacity: .6; }
+.post-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 20px 24px; text-decoration: none; border-bottom: 1px solid rgba(10,10,10,.08); }
+.post-row:hover { background: rgba(10,10,10,.04); }
+.list-panel li:last-child .post-row { border-bottom: 0; }
+.post-main { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.post-main .muted { line-height: 1.5; }
+.post-main strong { font-size: 18px; line-height: 1.3; letter-spacing: -.015em; }
+.post-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; white-space: nowrap; }
+@media (max-width: 560px) {
+  .post-row { flex-direction: column; gap: 10px; padding: 18px; }
+  .post-meta { flex-direction: row; gap: 12px; }
+}
+
+/* hire + uses */
+.stat-list { padding: 6px clamp(18px, 3vw, 28px); border-radius: 28px; }
+.stat-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 20px; padding: 15px 0; border-bottom: 1px solid rgba(10,10,10,.08); }
+.stat-row:last-child { border-bottom: 0; }
+.stat-value { font-weight: 500; letter-spacing: -.01em; }
+.dot-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+.dot-list li { position: relative; padding-left: 22px; line-height: 1.6; color: #3C3C41; }
+.dot-list li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 7px; height: 7px; border-radius: 50%; background: #0A0A0A; }
+.cta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; padding-bottom: 40px; }
+.cta-card { display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 28px; text-decoration: none; transition: transform .2s var(--ease-soft); }
+.cta-card:hover { transform: translateY(-3px); }
+.cta-card strong { font-size: 17px; letter-spacing: -.01em; }
+.cta-card-dark { grid-column: 1 / -1; background: #0A0A0A; color: #fff; }
+.cta-card-dark .mono { color: #B9B9BE; }
+.break { overflow-wrap: anywhere; }
+
+/* home: now building */
+.now-card { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding: clamp(24px, 4.5vw, 48px); border-radius: 36px; background: #0A0A0A; color: #F2F2F2; box-shadow: 0 20px 50px rgba(10,10,10,.18); }
+.now-eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.1); font-size: 13px; font-weight: 500; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+.now-text { max-width: 60ch; font-size: clamp(16px, 1.7vw, 18px); line-height: 1.6; color: #CFCFD3; }
+.now-points { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.now-points li { position: relative; padding-left: 20px; color: #E6E6E8; line-height: 1.5; }
+.now-points li::before { content: "→"; position: absolute; left: 0; color: #9A9AA0; }
+.chip-dark { background: rgba(255,255,255,.12); color: #F2F2F2; }
+.pill-btn-light { background: #fff; color: #0A0A0A; }
+.pill-btn-light:hover { background: #E6E6E8; }
+
+/* ═════════ Mobile nav: one tidy line ═════════ */
+@media (max-width: 640px) {
+  .site-nav { flex-wrap: nowrap; padding: 5px; gap: 4px; }
+  .site-nav-cta { display: none; }
+  .site-nav-links { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
+  .site-nav-links::-webkit-scrollbar { display: none; }
+  .site-nav-link { padding: 0 12px; white-space: nowrap; }
+}
