@@ -6,11 +6,9 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        montserrat: ['var(--font-montserrat)', 'sans-serif'],
-      },
-    },
+    extend: {},
   },
+  // The public site has its own reset in globals.css; Tailwind only styles /studio.
+  corePlugins: { preflight: false },
   plugins: [],
 }

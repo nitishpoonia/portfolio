@@ -1,21 +1,14 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import rehypePrettyCode from "rehype-pretty-code";
+import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import Navbar from "@/components/NavBar";
-import BackButton from "@/components/BackButton";
+import SiteFooter from "@/components/SiteFooter";
 
 const mdxOptions = {
   mdxOptions: {
-    rehypePlugins: [
-      [
-        rehypePrettyCode,
-        {
-          theme: "github-light",
-          keepBackground: true,
-        },
-      ],
-    ],
+    rehypePlugins: [[rehypePrettyCode, { theme: "github-light", keepBackground: true }]],
   },
 };
 
@@ -24,119 +17,64 @@ export async function generateMetadata({ params }) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const fullTitle = `${post.title} | Nitish Poonia`;
   const description =
     post.description && post.description.length >= 150
       ? post.description
-      : `${post.description} Written from real production experience building React Native apps.`;
+      : `${post.description} Written from real production experience.`;
 
   return {
-    title: fullTitle,
+    title: post.title,
     description,
-    alternates: {
-      canonical: `https://nitishpoonia.in/blog/${slug}`,
-    },
+    alternates: { canonical: `https://nitishpoonia.in/blog/${slug}` },
     openGraph: {
-      title: fullTitle,
+      title: post.title,
       description,
       url: `https://nitishpoonia.in/blog/${slug}`,
       type: "article",
       siteName: "Nitish Poonia",
+    images: ["/opengraph-image"],
       publishedTime: post.date,
     },
-    twitter: {
-      card: "summary_large_image",
-      title: fullTitle,
-      description,
-      creator: "@nitishpoonia",
-    },
+    twitter: { card: "summary_large_image", title: post.title, description, creator: "@nitishpoonia" },
   };
 }
 
-// Pre-generates all post pages at build time
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
+  const posts = await getAllPosts().catch(() => []);
   return posts.map((p) => ({ slug: p.slug }));
 }
 
 export default async function PostPage({ params }) {
   const { slug } = await params;
-
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
+  const date = new Date(post.date).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+
   return (
-    <>
+    <div className="page-shell">
       <Navbar />
-      <main className="band band-0" style={{ minHeight: "100vh" }}>
-        <div
-          style={{
-            maxWidth: "720px",
-            margin: "0 auto",
-            padding: "calc(var(--pad-y) + 4rem) var(--pad-x) var(--pad-y)",
-          }}
-        >
-          <BackButton />
+      <main className="page-main page-narrow">
+        <header className="page-head">
+          <Link href="/blog" className="crumb">← All writing</Link>
+          <span className="mono">{date} · {post.readingTime}</span>
+          <h1>{post.title}</h1>
+          {post.description && <p className="page-lede">{post.description}</p>}
+          {post.tags.length > 0 && (
+            <div className="chip-row">{post.tags.map((t) => <span key={t} className="chip">{t}</span>)}</div>
+          )}
+        </header>
 
-          <div
-            style={{
-              marginBottom: "clamp(2.5rem, 5vw, 4rem)",
-              borderBottom: "1px solid var(--sec-line)",
-              paddingBottom: "2rem",
-            }}
-          >
-            <p
-              style={{
-                fontFamily: "var(--mono)",
-                fontSize: "0.66rem",
-                fontWeight: 500,
-                letterSpacing: "0.08em",
-                color: "var(--sec-mid)",
-                marginBottom: "1.25rem",
-              }}
-            >
-              {new Date(post.date).toLocaleDateString("en-IN", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}{" "}
-              · {post.readingTime}
-            </p>
-            <h1
-              style={{
-                fontFamily: "var(--display)",
-                fontSize: "clamp(2rem, 4.5vw, 3.2rem)",
-                fontWeight: 400,
-                letterSpacing: "-0.02em",
-                lineHeight: 1.05,
-                color: "var(--sec-ink)",
-                textWrap: "balance",
-              }}
-            >
-              {post.title}
-            </h1>
-            <p
-              style={{
-                marginTop: "1.1rem",
-                fontSize: "clamp(1.05rem, 1.7vw, 1.2rem)",
-                fontWeight: 400,
-                color: "var(--sec-mid)",
-                lineHeight: 1.6,
-              }}
-            >
-              {post.description}
-            </p>
-          </div>
+        <article className="glass article prose">
+          <MDXRemote source={post.content} options={mdxOptions} />
+        </article>
 
-          <div className="prose">
-            <MDXRemote source={post.content} options={mdxOptions} />
-          </div>
-
-          <div style={{ marginTop: "4rem" }}>
-            <BackButton />
-          </div>
-        </div>
+        <nav className="article-foot" aria-label="Post">
+          <Link href="/blog" className="pill-btn pill-btn-line">← All writing</Link>
+          <Link href="/projects" className="pill-btn pill-btn-dark">See my work</Link>
+        </nav>
       </main>
-    </>
+      <SiteFooter />
+    </div>
   );
 }

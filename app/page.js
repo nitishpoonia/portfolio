@@ -5,20 +5,18 @@ import SiteFooter from "@/components/SiteFooter";
 import StackTabs from "@/components/StackTabs";
 import { getHomeProjects } from "@/lib/project";
 import { getAllPosts } from "@/lib/posts";
-import { COLLAGE } from "@/lib/story";
-import { CONTACT } from "@/lib/contact";
+import { COLLAGE, NOW_BUILDING } from "@/lib/story";
+import { getContact, whatsappHref } from "@/lib/site";
 
 export const metadata = {
-  title: "Nitish Poonia — Software Developer",
-  description:
-    "Software developer building mobile and web products end to end — React Native and Next.js on the front, Node and PostgreSQL behind. Open to full-time roles.",
   alternates: { canonical: "https://nitishpoonia.in" },
 };
 
 export default async function HomePage() {
-  const [projects, posts] = await Promise.all([
+  const [projects, posts, contact] = await Promise.all([
     getHomeProjects().catch(() => []),
     getAllPosts().catch(() => []),
+    getContact(),
   ]);
 
   return (
@@ -29,8 +27,8 @@ export default async function HomePage() {
           <Image src="/assets/Untitled-design.png" alt="Nitish Poonia" width={120} height={120} priority className="hero-avatar" />
           <h1 id="hero-h">Hi, I’m Nitish. I build apps from Chandigarh.</h1>
           <p>
-            Software developer working across React Native, Next.js, Node and PostgreSQL.
-            Open to full-time roles.
+            Software developer shipping mobile and web products with React Native, Next.js,
+            Node and PostgreSQL, and now building AI systems in Python. Open to full-time roles.
           </p>
           <div className="btn-row">
             <Link href="/story" className="pill-btn pill-btn-dark">Read my story</Link>
@@ -47,13 +45,32 @@ export default async function HomePage() {
           </section>
         )}
 
+        {NOW_BUILDING && (
+          <section id="now" className="block" aria-labelledby="now-h">
+            <div className="now-card">
+              <span className="now-eyebrow"><span className="live-dot" aria-hidden="true" />Now building</span>
+              <h2 id="now-h" className="h2">{NOW_BUILDING.title}</h2>
+              <p className="now-text">{NOW_BUILDING.text}</p>
+              <ul className="now-points">
+                {NOW_BUILDING.points.map((pt) => <li key={pt}>{pt}</li>)}
+              </ul>
+              <div className="chip-row">
+                {NOW_BUILDING.tags.map((t) => <span key={t} className="chip chip-dark">{t}</span>)}
+              </div>
+              {NOW_BUILDING.href && (
+                <a href={NOW_BUILDING.href} target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-light">View the code</a>
+              )}
+            </div>
+          </section>
+        )}
+
         <section id="stack" className="block" aria-labelledby="stack-h">
           <div className="glass panel">
             <h2 id="stack-h" className="h2">What I build with</h2>
             <p className="lede">Tools I reach for regularly, grouped by where they sit in a product.</p>
             <StackTabs />
             <div className="btn-row" style={{ marginTop: "1.5rem" }}>
-              <a href={`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent("Hi Nitish, I’d like to book a call.")}`}
+              <a href={whatsappHref(contact, "Hi Nitish, I’d like to book a call.")}
                 target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-dark">Book a call on WhatsApp</a>
             </div>
           </div>
@@ -66,9 +83,12 @@ export default async function HomePage() {
               {projects.map((p) => (
                 <li key={p.link}>
                   <Link href={p.link} className="glass card">
-                    <span className="mono">{p.number} · {p.timeline}</span>
+                    <span className="card-top">
+                      <span className="mono">{p.number} · {p.timeline}</span>
+                      {p.isBuilding && <span className="badge">Building now</span>}
+                    </span>
                     <strong>{p.title}</strong>
-                    <span className="muted">{p.tagline}</span>
+                    <span className="muted card-grow">{p.tagline}</span>
                     <span className="chip-row">
                       {p.tags.map((t) => <span key={t} className="chip">{t}</span>)}
                     </span>
@@ -92,7 +112,7 @@ export default async function HomePage() {
                 </li>
               ))}
             </ul>
-            <Link href="/blog" className="pill-btn pill-btn-line" style={{ marginTop: "1rem" }}>All posts</Link>
+            <div className="btn-row btn-row-start"><Link href="/blog" className="pill-btn pill-btn-line">All posts</Link></div>
           </section>
         )}
       </main>
