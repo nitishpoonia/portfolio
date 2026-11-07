@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
     title,
     description,
     alternates: { canonical: `https://nitishpoonia.in/projects/${slug}` },
-    openGraph: { title, description, url: `https://nitishpoonia.in/projects/${slug}`, type: "article", siteName: "Nitish Poonia" },
+    openGraph: { title, description, url: `https://nitishpoonia.in/projects/${slug}`, type: "article", siteName: "Nitish Poonia", images: ["/opengraph-image"] },
     twitter: { card: "summary_large_image", title, description, creator: "@nitishpoonia" },
   };
 }

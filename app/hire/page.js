@@ -1,10 +1,10 @@
+import Link from "next/link";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
-import PageHeader from "@/components/PageHeader";
 import { getContact, whatsappHref } from "@/lib/site";
 
 const DESCRIPTION =
-  "Nitish Poonia builds mobile and web products end to end with React Native, Next.js, Node and PostgreSQL, and is moving into AI engineering with Python. Open to full-time roles.";
+  "Nitish Poonia is a software developer who ships mobile and web products end to end and is now building AI systems in Python. Looking for a full-time role.";
 
 export const metadata = {
   title: "Hire",
@@ -16,23 +16,29 @@ export const metadata = {
     url: "https://nitishpoonia.in/hire",
     type: "website",
     siteName: "Nitish Poonia",
+    images: ["/opengraph-image"],
   },
 };
 
-const SNAPSHOT = [
-  { label: "Currently", value: "Software Developer at Arthtech Supports" },
-  { label: "Focus", value: "Mobile and web, front to back" },
-  { label: "Stack", value: "React Native · Next.js · Node · PostgreSQL" },
-  { label: "Learning", value: "AI engineering · Python · FastAPI" },
-  { label: "Shipped", value: "EDA Time Tracker, live on the App Store" },
-  { label: "Availability", value: "Open to full-time roles" },
-];
-
-const WHAT = [
-  "Ship into large codebases I didn't write: trace a bug to its real cause and make one fix authoritative rather than patching symptoms.",
-  "Build the whole feature: React Native or Next.js on the front, Node and PostgreSQL behind, and the native module in between when there's no cross-platform API.",
-  "Take a vague, real-world problem, like staff gaming a shift clock or a booking flow across mismatched supplier APIs, and turn it into something that holds up in production.",
-  "Bring that product sense to AI features: I'm building a health claims assistant in Python where code makes the exact decisions and the model handles language.",
+const REASONS = [
+  {
+    title: "I ship to real users",
+    text: "My NFC attendance app is live on the App Store, and staff use it every day to clock their shifts.",
+    href: "/projects/nfc-time-tracking",
+    link: "Read the case study",
+  },
+  {
+    title: "I’m at home in other people’s code",
+    text: "At Arthtech I took over an inherited React and React Native codebase, stabilised it, and kept shipping features on top.",
+  },
+  {
+    title: "I own features end to end",
+    text: "I own our biometric feature from design to release, and I make the builds the other developers test on.",
+  },
+  {
+    title: "I’m building with AI, not just calling it",
+    text: "My current project is a health claims assistant in Python: code makes the exact decisions, the model handles language, and unclear cases go to a human.",
+  },
 ];
 
 export default async function HirePage() {
@@ -42,41 +48,47 @@ export default async function HirePage() {
     <div className="page-shell">
       <Navbar />
       <main className="page-main page-narrow">
-        <PageHeader
-          eyebrow="Hire"
-          title="Open to full-time roles"
-          lede="I build mobile and web products end to end, and I'm moving deeper into AI engineering. Most of my work happens inside large existing codebases I didn't write."
-        />
+        <header className="page-head">
+          <span className="status-pill"><span className="live-dot live-dot-dark" aria-hidden="true" />Open to full-time roles</span>
+          <h1>Looking for my next team</h1>
+          <p className="page-lede">
+            I’m a software developer who takes products from idea to app store, and I’m now
+            building AI systems too. I want a full-time role where I can do both: ship the product
+            people touch and the intelligence underneath it.
+          </p>
+          <div className="btn-row btn-row-start">
+            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-dark">Download résumé</a>
+            <a href={`mailto:${contact.email}`} className="pill-btn pill-btn-line">Email me</a>
+          </div>
+        </header>
 
-        <section className="glass stat-list" aria-label="Snapshot">
-          {SNAPSHOT.map(({ label, value }) => (
-            <div key={label} className="stat-row">
-              <span className="mono">{label}</span>
-              <span className="stat-value">{value}</span>
-            </div>
-          ))}
-        </section>
-
-        <section className="block" aria-labelledby="bring-h">
-          <h2 id="bring-h" className="h2">What I bring</h2>
-          <ul className="dot-list">
-            {WHAT.map((w) => <li key={w}>{w}</li>)}
+        <section className="block" aria-labelledby="why-h">
+          <h2 id="why-h" className="h2">Why work with me</h2>
+          <ul className="reason-grid">
+            {REASONS.map((r, i) => (
+              <li key={r.title} className="glass reason">
+                <span className="reason-num">{String(i + 1).padStart(2, "0")}</span>
+                <strong>{r.title}</strong>
+                <p>{r.text}</p>
+                {r.href && <Link href={r.href} className="reason-link">{r.link} →</Link>}
+              </li>
+            ))}
           </ul>
         </section>
 
-        <section className="cta-grid" aria-label="Get in touch">
-          <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="cta-card cta-card-dark">
-            <span className="mono">Résumé · PDF</span>
-            <strong>Download my résumé →</strong>
-          </a>
-          <a href={`mailto:${contact.email}`} className="glass cta-card">
-            <span className="mono">Email</span>
-            <strong className="break">{contact.email} →</strong>
-          </a>
-          <a href={whatsappHref(contact)} target="_blank" rel="noopener noreferrer" className="glass cta-card">
-            <span className="mono">WhatsApp</span>
-            <strong>Message me →</strong>
-          </a>
+        <section className="block" aria-labelledby="fit-h">
+          <div className="now-card">
+            <h2 id="fit-h" className="h2">Where I fit best</h2>
+            <p className="now-text">
+              Product teams building AI-powered features, where one engineer can own a feature from
+              the backend and model logic through to the mobile or web screen. I’m based in Chandigarh
+              and currently a software developer at Arthtech Supports.
+            </p>
+            <div className="btn-row btn-row-start">
+              <a href={whatsappHref(contact)} target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-light">Message me on WhatsApp</a>
+              <Link href="/story" className="pill-btn pill-btn-ghost-light">Read my story</Link>
+            </div>
+          </div>
         </section>
       </main>
       <SiteFooter />

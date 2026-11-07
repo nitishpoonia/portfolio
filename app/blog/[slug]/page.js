@@ -32,6 +32,7 @@ export async function generateMetadata({ params }) {
       url: `https://nitishpoonia.in/blog/${slug}`,
       type: "article",
       siteName: "Nitish Poonia",
+    images: ["/opengraph-image"],
       publishedTime: post.date,
     },
     twitter: { card: "summary_large_image", title: post.title, description, creator: "@nitishpoonia" },

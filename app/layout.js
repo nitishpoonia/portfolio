@@ -10,7 +10,7 @@ const DESCRIPTION =
 
 export const metadata = {
   title: {
-    default: "Nitish Poonia — Software Developer",
+    default: "Nitish Poonia, Software Developer",
     template: "%s | Nitish Poonia",
   },
   description:
@@ -20,29 +20,21 @@ export const metadata = {
     canonical: "https://nitishpoonia.in",
   },
   openGraph: {
-    title: "Nitish Poonia — Software Developer",
+    title: "Nitish Poonia, Software Developer",
     description:
       DESCRIPTION,
     url: "https://nitishpoonia.in",
     siteName: "Nitish Poonia",
+    images: ["/opengraph-image"],
     locale: "en_IN",
     type: "website",
-    images: [
-      {
-        url: "https://nitishpoonia.in/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Nitish Poonia — Software Developer",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nitish Poonia — Software Developer",
+    title: "Nitish Poonia, Software Developer",
     description:
       DESCRIPTION,
     creator: "@nitishpoonia",
-    images: ["https://nitishpoonia.in/og-image.png"],
   },
   robots: {
     index: true,

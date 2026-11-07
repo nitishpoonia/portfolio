@@ -17,6 +17,7 @@ export const metadata = {
     url: "https://nitishpoonia.in/blog",
     type: "website",
     siteName: "Nitish Poonia",
+    images: ["/opengraph-image"],
   },
 };
 

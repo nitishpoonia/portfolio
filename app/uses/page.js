@@ -13,6 +13,7 @@ export const metadata = {
     url: "https://nitishpoonia.in/uses",
     type: "website",
     siteName: "Nitish Poonia",
+    images: ["/opengraph-image"],
   },
 };
 
