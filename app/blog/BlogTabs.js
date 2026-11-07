@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Code2, NotebookPen, ArrowUpRight } from "lucide-react";
 
 const TABS = [
-  { id: "tech", label: "Tech" },
-  { id: "personal", label: "Personal" },
+  { id: "tech", label: "Tech", icon: Code2 },
+  { id: "personal", label: "Personal", icon: NotebookPen },
 ];
 
 const fmt = (d) =>
@@ -26,6 +27,7 @@ export default function BlogTabs({ posts }) {
             className={`tab-pill${active === tab.id ? " is-on" : ""}`}
             onClick={() => setActive(tab.id)}
           >
+            <tab.icon size={16} strokeWidth={1.9} aria-hidden="true" />
             {tab.label}
             <span className="tab-count">{posts.filter((p) => p.category === tab.id).length}</span>
           </button>
@@ -46,6 +48,7 @@ export default function BlogTabs({ posts }) {
                 <span className="post-meta mono">
                   <span>{fmt(post.date)}</span>
                   <span>{post.readingTime}</span>
+                  <ArrowUpRight size={18} strokeWidth={1.8} className="card-arrow" aria-hidden="true" />
                 </span>
               </Link>
             </li>

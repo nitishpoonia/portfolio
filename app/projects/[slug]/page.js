@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { ArrowLeft, Mail } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 import { getAllProjects, getProjectBySlug } from "@/lib/project";
@@ -54,7 +55,7 @@ export default async function ProjectPage({ params }) {
       <Navbar />
       <main className="page-main page-narrow">
         <header className="page-head">
-          <Link href="/projects" className="crumb">← All work</Link>
+          <Link href="/projects" className="crumb"><ArrowLeft size={15} strokeWidth={2} aria-hidden="true" />All work</Link>
           {meta.length > 0 && <span className="mono">{meta.join(" · ")}</span>}
           <h1>{project.title}</h1>
           {project.tagline && <p className="page-lede">{project.tagline}</p>}
@@ -68,9 +69,9 @@ export default async function ProjectPage({ params }) {
         </article>
 
         <nav className="article-foot" aria-label="Project">
-          <Link href="/projects" className="pill-btn pill-btn-line">← All work</Link>
+          <Link href="/projects" className="pill-btn pill-btn-line"><ArrowLeft size={17} strokeWidth={1.9} aria-hidden="true" />All work</Link>
           <a href={`mailto:${contact.email}?subject=${encodeURIComponent(`Re: ${project.title}`)}`} className="pill-btn pill-btn-dark">
-            Ask me about this project
+            <Mail size={17} strokeWidth={1.9} aria-hidden="true" />Ask me about this project
           </a>
         </nav>
       </main>

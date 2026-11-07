@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { ProjectIcon } from "@/lib/icons";
 
 export default function ProjectCard({ project }) {
   const meta = [project.company, project.timeline].filter(Boolean).join(" · ");
@@ -6,9 +8,10 @@ export default function ProjectCard({ project }) {
   return (
     <Link href={`/projects/${project.slug}`} className="glass card">
       <span className="card-top">
-        <span className="mono">{meta}</span>
-        {building ? <span className="badge">Building now</span> : <span className="card-arrow" aria-hidden="true">→</span>}
+        <span className="card-icon" aria-hidden="true"><ProjectIcon tags={project.tags} size={18} strokeWidth={1.8} /></span>
+        {building ? <span className="badge">Building now</span> : <ArrowUpRight size={20} strokeWidth={1.8} className="card-arrow" aria-hidden="true" />}
       </span>
+      <span className="mono">{meta}</span>
       <strong>{project.title}</strong>
       <span className="muted card-grow">{project.tagline}</span>
       {project.tags.length > 0 && (

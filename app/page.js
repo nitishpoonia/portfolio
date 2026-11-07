@@ -1,5 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight, BookOpen, MessageCircle, Github, FileText, Smartphone, Globe, Sparkles } from "lucide-react";
+import HeroAvatar from "@/components/graphics/HeroAvatar";
+import ClaimsFlow from "@/components/graphics/ClaimsFlow";
+import { ProjectIcon } from "@/lib/icons";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import StackTabs from "@/components/StackTabs";
@@ -24,15 +28,20 @@ export default async function HomePage() {
       <Navbar />
       <main className="page-main">
         <section className="hero" aria-labelledby="hero-h">
-          <Image src="/assets/Untitled-design.png" alt="Nitish Poonia" width={120} height={120} priority className="hero-avatar" />
+          <HeroAvatar src="/assets/Untitled-design.png" alt="Nitish Poonia" />
           <h1 id="hero-h">Hi, I’m Nitish. I build apps from Chandigarh.</h1>
           <p>
             Software developer shipping mobile and web products with React Native, Next.js,
             Node and PostgreSQL, and now building AI systems in Python. Open to full-time roles.
           </p>
+          <ul className="hero-chips" aria-label="What I build">
+            <li><Smartphone size={15} strokeWidth={1.9} aria-hidden="true" />Mobile apps</li>
+            <li><Globe size={15} strokeWidth={1.9} aria-hidden="true" />Web products</li>
+            <li><Sparkles size={15} strokeWidth={1.9} aria-hidden="true" />AI systems</li>
+          </ul>
           <div className="btn-row">
-            <Link href="/story" className="pill-btn pill-btn-dark">Read my story</Link>
-            <Link href="/projects" className="pill-btn pill-btn-line">See my work</Link>
+            <Link href="/story" className="pill-btn pill-btn-dark"><BookOpen size={17} strokeWidth={1.9} aria-hidden="true" />Read my story</Link>
+            <Link href="/projects" className="pill-btn pill-btn-line">See my work<ArrowRight size={17} strokeWidth={1.9} aria-hidden="true" /></Link>
           </div>
         </section>
 
@@ -51,6 +60,7 @@ export default async function HomePage() {
               <span className="now-eyebrow"><span className="live-dot" aria-hidden="true" />Now building</span>
               <h2 id="now-h" className="h2">{NOW_BUILDING.title}</h2>
               <p className="now-text">{NOW_BUILDING.text}</p>
+              <ClaimsFlow />
               <ul className="now-points">
                 {NOW_BUILDING.points.map((pt) => <li key={pt}>{pt}</li>)}
               </ul>
@@ -58,7 +68,7 @@ export default async function HomePage() {
                 {NOW_BUILDING.tags.map((t) => <span key={t} className="chip chip-dark">{t}</span>)}
               </div>
               {NOW_BUILDING.href && (
-                <a href={NOW_BUILDING.href} target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-light">View the code</a>
+                <a href={NOW_BUILDING.href} target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-light"><Github size={17} strokeWidth={1.9} aria-hidden="true" />View the code</a>
               )}
             </div>
           </section>
@@ -71,7 +81,7 @@ export default async function HomePage() {
             <StackTabs />
             <div className="btn-row" style={{ marginTop: "1.5rem" }}>
               <a href={whatsappHref(contact, "Hi Nitish, I’d like to book a call.")}
-                target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-dark">Book a call on WhatsApp</a>
+                target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-dark"><MessageCircle size={17} strokeWidth={1.9} aria-hidden="true" />Book a call on WhatsApp</a>
             </div>
           </div>
         </section>
@@ -80,11 +90,13 @@ export default async function HomePage() {
           <section id="work" className="block" aria-labelledby="work-h">
             <h2 id="work-h" className="h2">Work</h2>
             <ul className="card-grid">
-              {projects.map((p) => (
+              {projects.map((p) => {
+                return (
                 <li key={p.link}>
                   <Link href={p.link} className="glass card">
                     <span className="card-top">
-                      <span className="mono">{p.number} · {p.timeline}</span>
+                      <span className="card-icon" aria-hidden="true"><ProjectIcon tags={p.tags} size={18} strokeWidth={1.8} /></span>
+                      <span className="mono card-meta">{p.number} · {p.timeline}</span>
                       {p.isBuilding && <span className="badge">Building now</span>}
                     </span>
                     <strong>{p.title}</strong>
@@ -94,7 +106,8 @@ export default async function HomePage() {
                     </span>
                   </Link>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           </section>
         )}
@@ -106,13 +119,13 @@ export default async function HomePage() {
               {posts.slice(0, 6).map((post) => (
                 <li key={post.slug}>
                   <Link href={`/blog/${post.slug}`} className="list-row">
-                    <span>{post.title}</span>
+                    <span className="list-title"><FileText size={16} strokeWidth={1.8} aria-hidden="true" className="list-icon" />{post.title}</span>
                     <span className="mono">{post.date}</span>
                   </Link>
                 </li>
               ))}
             </ul>
-            <div className="btn-row btn-row-start"><Link href="/blog" className="pill-btn pill-btn-line">All posts</Link></div>
+            <div className="btn-row btn-row-start"><Link href="/blog" className="pill-btn pill-btn-line">All posts<ArrowRight size={17} strokeWidth={1.9} aria-hidden="true" /></Link></div>
           </section>
         )}
       </main>

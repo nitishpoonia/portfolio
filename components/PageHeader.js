@@ -1,8 +1,13 @@
-// Shared header for inner pages: eyebrow, big title, one-line lede.
-export default function PageHeader({ eyebrow, title, lede, children }) {
+// Shared header for inner pages: icon tile + eyebrow, big title, one-line lede.
+export default function PageHeader({ icon: Icon, eyebrow, title, lede, children }) {
   return (
     <header className="page-head">
-      {eyebrow && <span className="eyebrow">{eyebrow}</span>}
+      {(Icon || eyebrow) && (
+        <span className="eyebrow-row">
+          {Icon && <span className="icon-tile" aria-hidden="true"><Icon size={20} strokeWidth={1.8} /></span>}
+          {eyebrow && <span className="eyebrow">{eyebrow}</span>}
+        </span>
+      )}
       <h1>{title}</h1>
       {lede && <p className="page-lede">{lede}</p>}
       {children}
