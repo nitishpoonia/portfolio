@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Spotlight from "@/components/motion/Spotlight";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
@@ -57,6 +58,7 @@ export default function RootLayout({ children }) {
     >
       <body>
         {children}
+        <Spotlight />
         <GoogleAnalytics gaId="G-K9ZSKF1486" />
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { Code2, NotebookPen, ArrowUpRight } from "lucide-react";
 
@@ -14,6 +15,7 @@ const fmt = (d) =>
 
 export default function BlogTabs({ posts }) {
   const [active, setActive] = useState("tech");
+  const calm = useReducedMotion();
   const filtered = posts.filter((p) => p.category === active);
 
   return (
@@ -27,6 +29,10 @@ export default function BlogTabs({ posts }) {
             className={`tab-pill${active === tab.id ? " is-on" : ""}`}
             onClick={() => setActive(tab.id)}
           >
+            {active === tab.id && (
+              <motion.span layoutId="blog-tab-pill" className="tab-pill-bg" aria-hidden="true"
+                transition={calm ? { duration: 0 } : { type: "spring", bounce: 0.2, duration: 0.5 }} />
+            )}
             <tab.icon size={16} strokeWidth={1.9} aria-hidden="true" />
             {tab.label}
             <span className="tab-count">{posts.filter((p) => p.category === tab.id).length}</span>
@@ -37,9 +43,9 @@ export default function BlogTabs({ posts }) {
       {filtered.length === 0 ? (
         <p className="empty">Nothing here yet. Check back soon.</p>
       ) : (
-        <ul className="glass list-panel" role="tabpanel">
-          {filtered.map((post) => (
-            <li key={post.slug}>
+        <ul className="glass list-panel tab-swap" role="tabpanel" key={active}>
+          {filtered.map((post, i) => (
+            <li key={post.slug} style={{ "--i": i }}>
               <Link href={`/blog/${post.slug}`} className="post-row">
                 <span className="post-main">
                   <strong>{post.title}</strong>

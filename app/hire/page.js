@@ -3,6 +3,7 @@ import { Rocket, CodeXml, Fingerprint, Sparkles, Download, Mail, MessageCircle, 
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import { getContact, whatsappHref } from "@/lib/site";
+import SplitWords from "@/components/motion/SplitWords";
 
 const DESCRIPTION =
   "Nitish Poonia is a software developer who ships mobile and web products end to end and is now building AI systems in Python. Looking for a full-time role.";
@@ -55,7 +56,7 @@ export default async function HirePage() {
       <main className="page-main page-narrow">
         <header className="page-head">
           <span className="status-pill"><span className="live-dot live-dot-dark" aria-hidden="true" />Open to full-time roles</span>
-          <h1>Looking for my next team</h1>
+          <h1 className="split"><SplitWords text="Looking for my next team" /></h1>
           <p className="page-lede">
             I’m a software developer who takes products from idea to app store, and I’m now
             building AI systems too. I want a full-time role where I can do both: ship the product
