@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { SESSION_COOKIE, verifyToken } from "@/lib/auth";
 
-// Next 16 "proxy" (formerly middleware): gate everything under /studio and /api/studio.
+// Next 16 "proxy" (formerly middleware): gate /studio, /api/studio and /preview.
 export async function proxy(request) {
   const { pathname } = request.nextUrl;
   const open = pathname === "/studio/login" || pathname === "/api/studio/login";
@@ -16,4 +16,4 @@ export async function proxy(request) {
   return NextResponse.redirect(new URL("/studio/login", request.url));
 }
 
-export const config = { matcher: ["/studio/:path*", "/api/studio/:path*"] };
+export const config = { matcher: ["/studio/:path*", "/api/studio/:path*", "/preview/:path*"] };

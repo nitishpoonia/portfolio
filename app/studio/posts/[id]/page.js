@@ -8,8 +8,10 @@ const fields = [
   { name: "date", label: "Date", type: "date" },
   { name: "category", label: "Category", options: ["tech", "career", "life"] },
   { name: "tags", label: "Tags (comma separated)" },
-  { name: "description", label: "Description (SEO, 150+ chars is best)", wide: true },
+  { name: "description", label: "Description (shown in Google and link previews)", wide: true, counter: [150, 160] },
 ];
+
+const iso = (d) => (d ? new Date(d).toISOString() : null);
 
 export default async function PostEditor({ params }) {
   const { id } = await params;
@@ -17,7 +19,7 @@ export default async function PostEditor({ params }) {
   const post = isNew ? null : await getPostAdmin(Number(id));
   if (!isNew && !post) notFound();
   const initial = post
-    ? { ...post, tags: (post.tags || []).join(", ") }
+    ? { ...post, tags: (post.tags || []).join(", "), updated_at: iso(post.updated_at) }
     : { title: "", slug: "", date: new Date().toISOString().slice(0, 10), category: "tech", tags: "", description: "", content: "", published: false };
   return (
     <EntityForm kind="post" apiBase="/api/studio/posts" backHref="/studio/posts" publicPath="/blog"

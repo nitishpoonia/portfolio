@@ -55,7 +55,7 @@ export default async function HomePage() {
         )}
 
         {NOW_BUILDING && (
-          <section id="now" className="block" aria-labelledby="now-h">
+          <section id="now" className="section-block" aria-labelledby="now-h">
             <div className="now-card">
               <span className="now-eyebrow"><span className="live-dot" aria-hidden="true" />Now building</span>
               <h2 id="now-h" className="h2">{NOW_BUILDING.title}</h2>
@@ -74,7 +74,7 @@ export default async function HomePage() {
           </section>
         )}
 
-        <section id="stack" className="block" aria-labelledby="stack-h">
+        <section id="stack" className="section-block" aria-labelledby="stack-h">
           <div className="glass panel">
             <h2 id="stack-h" className="h2">What I build with</h2>
             <p className="lede">Tools I reach for regularly, grouped by where they sit in a product.</p>
@@ -87,7 +87,7 @@ export default async function HomePage() {
         </section>
 
         {projects.length > 0 && (
-          <section id="work" className="block" aria-labelledby="work-h">
+          <section id="work" className="section-block" aria-labelledby="work-h">
             <h2 id="work-h" className="h2">Work</h2>
             <ul className="card-grid">
               {projects.map((p) => {
@@ -113,7 +113,7 @@ export default async function HomePage() {
         )}
 
         {posts.length > 0 && (
-          <section id="writing" className="block" aria-labelledby="writing-h">
+          <section id="writing" className="section-block" aria-labelledby="writing-h">
             <h2 id="writing-h" className="h2">Writing</h2>
             <ul className="glass list-panel">
               {posts.slice(0, 6).map((post) => (
