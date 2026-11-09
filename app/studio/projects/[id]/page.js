@@ -3,15 +3,15 @@ import { getProjectAdmin } from "@/lib/admin";
 import EntityForm from "@/components/studio/EntityForm";
 
 const fields = [
-  { name: "title", label: "Title", wide: true },
-  { name: "tagline", label: "Tagline", wide: true, counter: [80, 160] },
-  { name: "slug", label: "Slug", hint: "auto from title if empty" },
-  { name: "timeline", label: "Timeline", hint: "Dec 2024 - Present" },
-  { name: "role", label: "Role" },
-  { name: "company", label: "Company" },
-  { name: "type", label: "Type", options: ["case-study", "product", "client"] },
+  { name: "title", label: "Title", place: "title", hint: "Project name" },
+  { name: "tagline", label: "Tagline", place: "lede", hint: "One line on what it is and why it matters. Shown under the title and in link previews.", counter: [80, 160] },
   { name: "status", label: "Status", options: ["", "Currently building", "Shipped", "Paused"] },
-  { name: "tags", label: "Tech stack (comma separated)", wide: true },
+  { name: "type", label: "Type", options: ["case-study", "product", "client"] },
+  { name: "slug", label: "URL slug", hint: "auto from title" },
+  { name: "role", label: "Role", hint: "Frontend developer" },
+  { name: "company", label: "Company" },
+  { name: "timeline", label: "Timeline", hint: "Dec 2024 - Present" },
+  { name: "tags", label: "Tech stack", hint: "React Native, Node.js", help: "Comma separated" },
 ];
 
 const iso = (d) => (d ? new Date(d).toISOString() : null);

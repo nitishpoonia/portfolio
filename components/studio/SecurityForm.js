@@ -43,7 +43,10 @@ export default function SecurityForm() {
 
   return (
     <form onSubmit={change} className={`${glass} flex flex-col gap-4 p-6`}>
-      <h2 className="text-lg font-semibold">Password</h2>
+      <div>
+        <h2 className="text-lg font-semibold">Password</h2>
+        <p className="mt-1 text-sm text-[#55555A]">Changing it logs you out on every other device.</p>
+      </div>
       {f("current", "Current password", "current-password")}
       {f("next", "New password (10+ characters)", "new-password")}
       {f("confirm", "Confirm new password", "new-password")}

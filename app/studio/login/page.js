@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { glass, input, btn } from "@/components/studio/ui";
 
 export default function LoginPage() {
@@ -30,8 +32,12 @@ export default function LoginPage() {
   }
 
   return (
-    <form onSubmit={submit} className={`${glass} mx-auto mt-24 flex max-w-sm flex-col gap-4 p-8`}>
-      <h1 className="text-2xl font-semibold tracking-tight">Studio</h1>
+    <div className="mx-auto mt-[12vh] flex max-w-sm flex-col gap-4">
+    <form onSubmit={submit} className={`${glass} flex flex-col gap-4 p-8`}>
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Studio</h1>
+        <p className="mt-1 text-sm text-[#55555A]">Write and publish on nitishpoonia.in</p>
+      </div>
       <label htmlFor="pw" className="sr-only">Password</label>
       <div className="relative">
         <input id="pw" type={show ? "text" : "password"} autoFocus autoComplete="current-password" placeholder="Password" className={`${input} pr-12`} value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -43,5 +49,9 @@ export default function LoginPage() {
       {error && <p role="alert" className="px-1 text-sm text-red-700">{error}</p>}
       <button className={btn} disabled={busy || !password}>{busy ? "Checking…" : "Log in"}</button>
     </form>
+    <Link href="/" className="inline-flex min-h-[44px] items-center gap-1.5 self-center rounded-full px-4 text-sm text-[#55555A] hover:text-[#0A0A0A]">
+      <ArrowLeft size={15} aria-hidden="true" />Back to site
+    </Link>
+    </div>
   );
 }
