@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BookOpen, MessageCircle, Github, FileText, Smartphone, Globe, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BookOpen, MessageCircle, Github, FileText, Smartphone, Globe, Sparkles, Mail, Download } from "lucide-react";
 import HeroAvatar from "@/components/graphics/HeroAvatar";
 import ClaimsFlow from "@/components/graphics/ClaimsFlow";
 import { ProjectIcon } from "@/lib/icons";
@@ -9,9 +9,12 @@ import SiteFooter from "@/components/SiteFooter";
 import StackTabs from "@/components/StackTabs";
 import { getHomeProjects } from "@/lib/project";
 import { getAllPosts } from "@/lib/posts";
-import { COLLAGE, NOW_BUILDING } from "@/lib/story";
+import { CHAPTERS, COLLAGE, NOW_BUILDING } from "@/lib/story";
 import { getContact, whatsappHref } from "@/lib/site";
 import SplitWords from "@/components/motion/SplitWords";
+
+const fmtDate = (d) =>
+  new Date(`${d}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 
 export const metadata = {
   alternates: { canonical: "https://nitishpoonia.in" },
@@ -30,10 +33,14 @@ export default async function HomePage() {
       <main className="page-main">
         <section className="hero" aria-labelledby="hero-h">
           <HeroAvatar src="/assets/Untitled-design.png" alt="Nitish Poonia" />
+          <Link href="/hire" className="status-pill status-pill-link">
+            <span className="live-dot live-dot-dark" aria-hidden="true" />Open to full-time roles
+            <ArrowRight size={14} strokeWidth={2} aria-hidden="true" />
+          </Link>
           <h1 id="hero-h" className="split"><SplitWords text="Hi, I’m Nitish. I build apps from Chandigarh." /></h1>
           <p>
             Software developer shipping mobile and web products with React Native, Next.js,
-            Node and PostgreSQL, and now building AI systems in Python. Open to full-time roles.
+            Node and PostgreSQL, and now building AI systems in Python.
           </p>
           <ul className="hero-chips" aria-label="What I build">
             <li><Smartphone size={15} strokeWidth={1.9} aria-hidden="true" />Mobile apps</li>
@@ -75,21 +82,14 @@ export default async function HomePage() {
           </section>
         )}
 
-        <section id="stack" className="section-block" aria-labelledby="stack-h">
-          <div className="glass panel">
-            <h2 id="stack-h" className="h2">What I build with</h2>
-            <p className="lede">Tools I reach for regularly, grouped by where they sit in a product.</p>
-            <StackTabs />
-            <div className="btn-row" style={{ marginTop: "1.5rem" }}>
-              <a href={whatsappHref(contact, "Hi Nitish, I’d like to book a call.")}
-                target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-dark"><MessageCircle size={17} strokeWidth={1.9} aria-hidden="true" />Book a call on WhatsApp</a>
-            </div>
-          </div>
-        </section>
+
 
         {projects.length > 0 && (
           <section id="work" className="section-block" aria-labelledby="work-h">
-            <h2 id="work-h" className="h2">Work</h2>
+            <div className="section-head">
+              <h2 id="work-h" className="h2">Work</h2>
+              <Link href="/projects" className="section-link">All work<ArrowRight size={15} strokeWidth={1.9} aria-hidden="true" /></Link>
+            </div>
             <ul className="card-grid">
               {projects.map((p) => {
                 return (
@@ -113,22 +113,74 @@ export default async function HomePage() {
           </section>
         )}
 
+        <section id="story" className="section-block" aria-labelledby="story-teaser-h">
+          <div className="section-head">
+            <h2 id="story-teaser-h" className="h2">How I got here</h2>
+            <Link href="/story" className="section-link">Full story<ArrowRight size={15} strokeWidth={1.9} aria-hidden="true" /></Link>
+          </div>
+          <ol className="chapter-strip">
+            {CHAPTERS.map((c, i) => (
+              <li key={c.title}>
+                <Link href={`/story#chapter-${i + 1}`} className={`glass chapter-card${c.current ? " is-current" : ""}`}>
+                  <span className="chapter-top">
+                    <span className="mono">{String(i + 1).padStart(2, "0")} · {c.when}</span>
+                    {c.current && <span className="live-dot" aria-hidden="true" />}
+                  </span>
+                  <strong>{c.title}</strong>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section id="stack" className="section-block" aria-labelledby="stack-h">
+          <div className="glass panel">
+            <h2 id="stack-h" className="h2">What I build with</h2>
+            <p className="lede">Tools I reach for regularly, grouped by where they sit in a product.</p>
+            <StackTabs />
+            <div className="btn-row" style={{ marginTop: "1.5rem" }}>
+              <a href={whatsappHref(contact, "Hi Nitish, I’d like to book a call.")}
+                target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-dark"><MessageCircle size={17} strokeWidth={1.9} aria-hidden="true" />Book a call on WhatsApp</a>
+            </div>
+          </div>
+        </section>
+
         {posts.length > 0 && (
           <section id="writing" className="section-block" aria-labelledby="writing-h">
-            <h2 id="writing-h" className="h2">Writing</h2>
+            <div className="section-head">
+              <h2 id="writing-h" className="h2">Writing</h2>
+              <Link href="/blog" className="section-link">All posts<ArrowRight size={15} strokeWidth={1.9} aria-hidden="true" /></Link>
+            </div>
             <ul className="glass list-panel">
               {posts.slice(0, 6).map((post) => (
                 <li key={post.slug}>
                   <Link href={`/blog/${post.slug}`} className="list-row">
                     <span className="list-title"><FileText size={16} strokeWidth={1.8} aria-hidden="true" className="list-icon" />{post.title}</span>
-                    <span className="mono">{post.date}</span>
+                    <span className="list-end">
+                      <time className="mono" dateTime={post.date}>{fmtDate(post.date)}</time>
+                      <ArrowUpRight size={16} strokeWidth={1.8} className="card-arrow" aria-hidden="true" />
+                    </span>
                   </Link>
                 </li>
               ))}
             </ul>
-            <div className="btn-row btn-row-start"><Link href="/blog" className="pill-btn pill-btn-line">All posts<ArrowRight size={17} strokeWidth={1.9} aria-hidden="true" /></Link></div>
           </section>
         )}
+        <section id="contact" className="section-block" aria-labelledby="contact-h">
+          <div className="now-card contact-card">
+            <span className="now-eyebrow"><span className="live-dot" aria-hidden="true" />Let’s talk</span>
+            <h2 id="contact-h" className="h2">Have a role or a product in mind?</h2>
+            <p className="now-text">
+              I’m looking for a team where I can ship the product people touch and the AI underneath it.
+              The quickest way to reach me is email or WhatsApp.
+            </p>
+            <div className="btn-row btn-row-start">
+              <a href={`mailto:${contact.email}`} className="pill-btn pill-btn-light"><Mail size={17} strokeWidth={1.9} aria-hidden="true" />Email me</a>
+              <a href={whatsappHref(contact)} target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-ghost-light"><MessageCircle size={17} strokeWidth={1.9} aria-hidden="true" />WhatsApp</a>
+              <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-ghost-light"><Download size={17} strokeWidth={1.9} aria-hidden="true" />Résumé</a>
+            </div>
+          </div>
+        </section>
       </main>
       <SiteFooter />
     </div>
