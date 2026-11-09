@@ -336,6 +336,44 @@ a { color: inherit; }
 }
 @media (prefers-reduced-motion: reduce) { .tl-fill, .tl-dot, .tl-card { animation: none !important; } }
 
+/* Story: chapter index, reading progress, links, current chapter */
+.story-index ol { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 720px; }
+.story-index-link { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.7); border: 1px solid rgba(10,10,10,.1); font-size: 13px; font-weight: 500; color: #0A0A0A; text-decoration: none; transition: background var(--t-fast) var(--ease-soft), color var(--t-fast) var(--ease-soft); }
+.story-index-link:hover, .story-index-link:focus-visible { background: #0A0A0A; color: #fff; }
+.story-index-link.is-current { background: #0A0A0A; color: #fff; }
+.story-index-num { font-family: var(--mono); font-size: 11px; opacity: .55; }
+.story-cue { margin-top: 8px; color: #9A9AA0; animation: bob 2.4s ease-in-out infinite; }
+.tl-row { scroll-margin-top: 96px; }
+.timeline .chip-row { list-style: none; }
+.tl-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.tl-now { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border-radius: 999px; background: rgba(10,10,10,.07); font-size: 12px; font-weight: 500; }
+.tl-links { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 6px; }
+.tl-link { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 500; color: #0A0A0A; text-decoration: underline; text-decoration-color: rgba(10,10,10,.25); text-underline-offset: 4px; transition: text-decoration-color var(--t-fast) var(--ease-soft); }
+.tl-link:hover { text-decoration-color: #0A0A0A; }
+.tl-link svg { transition: transform var(--t-fast) var(--ease-soft); }
+.tl-link:hover svg { transform: translateX(3px); }
+.tl-row-current .tl-card { box-shadow: 0 0 0 2px #0A0A0A, 0 20px 50px rgba(10,10,10,.12); }
+.tl-row-current .tl-track { background: repeating-linear-gradient(to bottom, rgba(10,10,10,.25) 0 6px, transparent 6px 12px); }
+.tl-row-current .tl-fill { display: none; }
+.story-end { padding-top: 1rem; }
+
+/* thin bar under the nav that fills as you read */
+.story-progress { display: none; }
+@supports (animation-timeline: scroll()) {
+  .story-progress { display: block; position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 300; background: #0A0A0A; transform-origin: left; transform: scaleX(0); animation: storyProgress linear both; animation-timeline: scroll(root); }
+}
+@keyframes storyProgress { to { transform: scaleX(1); } }
+
+/* Phones: slimmer rail so the cards get the width */
+@media (max-width: 640px) {
+  .tl-rail { flex-basis: 36px; }
+  .tl-dot { width: 36px; height: 36px; font-size: 12px; border-width: 2px; box-shadow: 0 0 0 6px #F2F2F2; top: 92px; }
+  .tl-card { border-radius: 28px; }
+  .tl-body p { font-size: 16px; }
+  .story-index-link { padding: 7px 12px; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .story-progress, .story-cue { animation: none !important; } .story-progress { display: none; } }
+
 
 /* ═════════ Inner pages (shared) ═════════ */
 .page-narrow { max-width: 780px; }
