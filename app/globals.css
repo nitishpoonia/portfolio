@@ -514,3 +514,121 @@ a { color: inherit; }
 
 /* Studio links are buttons and rows, not prose links */
 .studio-root a { text-decoration: none; }
+
+/* ═════════ Motion ═════════
+   Entrances run once when a page mounts (CSS keyframes, no JS).
+   Scroll reveals are scroll-driven (animation-timeline: view()); browsers without it
+   simply show everything. Everything is switched off for prefers-reduced-motion.
+   Keyframes use the individual `translate` / `scale` properties so they never fight
+   the `transform` that hover states use. */
+@keyframes enterUp { from { opacity: 0; translate: 0 18px; filter: blur(6px); } }
+@keyframes enterSoft { from { opacity: 0; translate: 0 28px; } }
+@keyframes wordUp { from { translate: 0 108%; rotate: 4deg; } }
+@keyframes reveal { from { opacity: 0; translate: 0 44px; scale: .97; } }
+@keyframes popIn { from { opacity: 0; translate: 0 8px; scale: .96; } }
+@keyframes avatarIn { from { opacity: 0; scale: .7; filter: blur(8px); } }
+@keyframes ringIn { from { opacity: 0; scale: .6; } }
+@keyframes badgePop { from { opacity: 0; scale: 0; } }
+@keyframes dotsIn { from { opacity: 0; scale: 1.08; } }
+@keyframes ping { 75%, 100% { scale: 2.8; opacity: 0; } }
+@keyframes navLift { to { background: rgba(255,255,255,.82); box-shadow: 0 14px 40px rgba(10,10,10,.12); } }
+
+/* page entrance: hero and inner-page headers, staggered */
+.hero > *, .page-head > * { animation: enterUp .9s var(--ease-out) both; }
+.hero > :nth-child(2), .page-head > :nth-child(2) { animation-delay: .08s; }
+.hero > :nth-child(3), .page-head > :nth-child(3) { animation-delay: .3s; }
+.hero > :nth-child(4), .page-head > :nth-child(4) { animation-delay: .42s; }
+.hero > :nth-child(5), .page-head > :nth-child(5) { animation-delay: .54s; }
+.hero > :nth-child(6), .page-head > :nth-child(6) { animation-delay: .66s; }
+.page-head + * { animation: enterSoft 1s .45s var(--ease-out) both; }
+.hero::before { animation: dotsIn 1.8s var(--ease-soft) both; }
+
+/* headline words rise out of a mask, one after another */
+.hero > .split, .page-head > .split { animation: none; }
+.split .w { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .04em .1em; margin: 0 -.04em -.1em; }
+.split .w > span { display: inline-block; transform-origin: 0 100%; animation: wordUp 1s var(--ease-out) both; animation-delay: calc(var(--d, 0s) + .1s + var(--i, 0) * 55ms); }
+
+/* home avatar: photo settles, ring draws in, badges pop then keep bobbing */
+.hero-avatar { animation: avatarIn 1s var(--ease-out) both; }
+.orbit-ring { animation: ringIn 1.2s .15s var(--ease-out) both, spin 40s linear infinite; }
+.orbit-badge { animation: badgePop .7s cubic-bezier(.34,1.56,.64,1) both, bob 5s ease-in-out infinite; }
+.orbit-a { animation-delay: .5s, 0s; }
+.orbit-b { animation-delay: .65s, -1.6s; }
+.orbit-c { animation-delay: .8s, -3.2s; }
+.hero > .story-cue { animation: enterUp .8s .7s var(--ease-out) both, bob 2.4s 1.5s ease-in-out infinite; }
+
+/* scroll reveals */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :is(.section-block > .h2, .section-block > .h3, .section-block > .btn-row, .stat-list > .stat-row,
+        .card-grid > li, .list-panel > li, .reason-grid > li, .now-card > *, .panel > *,
+        .site-footer-inner, .article-foot, .story-end > *) {
+      animation: reveal cubic-bezier(.2,.7,.2,1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    .card-grid > li:nth-child(even), .reason-grid > li:nth-child(even) { animation-range: entry 14% entry 100%; }
+    /* nav glass firms up once you start scrolling */
+    .site-nav { animation: navLift linear both; animation-timeline: scroll(root); animation-range: 0 140px; }
+  }
+}
+
+/* sliding active pill: nav and tabs (positioned by framer-motion) */
+.site-nav-link { position: relative; isolation: isolate; }
+.site-nav-link[aria-current="page"] { background: transparent; }
+.site-nav-pill { position: absolute; inset: 0; z-index: -1; border-radius: 999px; background: rgba(10,10,10,.08); }
+.tab-pill { position: relative; isolation: isolate; transition: color .25s var(--ease-soft), border-color .25s var(--ease-soft), background .2s var(--ease-soft); }
+.tab-pill.is-on { background: transparent; }
+.tab-pill:not(.is-on):hover { background: rgba(10,10,10,.05); }
+.tab-pill-bg { position: absolute; inset: -1px; z-index: -1; border-radius: 999px; background: #0A0A0A; }
+.tab-swap > .chip, .tab-swap > li > .post-row { animation: popIn .45s var(--ease-out) both; animation-delay: min(calc(var(--i, 0) * 35ms), 420ms); }
+
+/* cards: lift, cursor spotlight and a border glint (Spotlight.js sets --mx/--my) */
+.card { transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); }
+.card:hover { box-shadow: 0 18px 44px rgba(10,10,10,.12); }
+.card, .reason, .tl-card, .site-footer-inner { position: relative; isolation: isolate; }
+:is(.card, .reason, .tl-card, .site-footer-inner)::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,.95), transparent 65%);
+  opacity: 0; transition: opacity .4s var(--ease-soft);
+}
+:is(.card, .reason, .tl-card, .site-footer-inner)::before {
+  content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; padding: 1px;
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), rgba(10,10,10,.4), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0; transition: opacity .4s var(--ease-soft);
+}
+@media (hover: hover) and (pointer: fine) {
+  :is(.card, .reason, .tl-card, .site-footer-inner):hover::after,
+  :is(.card, .reason, .tl-card, .site-footer-inner):hover::before { opacity: 1; }
+}
+.card-icon { transition: background .2s var(--ease-soft), color .2s var(--ease-soft), rotate .35s var(--ease-out), scale .35s var(--ease-out); }
+.card:hover .card-icon, .reason:hover .card-icon { rotate: -8deg; scale: 1.08; }
+
+/* buttons: press, lift, light sweep, arrow nudge */
+.pill-btn { position: relative; overflow: hidden; isolation: isolate; transition: transform .2s var(--ease-out), background .2s var(--ease-soft), box-shadow .3s var(--ease-out); }
+.pill-btn:active { transform: scale(.97); }
+.pill-btn-dark:hover { box-shadow: 0 10px 26px rgba(10,10,10,.24); }
+.pill-btn-dark::after, .pill-btn-light::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 50%; z-index: -1; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.3), transparent); transform: skewX(-20deg);
+}
+.pill-btn-light::after { background: linear-gradient(100deg, transparent, rgba(10,10,10,.08), transparent); }
+.pill-btn-dark:hover::after, .pill-btn-light:hover::after { translate: 400% 0; transition: translate .8s var(--ease-out); }
+:is(.pill-btn, .crumb, .tl-link, .reason-link) svg { transition: translate .3s var(--ease-out); }
+:is(.pill-btn, .tl-link, .reason-link):hover :is(.lucide-arrow-right) { translate: 3px 0; }
+:is(.pill-btn, .crumb):hover .lucide-arrow-left { translate: -3px 0; }
+.pill-btn:hover .lucide-arrow-up-right { translate: 2px -2px; }
+.social-btn { transition: background .2s var(--ease-soft), color .2s var(--ease-soft), translate .3s var(--ease-out); }
+.social-btn:hover { translate: 0 -2px; }
+
+/* live dots send out a soft ping */
+.live-dot { position: relative; }
+.live-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: inherit; animation: ping 1.8s cubic-bezier(0,0,.2,1) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero > *, .page-head > *, .page-head + *, .hero::before, .split .w > span, .hero-avatar,
+  .orbit-ring, .orbit-badge, .tab-swap > .chip, .tab-swap > li > .post-row, .live-dot::after { animation: none !important; }
+  .pill-btn::after { display: none; }
+}

@@ -5,6 +5,7 @@ import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import { CHAPTERS } from "@/lib/story";
 import { getContact } from "@/lib/site";
+import SplitWords from "@/components/motion/SplitWords";
 
 export const metadata = {
   title: "How I got here",
@@ -23,7 +24,7 @@ export default async function StoryPage() {
       <main className="page-main story-main">
         <section className="hero" aria-labelledby="story-h">
           <span className="eyebrow">My story</span>
-          <h1 id="story-h">How I got here</h1>
+          <h1 id="story-h" className="split"><SplitWords text="How I got here" /></h1>
           <p>{CHAPTERS.length} chapters, in order. Jump to one, or keep scrolling.</p>
 
           <nav className="story-index" aria-label="Chapters">

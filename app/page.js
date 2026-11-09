@@ -11,6 +11,7 @@ import { getHomeProjects } from "@/lib/project";
 import { getAllPosts } from "@/lib/posts";
 import { COLLAGE, NOW_BUILDING } from "@/lib/story";
 import { getContact, whatsappHref } from "@/lib/site";
+import SplitWords from "@/components/motion/SplitWords";
 
 export const metadata = {
   alternates: { canonical: "https://nitishpoonia.in" },
@@ -29,7 +30,7 @@ export default async function HomePage() {
       <main className="page-main">
         <section className="hero" aria-labelledby="hero-h">
           <HeroAvatar src="/assets/Untitled-design.png" alt="Nitish Poonia" />
-          <h1 id="hero-h">Hi, I’m Nitish. I build apps from Chandigarh.</h1>
+          <h1 id="hero-h" className="split"><SplitWords text="Hi, I’m Nitish. I build apps from Chandigarh." /></h1>
           <p>
             Software developer shipping mobile and web products with React Native, Next.js,
             Node and PostgreSQL, and now building AI systems in Python. Open to full-time roles.
