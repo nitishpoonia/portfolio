@@ -95,7 +95,7 @@ body {
 }
 
 /* ── Focus visibility (keyboard) ─────────────── */
-:focus-visible {
+:focus-visible:not(.studio-root *) {
   outline: 2px solid var(--sec-accent);
   outline-offset: 3px;
   border-radius: var(--r-sm);
@@ -210,14 +210,25 @@ body {
   .cursor { animation: none; opacity: 1; }
 }
 
-/* Studio: the border reset Tailwind's preflight would normally provide */
-.studio-root *, .studio-root ::before, .studio-root ::after { border-width: 0; border-style: solid; border-color: currentColor; }
-.studio-root img { max-width: 100%; height: auto; }
+/* Studio: the small part of Tailwind's preflight the Studio needs (preflight is
+   off for the public site). :where() keeps these at zero specificity so utility
+   classes like `border` still win. */
+:where(.studio-root) *, :where(.studio-root) ::before, :where(.studio-root) ::after { border-width: 0; border-style: solid; border-color: rgba(10,10,10,.15); }
+:where(.studio-root) :is(button, input, select, textarea) { font: inherit; color: inherit; background-color: transparent; }
+:where(.studio-root) button { cursor: pointer; }
+:where(.studio-root) button:disabled { cursor: default; }
+:where(.studio-root) img { max-width: 100%; height: auto; }
+.studio-root :focus-visible { outline: 2px solid #0A0A0A; outline-offset: 2px; }
+.studio-root input:focus-visible, .studio-root select:focus-visible, .studio-root textarea:focus-visible { outline: none; }
+.studio-root .ProseMirror:focus-visible, .studio-root .bare-field:focus-visible { outline: none; }
 
 /* Studio rich-text editor */
-.prose-studio h2{font-size:1.5rem;font-weight:600;margin:1.2em 0 .4em}
+.prose-studio h2{font-size:1.6rem;font-weight:600;letter-spacing:-.015em;margin:1.4em 0 .4em}
 .prose-studio h3{font-size:1.2rem;font-weight:600;margin:1.1em 0 .4em}
-.prose-studio p{margin:.6em 0;line-height:1.7}
+.prose-studio p{margin:.7em 0;line-height:1.75}
+.prose-studio > :first-child{margin-top:0}
+.prose-studio img.ProseMirror-selectednode{outline:3px solid #0A0A0A;outline-offset:2px}
+.prose-studio hr{border-top:1px solid rgba(10,10,10,.15);margin:2em 0}
 .prose-studio ul{list-style:disc;padding-left:1.4em}
 .prose-studio ol{list-style:decimal;padding-left:1.4em}
 .prose-studio blockquote{border-left:3px solid #0A0A0A;padding-left:1em;color:#55555A}
@@ -226,7 +237,7 @@ body {
 .prose-studio pre code{background:none;padding:0}
 .prose-studio a{text-decoration:underline}
 .prose-studio img{max-width:100%;border-radius:16px}
-.prose-studio p.is-editor-empty:first-child::before{content:attr(data-placeholder);color:#9a9aa0;float:left;height:0;pointer-events:none}
+.prose-studio > p.is-editor-empty:first-child::before{content:attr(data-placeholder);color:#9a9aa0;float:left;height:0;pointer-events:none}
 
 
 /* ═════════ Black & white glass redesign ═════════ */
