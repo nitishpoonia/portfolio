@@ -38,3 +38,25 @@ CREATE TABLE IF NOT EXISTS site_settings (
   value       JSONB NOT NULL DEFAULT '{}',
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Studio login. One row (id = 1) holds the scrypt hash of the admin password.
+CREATE TABLE IF NOT EXISTS studio_auth (
+  id            INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+  password_hash TEXT NOT NULL,
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Logged-in browsers. Only a SHA-256 of the cookie value is stored.
+CREATE TABLE IF NOT EXISTS studio_sessions (
+  token_hash  TEXT PRIMARY KEY,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  expires_at  TIMESTAMPTZ NOT NULL
+);
+
+-- Failed logins, used to rate-limit guessing.
+CREATE TABLE IF NOT EXISTS studio_login_failures (
+  id  SERIAL PRIMARY KEY,
+  ip  TEXT NOT NULL,
+  at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS studio_login_failures_at ON studio_login_failures (at)

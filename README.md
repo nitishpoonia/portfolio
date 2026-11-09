@@ -24,8 +24,15 @@ Environment variables:
 | Name | What it is |
 | --- | --- |
 | `DATABASE_URL` | Neon connection string |
-| `STUDIO_PASSWORD` | Password for `/studio/login` |
-| `STUDIO_SESSION_SECRET` | 32+ random characters for signing the session cookie |
+
+## Studio login
+
+The Studio password lives in the database (`studio_auth`), hashed with scrypt. No password or secret goes in env vars.
+
+- Change it: Studio → Settings → Password. This logs out other devices.
+- Locked out: run `npm run studio:set-password` locally (needs `DATABASE_URL` in `.env.local`).
+- Sessions are random tokens; only their SHA-256 is stored in `studio_sessions`. "Log out everywhere" deletes them all.
+- 5 wrong attempts from one IP (or 30 overall) in 15 minutes locks login for that window.
 
 ## Where things live
 
