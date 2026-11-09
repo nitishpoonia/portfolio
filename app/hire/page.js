@@ -67,7 +67,7 @@ export default async function HirePage() {
           </div>
         </header>
 
-        <section className="block" aria-labelledby="why-h">
+        <section className="section-block" aria-labelledby="why-h">
           <h2 id="why-h" className="h2">Why work with me</h2>
           <ul className="reason-grid">
             {REASONS.map(({ icon: Icon, ...r }, i) => (
@@ -84,7 +84,7 @@ export default async function HirePage() {
           </ul>
         </section>
 
-        <section className="block" aria-labelledby="fit-h">
+        <section className="section-block" aria-labelledby="fit-h">
           <div className="now-card">
             <h2 id="fit-h" className="h2">Where I fit best</h2>
             <p className="now-text">

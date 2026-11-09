@@ -65,7 +65,7 @@ export default function UsesPage() {
       <main className="page-main page-narrow">
         <PageHeader icon={Laptop} eyebrow="Uses" title="What I use" lede="The editor, hardware and tools behind the projects on this site." />
         {SECTIONS.map(({ label, icon: Icon, items }) => (
-          <section key={label} className="block" aria-label={label}>
+          <section key={label} className="section-block" aria-label={label}>
             <h2 className="h3 h-icon"><span className="icon-tile icon-tile-sm" aria-hidden="true"><Icon size={16} strokeWidth={1.8} /></span>{label}</h2>
             <div className="glass stat-list">
               {items.map(({ name, note }) => (

@@ -59,4 +59,25 @@ CREATE TABLE IF NOT EXISTS studio_login_failures (
   ip  TEXT NOT NULL,
   at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-CREATE INDEX IF NOT EXISTS studio_login_failures_at ON studio_login_failures (at)
+CREATE INDEX IF NOT EXISTS studio_login_failures_at ON studio_login_failures (at);
+
+-- Images uploaded from the Studio editor, served at /media/<id>.
+-- id is random so draft images can't be guessed by counting.
+CREATE TABLE IF NOT EXISTS media (
+  id          TEXT PRIMARY KEY,
+  name        TEXT NOT NULL DEFAULT '',
+  mime        TEXT NOT NULL,
+  size        INT NOT NULL,
+  width       INT,
+  height      INT,
+  data        BYTEA NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Short-lived snapshots of unsaved editor content for /preview/<token>.
+CREATE TABLE IF NOT EXISTS studio_previews (
+  token       TEXT PRIMARY KEY,
+  kind        TEXT NOT NULL,
+  data        JSONB NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+)

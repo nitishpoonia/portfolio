@@ -1,17 +1,10 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import rehypePrettyCode from "rehype-pretty-code";
+import { mdxOptions } from "@/lib/mdx";
+import { PostArticle } from "@/components/ArticleViews";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
-
-const mdxOptions = {
-  mdxOptions: {
-    rehypePlugins: [[rehypePrettyCode, { theme: "github-light", keepBackground: true }]],
-  },
-};
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -50,30 +43,11 @@ export default async function PostPage({ params }) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const date = new Date(post.date).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
-
   return (
     <div className="page-shell">
       <Navbar />
       <main className="page-main page-narrow">
-        <header className="page-head">
-          <Link href="/blog" className="crumb"><ArrowLeft size={15} strokeWidth={2} aria-hidden="true" />All writing</Link>
-          <span className="mono">{date} · {post.readingTime}</span>
-          <h1>{post.title}</h1>
-          {post.description && <p className="page-lede">{post.description}</p>}
-          {post.tags.length > 0 && (
-            <div className="chip-row">{post.tags.map((t) => <span key={t} className="chip">{t}</span>)}</div>
-          )}
-        </header>
-
-        <article className="glass article prose">
-          <MDXRemote source={post.content} options={mdxOptions} />
-        </article>
-
-        <nav className="article-foot" aria-label="Post">
-          <Link href="/blog" className="pill-btn pill-btn-line"><ArrowLeft size={17} strokeWidth={1.9} aria-hidden="true" />All writing</Link>
-          <Link href="/projects" className="pill-btn pill-btn-dark">See my work<ArrowRight size={17} strokeWidth={1.9} aria-hidden="true" /></Link>
-        </nav>
+        <PostArticle post={post} body={<MDXRemote source={post.content} options={mdxOptions} />} />
       </main>
       <SiteFooter />
     </div>
