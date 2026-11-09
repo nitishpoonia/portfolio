@@ -1,8 +1,14 @@
 import { getSetting } from "@/lib/admin";
 import { CONTACT } from "@/lib/contact";
 import SettingsForm from "@/components/studio/SettingsForm";
+import SecurityForm from "@/components/studio/SecurityForm";
 
 export default async function SettingsPage() {
   const contact = { ...CONTACT, ...(await getSetting("contact", {})) };
-  return <SettingsForm initial={contact} />;
+  return (
+    <div className="flex flex-col gap-6">
+      <SettingsForm initial={contact} />
+      <SecurityForm />
+    </div>
+  );
 }
