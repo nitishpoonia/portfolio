@@ -166,7 +166,7 @@ export default function NfcTimerDemo() {
           font-weight: 500;
           letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: var(--accent-deep);
+          color: var(--ink);
         }
         .nfc-demo-title {
           font-family: var(--display);
@@ -179,7 +179,7 @@ export default function NfcTimerDemo() {
         .nfc-demo-sub {
           font-size: 0.95rem;
           line-height: 1.65;
-          color: var(--sec-mid);
+          color: var(--muted);
           max-width: 56ch;
           margin: 0 0 1.6rem;
         }
@@ -223,9 +223,9 @@ export default function NfcTimerDemo() {
           white-space: nowrap;
           flex-shrink: 0;
         }
-        .chip-neutral { background: rgba(42,35,26,0.08); color: var(--sec-mid); }
+        .chip-neutral { background: rgba(42,35,26,0.08); color: var(--muted); }
         .chip-bad { background: rgba(180,71,46,0.14); color: #b4472e; }
-        .chip-good { background: rgba(62,84,73,0.14); color: var(--accent-deep); }
+        .chip-good { background: rgba(62,84,73,0.14); color: var(--ink); }
         .nfc-readout {
           font-family: var(--mono);
           font-size: clamp(1.7rem, 4.4vw, 2.4rem);
@@ -242,7 +242,7 @@ export default function NfcTimerDemo() {
           font-size: 0.62rem;
           letter-spacing: 0.03em;
           line-height: 1.4;
-          color: var(--sec-mid);
+          color: var(--muted);
         }
         .nfc-resync {
           display: inline-flex;
@@ -250,13 +250,13 @@ export default function NfcTimerDemo() {
           gap: 0.5rem;
           font-size: 0.95rem;
           font-weight: 500;
-          color: var(--accent-deep);
+          color: var(--ink);
           letter-spacing: 0;
         }
         .nfc-dots { display: inline-flex; gap: 3px; }
         .nfc-dots i {
           width: 6px; height: 6px; border-radius: 999px;
-          background: var(--accent-deep); display: inline-block;
+          background: var(--ink); display: inline-block;
           animation: nfcpulse 1s ease-in-out infinite;
         }
         .nfc-dots i:nth-child(2) { animation-delay: 0.15s; }
@@ -265,7 +265,7 @@ export default function NfcTimerDemo() {
         .nfc-caption {
           font-size: 0.9rem;
           line-height: 1.6;
-          color: var(--sec-mid);
+          color: var(--muted);
           margin: 1.4rem 0;
           min-height: 2.9em;
           max-width: 60ch;
@@ -277,8 +277,8 @@ export default function NfcTimerDemo() {
           font-weight: 600;
           letter-spacing: 0.01em;
           color: #f4efe2;
-          background: var(--accent-deep);
-          border: 1px solid var(--accent-deep);
+          background: var(--ink);
+          border: 1px solid var(--ink);
           border-radius: var(--r-pill);
           padding: 0.6rem 1.2rem;
           cursor: pointer;
@@ -287,7 +287,7 @@ export default function NfcTimerDemo() {
         .nfc-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(62,84,73,0.26); }
         .nfc-btn:active { transform: translateY(0); }
         .nfc-btn-ghost {
-          color: var(--sec-mid);
+          color: var(--muted);
           background: transparent;
           border-color: var(--sec-line, rgba(42,35,26,0.2));
         }

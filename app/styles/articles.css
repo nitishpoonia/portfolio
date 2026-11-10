@@ -1,0 +1,40 @@
+/* Posts and case studies: contents box, heading links, code blocks, tag filter, case-study cover and summary.
+   Loaded after app/globals.css (see app/layout.js); colours come from the tokens there. */
+
+/* ═════════ Reading: contents, heading links, code blocks ═════════ */
+.toc { margin-bottom: 16px; border-radius: 28px; }
+.toc summary { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 22px; cursor: pointer; font-size: 15px; font-weight: 500; list-style: none; }
+.toc summary::-webkit-details-marker { display: none; }
+.toc summary .mono { margin-left: auto; }
+.toc summary::after { content: ""; width: 8px; height: 8px; border-right: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .2s var(--ease-soft); }
+.toc[open] summary::after { transform: rotate(-135deg) translateY(-2px); }
+.toc ol { list-style: none; padding: 4px 12px 16px; display: flex; flex-direction: column; }
+.toc li a { display: block; padding: 7px 10px; border-radius: 12px; font-size: 15px; line-height: 1.4; text-decoration: none; color: var(--text-2); }
+.toc li a:hover { background: rgba(10,10,10,.05); color: var(--ink); }
+.toc li.toc-sub a { padding-left: 26px; font-size: 14px; color: var(--muted); }
+
+.prose h2, .prose h3 { scroll-margin-top: 96px; }
+.prose .heading-link { color: inherit; font-weight: inherit; text-decoration: none; }
+.prose .heading-link::after { content: "#"; margin-left: .35em; color: var(--subtle-2); opacity: 0; transition: opacity .15s; }
+.prose .heading-link:hover::after, .prose .heading-link:focus-visible::after { opacity: 1; }
+
+.code-block { margin-bottom: 1.6rem; }
+.code-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 40px; padding: 0 8px 0 1.5rem; border: 1px solid var(--border); border-bottom: 0; border-radius: var(--r-md) var(--r-md) 0 0; background: rgba(10,10,10,.04); }
+.code-lang { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.code-copy { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; font: inherit; font-size: 13px; color: var(--text-2); cursor: pointer; }
+.code-copy:hover { background: rgba(10,10,10,.07); color: var(--ink); }
+.code-block pre { border-radius: 0 0 var(--r-md) var(--r-md) !important; margin-bottom: 0 !important; }
+.prose img { height: auto; }
+
+.chip-link { text-decoration: none; transition: background .15s; }
+.chip-link:hover { background: rgba(10,10,10,.14); }
+.tag-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: -0.25rem 0 1rem; font-size: 14px; color: var(--muted); }
+.tag-filter .chip { font-size: 12px; }
+.tag-clear { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(10,10,10,.2); color: var(--ink); text-decoration: none; font-size: 13px; }
+.tag-clear:hover { background: rgba(10,10,10,.05); }
+
+/* ═════════ Case study extras: cover, at-a-glance ═════════ */
+.card-cover { display: block; width: calc(100% + 48px); max-width: none; margin: -24px -24px 8px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 28px 28px 0 0; background: rgba(10,10,10,.06); }
+.case-cover { display: block; width: 100%; height: auto; margin-bottom: 16px; border-radius: 28px; border: 5px solid rgba(255,255,255,.95); box-shadow: 0 16px 40px rgba(10,10,10,.12); }
+.case-summary { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; padding: clamp(18px, 3vw, 28px); border-radius: 28px; }
+.case-outcome { display: flex; flex-direction: column; gap: 6px; font-size: clamp(17px, 1.8vw, 19px); line-height: 1.5; color: var(--ink); text-wrap: pretty; }

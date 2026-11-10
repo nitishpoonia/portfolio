@@ -1,6 +1,14 @@
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
+// Order matters: later files build on earlier ones, as when this was one file.
+import "./styles/site.css";
+import "./styles/story.css";
+import "./styles/pages.css";
+import "./styles/graphics.css";
+import "./styles/motion.css";
+import "./styles/home.css";
+import "./styles/articles.css";
 import Spotlight from "@/components/motion/Spotlight";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import ContactEvents from "@/components/ContactEvents";
