@@ -4,6 +4,7 @@ import "./globals.css";
 import Spotlight from "@/components/motion/Spotlight";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import ContactEvents from "@/components/ContactEvents";
+import { SITE_URL, DEFAULT_IMAGE } from "@/lib/meta";
 
 // Analytics only on the live site, so local runs and builds don't count as visits.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-K9ZSKF1486";
@@ -20,17 +21,17 @@ export const metadata = {
   },
   description:
     DESCRIPTION,
-  metadataBase: new URL("https://nitishpoonia.in"),
+  metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: "https://nitishpoonia.in",
+    canonical: SITE_URL,
   },
   openGraph: {
     title: "Nitish Poonia, Software Developer",
     description:
       DESCRIPTION,
-    url: "https://nitishpoonia.in",
+    url: SITE_URL,
     siteName: "Nitish Poonia",
-    images: ["/opengraph-image"],
+    images: [DEFAULT_IMAGE],
     locale: "en_IN",
     type: "website",
   },
@@ -40,6 +41,7 @@ export const metadata = {
     description:
       DESCRIPTION,
     creator: "@nitishpoonia",
+    images: [DEFAULT_IMAGE],
   },
   robots: {
     index: true,

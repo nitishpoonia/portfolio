@@ -43,13 +43,17 @@ Node 22 (`.nvmrc`). CI (`.github/workflows/ci.yml`) runs `check` on every pull r
 
 | Path | What |
 | --- | --- |
-| `app/` | Routes. Public pages, `/studio` (admin), `/api/studio/*` (admin API), `/preview/[token]`, `/media/[id]` |
+| `app/(site)/` | Public pages. `layout.js` adds the nav and footer; each page renders only its `<main id="main">` |
+| `app/studio`, `app/api/studio` | Studio admin and its API |
+| `app/preview/[token]`, `app/media/[id]` | Studio preview, uploaded images |
 | `components/` | Shared UI. `components/studio/*` is Studio-only (Tailwind) |
 | `lib/posts.js`, `lib/project.js` | Public, published-only queries |
 | `lib/admin.js` | Studio queries (include drafts) and saves |
 | `lib/auth.js`, `proxy.js` | Studio login and the gate on `/studio`, `/api/studio`, `/preview` |
 | `lib/story.js`, `lib/contact.js` | Content kept in code: story chapters, skills, socials, fallback contact |
-| `lib/format.js` | Pure helpers (slugify, tags) |
+| `lib/format.js` | Pure helpers (slugify, tags, `formatDate`) |
+| `lib/meta.js` | `SITE_URL` and `pageMeta()`: use it for every public page's metadata |
+| `lib/validate.js` | Studio input checks; throw `ValidationError` for messages the user should see |
 | `db/migrations/` | Database schema, one numbered file per change |
 | `lib/sql-client.mjs` | Neon or PGlite client, shared by the app and scripts |
 | `lib/migrate.mjs`, `lib/seed.mjs`, `lib/export.mjs` | Migrations, filling from `content/`, exporting back to it |

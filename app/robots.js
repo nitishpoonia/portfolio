@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/meta";
 export default function robots() {
   return {
     rules: [
@@ -7,6 +8,6 @@ export default function robots() {
         disallow: ["/studio", "/preview", "/api"],
       },
     ],
-    sitemap: "https://nitishpoonia.in/sitemap.xml",
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

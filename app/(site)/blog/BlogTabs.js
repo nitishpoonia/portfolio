@@ -15,7 +15,9 @@ const TABS = [
 export default function BlogTabs({ posts }) {
   const [active, setActive] = useState("tech");
   const calm = useReducedMotion();
-  const filtered = posts.filter((p) => p.category === active);
+  // Anything that isn't "tech" lists under Personal, so no post is ever unreachable.
+  const tabOf = (p) => (p.category === "tech" ? "tech" : "personal");
+  const filtered = posts.filter((p) => tabOf(p) === active);
 
   return (
     <div>
@@ -34,7 +36,7 @@ export default function BlogTabs({ posts }) {
             )}
             <tab.icon size={16} strokeWidth={1.9} aria-hidden="true" />
             {tab.label}
-            <span className="tab-count">{posts.filter((p) => p.category === tab.id).length}</span>
+            <span className="tab-count">{posts.filter((p) => tabOf(p) === tab.id).length}</span>
           </button>
         ))}
       </div>
