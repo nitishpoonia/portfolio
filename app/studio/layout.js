@@ -13,6 +13,7 @@ const tabs = [
   ["/studio", "Overview"],
   ["/studio/posts", "Posts"],
   ["/studio/projects", "Projects"],
+  ["/studio/content", "Content"],
   ["/studio/settings", "Settings"],
 ];
 

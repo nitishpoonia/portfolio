@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, ArrowRight, ArrowDown } from "lucide-react";
-import { CHAPTERS } from "@/lib/story";
+import { getSiteContent } from "@/lib/site-content";
 import { getContact } from "@/lib/site";
 import SplitWords from "@/components/motion/SplitWords";
 import { pageMeta } from "@/lib/meta";
@@ -15,7 +15,7 @@ export const metadata = pageMeta({
 const chapterId = (i) => `chapter-${i + 1}`;
 
 export default async function StoryPage() {
-  const contact = await getContact();
+  const [contact, { chapters: CHAPTERS }] = await Promise.all([getContact(), getSiteContent()]);
   return (
     <>
       <div className="story-progress" aria-hidden="true" />

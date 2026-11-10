@@ -4,7 +4,7 @@ export const glass =
 export const input =
   "w-full min-h-[44px] rounded-full border border-black/15 bg-white/70 px-4 text-[15px] outline-none focus:border-black";
 export const area =
-  "w-full rounded-[22px] border border-black/15 bg-white/70 px-4 py-3 text-[15px] outline-none focus:border-black";
+  "w-full rounded-[22px] border border-black/15 bg-white/70 px-4 py-3 font-[inherit] text-[15px] outline-none focus:border-black";
 export const btn =
   "inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#0A0A0A] px-6 text-[14px] font-medium text-white disabled:opacity-40";
 export const btnGhost =

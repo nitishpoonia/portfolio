@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Rocket, CodeXml, Fingerprint, Sparkles, Download, Mail, MessageCircle, BookOpen, ArrowRight } from "lucide-react";
 import { getContact, whatsappHref } from "@/lib/site";
+import { getSiteContent } from "@/lib/site-content";
 import SplitWords from "@/components/motion/SplitWords";
 import CopyEmail from "@/components/CopyEmail";
 import { pageMeta } from "@/lib/meta";
@@ -38,12 +39,14 @@ const REASONS = [
 ];
 
 export default async function HirePage() {
-  const contact = await getContact();
+  const [contact, { availability }] = await Promise.all([getContact(), getSiteContent()]);
 
   return (
     <main id="main" className="page-main page-narrow">
       <header className="page-head">
-        <span className="status-pill"><span className="live-dot live-dot-dark" aria-hidden="true" />Open to full-time roles</span>
+        {availability.open && (
+          <span className="status-pill"><span className="live-dot live-dot-dark" aria-hidden="true" />{availability.label}</span>
+        )}
         <h1 className="split"><SplitWords text="Looking for my next team" /></h1>
         <p className="page-lede">
           I’m a software developer who takes products from idea to app store, and I’m now

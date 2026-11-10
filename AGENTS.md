@@ -50,7 +50,8 @@ Node 22 (`.nvmrc`). CI (`.github/workflows/ci.yml`) runs `check` on every pull r
 | `lib/posts.js`, `lib/project.js` | Public, published-only queries |
 | `lib/admin.js` | Studio queries (include drafts) and saves |
 | `lib/auth.js`, `proxy.js` | Studio login and the gate on `/studio`, `/api/studio`, `/preview` |
-| `lib/story.js`, `lib/contact.js` | Content kept in code: story chapters, skills, socials, fallback contact |
+| `lib/story.js`, `lib/contact.js` | Defaults for content: story chapters, skills, now-building, socials, contact |
+| `lib/site-content.js` | `getSiteContent()`: Studio → Content overrides (site_settings) over `lib/story.js`. Read site content through this, not `lib/story.js` |
 | `lib/format.js` | Pure helpers (slugify, tags, `formatDate`) |
 | `lib/meta.js` | `SITE_URL` and `pageMeta()`: use it for every public page's metadata |
 | `lib/validate.js` | Studio input checks; throw `ValidationError` for messages the user should see |
