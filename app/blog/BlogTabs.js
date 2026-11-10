@@ -4,14 +4,13 @@ import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { Code2, NotebookPen, ArrowUpRight } from "lucide-react";
+import { formatDate } from "@/lib/format";
 
 const TABS = [
   { id: "tech", label: "Tech", icon: Code2 },
   { id: "personal", label: "Personal", icon: NotebookPen },
 ];
 
-const fmt = (d) =>
-  new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 
 export default function BlogTabs({ posts }) {
   const [active, setActive] = useState("tech");
@@ -52,7 +51,7 @@ export default function BlogTabs({ posts }) {
                   {post.description && <span className="muted">{post.description}</span>}
                 </span>
                 <span className="post-meta mono">
-                  <span>{fmt(post.date)}</span>
+                  <span>{formatDate(post.date)}</span>
                   <span>{post.readingTime}</span>
                   <ArrowUpRight size={18} strokeWidth={1.8} className="card-arrow" aria-hidden="true" />
                 </span>

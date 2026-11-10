@@ -23,3 +23,16 @@ describe("tagsOf", () => {
     expect(tagsOf([" a", "", "b "])).toEqual(["a", "b"]);
   });
 });
+
+describe("formatDate", async () => {
+  const { formatDate } = await import("../lib/format");
+  it("formats a calendar date the same in every time zone", () => {
+    expect(formatDate("2026-03-20")).toBe("20 Mar 2026");
+    expect(formatDate("2026-03-20", "long")).toBe("20 March 2026");
+    expect(formatDate("2026-01-01")).toBe("1 Jan 2026");
+  });
+  it("returns empty for missing or bad input", () => {
+    expect(formatDate("")).toBe("");
+    expect(formatDate("nope")).toBe("");
+  });
+});

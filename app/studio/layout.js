@@ -37,7 +37,7 @@ export default async function StudioLayout({ children }) {
           </div>
         </header>
       )}
-      <main className="mx-auto max-w-3xl px-3 py-8">{children}</main>
+      <main id="main" className="mx-auto max-w-3xl px-3 py-8">{children}</main>
     </div>
   );
 }

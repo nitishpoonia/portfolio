@@ -41,7 +41,7 @@ export default async function ProjectPage({ params }) {
   return (
     <div className="page-shell">
       <Navbar />
-      <main className="page-main page-narrow">
+      <main id="main" className="page-main page-narrow">
         <ProjectArticle project={project} contact={contact}
           body={<MDXRemote source={project.content} options={mdxOptions} components={mdxComponents} />} />
       </main>

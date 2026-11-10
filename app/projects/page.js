@@ -29,7 +29,7 @@ export default async function ProjectsPage() {
   return (
     <div className="page-shell">
       <Navbar />
-      <main className="page-main">
+      <main id="main" className="page-main">
         <PageHeader
           icon={Layers}
           eyebrow="Work"

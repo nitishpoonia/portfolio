@@ -62,7 +62,7 @@ export default function UsesPage() {
   return (
     <div className="page-shell">
       <Navbar />
-      <main className="page-main page-narrow">
+      <main id="main" className="page-main page-narrow">
         <PageHeader icon={Laptop} eyebrow="Uses" title="What I use" lede="The editor, hardware and tools behind the projects on this site." />
         {SECTIONS.map(({ label, icon: Icon, items }) => (
           <section key={label} className="section-block" aria-label={label}>
