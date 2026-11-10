@@ -26,3 +26,5 @@ jobs:
         env:
           # A throwaway in-memory Postgres filled from content/, so the build renders real pages.
           DATABASE_URL: pglite:memory
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

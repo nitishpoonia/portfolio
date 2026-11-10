@@ -15,11 +15,13 @@ for publishing posts and case studies. Next.js 16 App Router, React 19, Neon Pos
 | `npm run lint` | ESLint |
 | `npm run test` | Unit tests (Vitest, `tests/`) |
 | `npm run check` | lint + test + production build. Run before every PR. |
+| `npm run test:e2e` | Browser smoke test (Playwright, `e2e/`) against the built site; build with `DATABASE_URL=pglite:memory` first |
 | `npm run db:local` | Creates a local database in `.data/` (PGlite) and points `.env.local` at it |
 | `npm run db:setup` | Applies new migrations. Also runs automatically before `next build`. |
 | `npm run db:export` | Writes the database to `content/` as MDX |
 
-Node 22 (`.nvmrc`). CI (`.github/workflows/ci.yml`) runs `check` on every pull request.
+Node 22 (`.nvmrc`). CI (`.github/workflows/ci.yml`) runs lint, unit tests, a build on an in-memory
+database filled from `content/`, and the browser smoke test on every pull request. Add a smoke test when you add a page.
 
 ## Hard rules
 
