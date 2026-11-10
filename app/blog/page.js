@@ -4,6 +4,7 @@ import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import PageHeader from "@/components/PageHeader";
 import { PenLine } from "lucide-react";
+import { orEmpty } from "@/lib/db";
 
 const DESCRIPTION =
   "Articles on React Native performance, FlatList optimisation, cursor pagination, image loading and building products end to end, written from real production work.";
@@ -23,7 +24,7 @@ export const metadata = {
 };
 
 export default async function BlogPage() {
-  const posts = await getAllPosts().catch(() => []);
+  const posts = await orEmpty(getAllPosts());
 
   return (
     <div className="page-shell">

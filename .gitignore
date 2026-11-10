@@ -7,3 +7,6 @@ docs
 
 # OS files
 .DS_Store
+
+# local database (npm run db:local)
+.data

@@ -12,6 +12,7 @@ import { getAllPosts } from "@/lib/posts";
 import { CHAPTERS, COLLAGE, NOW_BUILDING } from "@/lib/story";
 import { getContact, whatsappHref } from "@/lib/site";
 import SplitWords from "@/components/motion/SplitWords";
+import { orEmpty } from "@/lib/db";
 
 const fmtDate = (d) =>
   new Date(`${d}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
@@ -22,8 +23,8 @@ export const metadata = {
 
 export default async function HomePage() {
   const [projects, posts, contact] = await Promise.all([
-    getHomeProjects().catch(() => []),
-    getAllPosts().catch(() => []),
+    orEmpty(getHomeProjects()),
+    orEmpty(getAllPosts()),
     getContact(),
   ]);
 

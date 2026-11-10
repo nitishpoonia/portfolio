@@ -1,12 +1,13 @@
 import { getAllPosts } from "@/lib/posts";
 import { getAllProjects } from "@/lib/project";
+import { orEmpty } from "@/lib/db";
 
 const BASE = "https://nitishpoonia.in";
 
 export default async function sitemap() {
   const [posts, projects] = await Promise.all([
-    getAllPosts().catch(() => []),
-    getAllProjects().catch(() => []),
+    orEmpty(getAllPosts()),
+    orEmpty(getAllProjects()),
   ]);
   const now = new Date();
 

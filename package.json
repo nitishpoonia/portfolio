@@ -15,8 +15,10 @@
     "test:watch": "vitest",
     "check": "npm run lint && npm run test && npm run build",
     "db:setup": "node scripts/db-setup.mjs",
-    "db:seed": "node --env-file=.env.local scripts/db-seed.mjs",
-    "studio:set-password": "node scripts/studio-set-password.mjs"
+    "db:seed": "node scripts/db-seed.mjs",
+    "studio:set-password": "node scripts/studio-set-password.mjs",
+    "db:export": "node scripts/db-export.mjs",
+    "db:local": "node scripts/db-local.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
@@ -41,6 +43,7 @@
     "tiptap-markdown": "^0.9.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.16",
     "autoprefixer": "^10.0.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",

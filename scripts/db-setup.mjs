@@ -1,25 +1,19 @@
 // Usage: npm run db:setup   (also runs automatically before `next build`)
-import fs from "fs";
-import { neon } from "@neondatabase/serverless";
+// Applies any new files in db/migrations to the database in DATABASE_URL.
+import { createSql, closeDatabases } from "../lib/sql-client.mjs";
+import { migrate } from "../lib/migrate.mjs";
 
 // Locally the URL lives in .env.local; on Vercel it is already in the environment.
 try { process.loadEnvFile(".env.local"); } catch {}
 
 if (!process.env.DATABASE_URL) {
-  console.log("DATABASE_URL not set, skipping schema setup.");
+  console.log("DATABASE_URL not set, skipping migrations.");
+  process.exit(0);
+}
+if (process.env.DATABASE_URL === "pglite:memory") {
+  console.log("In-memory database: each process migrates its own copy, nothing to do here.");
   process.exit(0);
 }
 
-const sql = neon(process.env.DATABASE_URL);
-const schema = fs.readFileSync("db/schema.sql", "utf8");
-
-// The HTTP driver runs one statement per call, so split on ";"
-const statements = schema
-  .split(";")
-  .map((s) => s.replace(/--.*$/gm, "").trim())
-  .filter(Boolean);
-
-for (const stmt of statements) {
-  await sql.query(stmt);
-}
-console.log(`Schema ready (${statements.length} statements).`);
+await migrate(createSql());
+await closeDatabases();
