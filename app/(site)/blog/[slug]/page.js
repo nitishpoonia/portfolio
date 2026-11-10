@@ -1,4 +1,5 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
+import { findRedirect } from "@/lib/redirects";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { articleOptions, mdxComponents, tableOfContents, mediaIdsIn } from "@/lib/mdx";
 import { getMediaSizes } from "@/lib/media";
@@ -9,10 +10,17 @@ import { orEmpty } from "@/lib/db";
 import { pageMeta, blogPostingLd } from "@/lib/meta";
 import JsonLd from "@/components/JsonLd";
 
+// Missing slug: if it was renamed in Studio, send visitors to the new address.
+async function missing(slug) {
+  const to = await findRedirect("posts", slug);
+  if (to) permanentRedirect(`/blog/${to}`);
+  notFound();
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
-  if (!post) notFound();
+  if (!post) await missing(slug);
 
   const description =
     post.description && post.description.length >= 150
@@ -39,7 +47,7 @@ export async function generateStaticParams() {
 export default async function PostPage({ params }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
-  if (!post) notFound();
+  if (!post) await missing(slug);
   const [all, media] = await Promise.all([orEmpty(getAllPosts()), getMediaSizes(mediaIdsIn(post.content))]);
 
   return (

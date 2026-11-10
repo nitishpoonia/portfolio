@@ -21,3 +21,15 @@ describe("sortHomeProjects", () => {
     expect(sortHomeProjects([...input].reverse()).map((x) => x.title)).toEqual(once);
   });
 });
+
+describe("sortHomeProjects with Studio ordering", () => {
+  it("puts featured first, then sort order, then the old rules", () => {
+    const out = sortHomeProjects([
+      { title: "Building", timeline: "2026", status: "Currently building" },
+      { title: "Second", timeline: "2020", sortOrder: 2 },
+      { title: "First", timeline: "2019", sortOrder: 1 },
+      { title: "Star", timeline: "2018", featured: true },
+    ]);
+    expect(out.map((x) => x.title)).toEqual(["Star", "First", "Second", "Building"]);
+  });
+});

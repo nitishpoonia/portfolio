@@ -1,4 +1,5 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
+import { findRedirect } from "@/lib/redirects";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { articleOptions, mdxComponents, tableOfContents, mediaIdsIn } from "@/lib/mdx";
 import { getMediaSizes } from "@/lib/media";
@@ -9,10 +10,17 @@ import { getContact } from "@/lib/site";
 import { orEmpty } from "@/lib/db";
 import { pageMeta } from "@/lib/meta";
 
+// Missing slug: if it was renamed in Studio, send visitors to the new address.
+async function missing(slug) {
+  const to = await findRedirect("projects", slug);
+  if (to) permanentRedirect(`/projects/${to}`);
+  notFound();
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
-  if (!project) notFound();
+  if (!project) await missing(slug);
 
   const title = `${project.title}: case study`;
   const description =
@@ -31,7 +39,7 @@ export async function generateStaticParams() {
 export default async function ProjectPage({ params }) {
   const { slug } = await params;
   const [project, contact, all] = await Promise.all([getProjectBySlug(slug), getContact(), orEmpty(getAllProjects())]);
-  if (!project) notFound();
+  if (!project) await missing(slug);
   const media = await getMediaSizes(mediaIdsIn(project.content));
 
   return (

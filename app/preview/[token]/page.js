@@ -7,6 +7,15 @@ import { getContact } from "@/lib/site";
 import { articleOptions, mdxComponents, tableOfContents, mediaIdsIn } from "@/lib/mdx";
 import { getMediaSizes } from "@/lib/media";
 import { tagsOf } from "@/lib/format";
+import { links as parseLinks } from "@/lib/validate";
+
+const safeLinks = (v) => {
+  try {
+    return parseLinks(v);
+  } catch {
+    return [];
+  }
+};
 import { PostArticle, ProjectArticle } from "@/components/ArticleViews";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
@@ -39,7 +48,7 @@ export default async function PreviewPage({ params }) {
     );
   }
 
-  const item = { ...d, title: d.title || "Untitled", tags: tagsOf(d.tags) };
+  const item = { ...d, title: d.title || "Untitled", tags: tagsOf(d.tags), links: safeLinks(d.links) };
   const article =
     preview.kind === "post" ? (
       <PostArticle
