@@ -20,7 +20,7 @@ export async function generateMetadata({ params }) {
       ? project.tagline
       : [project.tagline, "Case study covering the problem, the decisions and what shipped."].filter(Boolean).join(" ");
 
-  return pageMeta({ title, shareTitle: title, description, path: `/projects/${slug}`, type: "article" });
+  return pageMeta({ title, shareTitle: title, description, path: `/projects/${slug}`, type: "article", image: false });
 }
 
 export async function generateStaticParams() {
