@@ -12,7 +12,8 @@ import { getContact, whatsappHref } from "@/lib/site";
 import SplitWords from "@/components/motion/SplitWords";
 import CopyEmail from "@/components/CopyEmail";
 import { orEmpty } from "@/lib/db";
-import { SITE_URL, FEED } from "@/lib/meta";
+import { SITE_URL, FEED, PERSON } from "@/lib/meta";
+import JsonLd from "@/components/JsonLd";
 import { formatDate } from "@/lib/format";
 
 
@@ -29,6 +30,7 @@ export default async function HomePage() {
 
   return (
     <main id="main" className="page-main">
+      <JsonLd data={{ "@context": "https://schema.org", ...PERSON }} />
       <section className="hero" aria-labelledby="hero-h">
         <HeroAvatar src="/assets/Untitled-design.png" alt="Nitish Poonia" />
         <Link href="/hire" className="status-pill status-pill-link">

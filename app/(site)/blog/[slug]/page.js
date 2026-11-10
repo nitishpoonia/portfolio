@@ -6,7 +6,8 @@ import { relatedPosts } from "@/lib/related";
 import { PostArticle } from "@/components/ArticleViews";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { orEmpty } from "@/lib/db";
-import { pageMeta } from "@/lib/meta";
+import { pageMeta, blogPostingLd } from "@/lib/meta";
+import JsonLd from "@/components/JsonLd";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -24,7 +25,9 @@ export async function generateMetadata({ params }) {
     description,
     path: `/blog/${slug}`,
     type: "article",
+    image: false,
     publishedTime: post.date,
+    modifiedTime: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
   });
 }
 
@@ -41,6 +44,7 @@ export default async function PostPage({ params }) {
 
   return (
     <main id="main" className="page-main page-narrow">
+      <JsonLd data={blogPostingLd(post)} />
       <PostArticle
         post={post}
         toc={tableOfContents(post.content)}
