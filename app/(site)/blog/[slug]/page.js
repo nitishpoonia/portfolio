@@ -3,9 +3,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { mdxOptions } from "@/lib/mdx";
 import { PostArticle } from "@/components/ArticleViews";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
-import Navbar from "@/components/NavBar";
-import SiteFooter from "@/components/SiteFooter";
 import { orEmpty } from "@/lib/db";
+import { pageMeta } from "@/lib/meta";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -15,23 +14,16 @@ export async function generateMetadata({ params }) {
   const description =
     post.description && post.description.length >= 150
       ? post.description
-      : `${post.description} Written from real production experience.`;
+      : [post.description, "Written from real production experience."].filter(Boolean).join(" ");
 
-  return {
+  return pageMeta({
     title: post.title,
+    shareTitle: post.title,
     description,
-    alternates: { canonical: `https://nitishpoonia.in/blog/${slug}` },
-    openGraph: {
-      title: post.title,
-      description,
-      url: `https://nitishpoonia.in/blog/${slug}`,
-      type: "article",
-      siteName: "Nitish Poonia",
-    images: ["/opengraph-image"],
-      publishedTime: post.date,
-    },
-    twitter: { card: "summary_large_image", title: post.title, description, creator: "@nitishpoonia" },
-  };
+    path: `/blog/${slug}`,
+    type: "article",
+    publishedTime: post.date,
+  });
 }
 
 export async function generateStaticParams() {
@@ -45,12 +37,8 @@ export default async function PostPage({ params }) {
   if (!post) notFound();
 
   return (
-    <div className="page-shell">
-      <Navbar />
-      <main id="main" className="page-main page-narrow">
-        <PostArticle post={post} body={<MDXRemote source={post.content} options={mdxOptions} />} />
-      </main>
-      <SiteFooter />
-    </div>
+    <main id="main" className="page-main page-narrow">
+      <PostArticle post={post} body={<MDXRemote source={post.content} options={mdxOptions} />} />
+    </main>
   );
 }

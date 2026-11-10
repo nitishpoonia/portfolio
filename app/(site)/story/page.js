@@ -1,26 +1,24 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, ArrowRight, ArrowDown } from "lucide-react";
-import Navbar from "@/components/NavBar";
-import SiteFooter from "@/components/SiteFooter";
 import { CHAPTERS } from "@/lib/story";
 import { getContact } from "@/lib/site";
 import SplitWords from "@/components/motion/SplitWords";
+import { pageMeta } from "@/lib/meta";
 
-export const metadata = {
+export const metadata = pageMeta({
   title: "How I got here",
   description: "The path from Jalandhar to building mobile, web and now AI products, one chapter at a time.",
-  alternates: { canonical: "https://nitishpoonia.in/story" },
-};
+  path: "/story",
+});
 
 const chapterId = (i) => `chapter-${i + 1}`;
 
 export default async function StoryPage() {
   const contact = await getContact();
   return (
-    <div className="page-shell">
+    <>
       <div className="story-progress" aria-hidden="true" />
-      <Navbar />
       <main id="main" className="page-main story-main">
         <section className="hero" aria-labelledby="story-h">
           <span className="eyebrow">My story</span>
@@ -93,7 +91,6 @@ export default async function StoryPage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
-    </div>
+    </>
   );
 }

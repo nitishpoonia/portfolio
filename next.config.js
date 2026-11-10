@@ -2,6 +2,7 @@
 const nextConfig = {
   async redirects() {
     return [
+      { source: "/portfolio", destination: "/", permanent: true },
       // Typo in old sitemap — /hote-booking → /hotel-booking
       {
         source: "/projects/hote-booking",

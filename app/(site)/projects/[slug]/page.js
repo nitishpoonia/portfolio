@@ -4,9 +4,8 @@ import { mdxOptions, mdxComponents } from "@/lib/mdx";
 import { ProjectArticle } from "@/components/ArticleViews";
 import { getAllProjects, getProjectBySlug } from "@/lib/project";
 import { getContact } from "@/lib/site";
-import Navbar from "@/components/NavBar";
-import SiteFooter from "@/components/SiteFooter";
 import { orEmpty } from "@/lib/db";
+import { pageMeta } from "@/lib/meta";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -17,15 +16,9 @@ export async function generateMetadata({ params }) {
   const description =
     project.tagline && project.tagline.length >= 150
       ? project.tagline
-      : `${project.tagline} Case study covering the problem, the decisions and what shipped.`;
+      : [project.tagline, "Case study covering the problem, the decisions and what shipped."].filter(Boolean).join(" ");
 
-  return {
-    title,
-    description,
-    alternates: { canonical: `https://nitishpoonia.in/projects/${slug}` },
-    openGraph: { title, description, url: `https://nitishpoonia.in/projects/${slug}`, type: "article", siteName: "Nitish Poonia", images: ["/opengraph-image"] },
-    twitter: { card: "summary_large_image", title, description, creator: "@nitishpoonia" },
-  };
+  return pageMeta({ title, shareTitle: title, description, path: `/projects/${slug}`, type: "article" });
 }
 
 export async function generateStaticParams() {
@@ -39,13 +32,9 @@ export default async function ProjectPage({ params }) {
   if (!project) notFound();
 
   return (
-    <div className="page-shell">
-      <Navbar />
-      <main id="main" className="page-main page-narrow">
-        <ProjectArticle project={project} contact={contact}
-          body={<MDXRemote source={project.content} options={mdxOptions} components={mdxComponents} />} />
-      </main>
-      <SiteFooter />
-    </div>
+    <main id="main" className="page-main page-narrow">
+      <ProjectArticle project={project} contact={contact}
+        body={<MDXRemote source={project.content} options={mdxOptions} components={mdxComponents} />} />
+    </main>
   );
 }

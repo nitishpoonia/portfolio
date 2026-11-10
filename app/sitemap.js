@@ -1,8 +1,9 @@
+import { SITE_URL } from "@/lib/meta";
 import { getAllPosts } from "@/lib/posts";
 import { getAllProjects } from "@/lib/project";
 import { orEmpty } from "@/lib/db";
 
-const BASE = "https://nitishpoonia.in";
+const BASE = SITE_URL;
 
 export default async function sitemap() {
   const [posts, projects] = await Promise.all([orEmpty(getAllPosts()), orEmpty(getAllProjects())]);

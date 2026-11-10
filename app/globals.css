@@ -107,18 +107,6 @@ html { scrollbar-width: thin; scrollbar-color: rgba(10,10,10,.28) transparent; }
   border-radius: var(--r-sm);
 }
 
-/* ── Cursor blink (kept, retinted) ───────────── */
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-.cursor {
-  display: inline-block;
-  width: 2px;
-  height: 0.85em;
-  background: currentColor;
-  margin-left: 5px;
-  vertical-align: middle;
-  animation: blink 1.05s step-end infinite;
-}
-
 /* ── MDX prose (soft-cornered; restyled fully in stage 4) ── */
 .prose {
   font-size: clamp(1rem, 1.5vw, 1.1rem);
@@ -213,7 +201,6 @@ html { scrollbar-width: thin; scrollbar-color: rgba(10,10,10,.28) transparent; }
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .cursor { animation: none; opacity: 1; }
 }
 
 /* Studio: the border reset Tailwind's preflight would normally provide */
@@ -390,6 +377,15 @@ a { color: inherit; }
 /* ═════════ Inner pages (shared) ═════════ */
 .page-narrow { max-width: 780px; }
 .page-head { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: clamp(104px, 13vw, 140px) 0 clamp(28px, 4vw, 40px); }
+/* loading skeleton */
+.skeleton { display: block; border-radius: 999px; background: rgba(10,10,10,.07); }
+.skeleton-line { height: 14px; }
+.skeleton-title { width: 70%; height: clamp(36px, 6vw, 64px); border-radius: 18px; }
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton { animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .5; } }
+}
+.loading-head { width: 100%; }
 .page-head h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.02; font-weight: 600; letter-spacing: -.04em; text-wrap: balance; }
 .page-lede { max-width: 58ch; font-size: clamp(16px, 1.8vw, 19px); line-height: 1.55; color: #3C3C41; text-wrap: pretty; }
 .crumb { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(10,10,10,.14); background: rgba(255,255,255,.5); font-size: 13px; font-weight: 500; text-decoration: none; color: #3C3C41; }
