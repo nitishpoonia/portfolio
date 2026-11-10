@@ -10,3 +10,7 @@ docs
 
 # local database (npm run db:local)
 .data
+
+# playwright
+/test-results
+/playwright-report
