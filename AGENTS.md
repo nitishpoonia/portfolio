@@ -66,5 +66,5 @@ Node 22 (`.nvmrc`). CI (`.github/workflows/ci.yml`) runs `check` on every pull r
 - Commits: Conventional Commits (see `.claude/skills/commit-message-write`).
 - Server components by default; add `"use client"` only where a component needs state or browser APIs.
 - Post and project bodies are Markdown/MDX stored in the database and rendered with `next-mdx-remote`.
-  Studio and `/preview` render through the same `components/ArticleViews.js` and `lib/mdx.js`, so a
-  change to article rendering must work in both.
+  Studio and `/preview` render through the same `components/ArticleViews.js` and `lib/mdx.js`
+  (`articleOptions()`, `mdxComponents`, `tableOfContents()`), so a change to article rendering must work in both.

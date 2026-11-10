@@ -4,7 +4,8 @@ import readingTime from "reading-time";
 import { isAdmin } from "@/lib/auth";
 import { getPreview } from "@/lib/preview";
 import { getContact } from "@/lib/site";
-import { mdxOptions, mdxComponents } from "@/lib/mdx";
+import { articleOptions, mdxComponents, tableOfContents, mediaIdsIn } from "@/lib/mdx";
+import { getMediaSizes } from "@/lib/media";
 import { tagsOf } from "@/lib/format";
 import { PostArticle, ProjectArticle } from "@/components/ArticleViews";
 import Navbar from "@/components/NavBar";
@@ -26,7 +27,8 @@ export default async function PreviewPage({ params }) {
   const content = String(d.content || "");
   let body;
   try {
-    ({ content: body } = await compileMDX({ source: content, options: mdxOptions, components: mdxComponents }));
+    const media = await getMediaSizes(mediaIdsIn(content));
+    ({ content: body } = await compileMDX({ source: content, options: articleOptions({ media }), components: mdxComponents }));
   } catch (e) {
     body = (
       <div role="alert">
@@ -43,9 +45,11 @@ export default async function PreviewPage({ params }) {
       <PostArticle
         post={{ ...item, date: d.date || new Date().toISOString().slice(0, 10), readingTime: readingTime(content).text }}
         body={body}
+        toc={tableOfContents(content)}
+        linkTags={false}
       />
     ) : (
-      <ProjectArticle project={item} contact={await getContact()} body={body} />
+      <ProjectArticle project={item} contact={await getContact()} body={body} toc={tableOfContents(content)} />
     );
 
   return (

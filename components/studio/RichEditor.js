@@ -22,6 +22,9 @@ function Btn({ on, active, children, label, disabled }) {
   );
 }
 
+// Languages offered for code blocks; the live page highlights by this name.
+const LANGS = [["", "Plain text"], ["js", "JavaScript"], ["jsx", "JSX"], ["ts", "TypeScript"], ["tsx", "TSX"], ["bash", "Shell"], ["json", "JSON"], ["python", "Python"], ["sql", "SQL"], ["css", "CSS"], ["html", "HTML"], ["diff", "Diff"], ["yaml", "YAML"], ["swift", "Swift"], ["kotlin", "Kotlin"], ["java", "Java"]];
+
 const Sep = () => <span aria-hidden="true" className="mx-0.5 my-2 w-px bg-black/10" />;
 const I = { size: 17, strokeWidth: 1.9, "aria-hidden": true };
 
@@ -127,6 +130,16 @@ export default function RichEditor({ value, onChange }) {
         <Btn label="Numbered list" active={editor.isActive("orderedList")} on={() => c().toggleOrderedList().run()}><ListOrdered {...I} /></Btn>
         <Btn label="Quote" active={editor.isActive("blockquote")} on={() => c().toggleBlockquote().run()}><Quote {...I} /></Btn>
         <Btn label="Code block" active={editor.isActive("codeBlock")} on={() => c().toggleCodeBlock().run()}><SquareCode {...I} /></Btn>
+        {editor.isActive("codeBlock") && (
+          <select aria-label="Code language" value={editor.getAttributes("codeBlock").language || ""}
+            onChange={(e) => c().updateAttributes("codeBlock", { language: e.target.value || null }).run()}
+            className="my-1 min-h-[36px] rounded-full border border-black/15 bg-white/70 px-3 text-sm">
+            {!LANGS.some(([v]) => v === (editor.getAttributes("codeBlock").language || "")) && (
+              <option value={editor.getAttributes("codeBlock").language}>{editor.getAttributes("codeBlock").language}</option>
+            )}
+            {LANGS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+          </select>
+        )}
         <Sep />
         <Btn label="Link" active={editor.isActive("link")} on={() => {
           const url = window.prompt("Link URL (empty to remove)", editor.getAttributes("link").href || "https://");

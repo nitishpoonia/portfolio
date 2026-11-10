@@ -3,17 +3,20 @@ import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { SKILLS } from "@/lib/story";
 import { SKILL_ICONS } from "@/lib/icons";
+import { useTabKeys } from "./useTabKeys";
 
 export default function StackTabs() {
   const [tab, setTab] = useState(0);
   const calm = useReducedMotion();
+  const keys = useTabKeys(SKILLS.length, tab, setTab);
   return (
     <div>
       <div role="tablist" aria-label="Skill groups" className="tab-row">
         {SKILLS.map((s, i) => {
           const Icon = SKILL_ICONS[s.label];
           return (
-          <button key={s.label} role="tab" id={`tab-${i}`} aria-selected={tab === i} aria-controls="tab-panel"
+          <button key={s.label} ref={keys.ref(i)} role="tab" id={`tab-${i}`} aria-selected={tab === i} aria-controls="tab-panel"
+            tabIndex={tab === i ? 0 : -1} onKeyDown={keys.onKeyDown}
             className={`tab-pill${tab === i ? " is-on" : ""}`} onClick={() => setTab(i)}>
             {tab === i && (
               <motion.span layoutId="stack-tab-pill" className="tab-pill-bg" aria-hidden="true"
