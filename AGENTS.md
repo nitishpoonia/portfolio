@@ -33,8 +33,10 @@ Node 22 (`.nvmrc`). CI (`.github/workflows/ci.yml`) runs `check` on every pull r
   to production before the new code goes live, so the old code must keep working against the new schema.
 - Public pages load data through `orEmpty(...)` from `lib/db.js`, never `.catch(() => [])`: with a database
   configured, a failed query must fail the build rather than ship an empty page.
-- Design: black and white only, frosted glass surfaces, pill-shaped controls. Public pages use plain CSS in
-  `app/globals.css`; Tailwind is only for `/studio` (preflight is off). All motion must switch off under
+- Design: black and white only, frosted glass surfaces, pill-shaped controls. Public pages use plain CSS:
+  `app/globals.css` (reset, colour tokens, prose) then `app/styles/*.css` by area, imported in order from
+  `app/layout.js`. Use the colour tokens (`var(--ink)`, `var(--muted)`…), not hex values. For text on a light
+  background, `--muted` is the lightest grey allowed. Tailwind is only for `/studio` (preflight is off). All motion must switch off under
   `prefers-reduced-motion`.
 - Don't rewrite site copy, invent facts about Nitish, or add placeholder content to public pages.
 - Name a new dependency and the reason for it in the PR description.
