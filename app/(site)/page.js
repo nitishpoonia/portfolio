@@ -12,12 +12,12 @@ import { getContact, whatsappHref } from "@/lib/site";
 import SplitWords from "@/components/motion/SplitWords";
 import CopyEmail from "@/components/CopyEmail";
 import { orEmpty } from "@/lib/db";
-import { SITE_URL } from "@/lib/meta";
+import { SITE_URL, FEED } from "@/lib/meta";
 import { formatDate } from "@/lib/format";
 
 
 export const metadata = {
-  alternates: { canonical: SITE_URL },
+  alternates: { canonical: SITE_URL, types: FEED },
 };
 
 export default async function HomePage() {

@@ -4,7 +4,7 @@ import "./globals.css";
 import Spotlight from "@/components/motion/Spotlight";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import ContactEvents from "@/components/ContactEvents";
-import { SITE_URL, DEFAULT_IMAGE } from "@/lib/meta";
+import { SITE_URL, DEFAULT_IMAGE, FEED } from "@/lib/meta";
 
 // Analytics only on the live site, so local runs and builds don't count as visits.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-K9ZSKF1486";
@@ -24,6 +24,7 @@ export const metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: SITE_URL,
+    types: FEED,
   },
   openGraph: {
     title: "Nitish Poonia, Software Developer",

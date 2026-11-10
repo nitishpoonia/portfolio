@@ -1,5 +1,6 @@
 import { getAllPosts } from "@/lib/posts";
-import BlogTabs from "./BlogTabs";
+import { Suspense } from "react";
+import BlogTabs, { BlogTabsFromUrl } from "./BlogTabs";
 import PageHeader from "@/components/PageHeader";
 import { PenLine } from "lucide-react";
 import { orEmpty } from "@/lib/db";
@@ -23,7 +24,10 @@ export default async function BlogPage() {
         title="Notes from building"
         lede="Things I worked out while shipping: React Native performance, pagination, image loading. Plus the occasional note from away from the screen."
       />
-      <BlogTabs posts={posts} />
+      {/* The static page renders the default tab; the URL's ?tab= / ?tag= apply in the browser. */}
+      <Suspense fallback={<BlogTabs posts={posts} />}>
+        <BlogTabsFromUrl posts={posts} />
+      </Suspense>
     </main>
   );
 }
