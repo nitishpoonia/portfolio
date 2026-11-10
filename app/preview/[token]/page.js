@@ -5,6 +5,7 @@ import { isAdmin } from "@/lib/auth";
 import { getPreview } from "@/lib/preview";
 import { getContact } from "@/lib/site";
 import { mdxOptions, mdxComponents } from "@/lib/mdx";
+import { tagsOf } from "@/lib/format";
 import { PostArticle, ProjectArticle } from "@/components/ArticleViews";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
@@ -12,8 +13,6 @@ import SiteFooter from "@/components/SiteFooter";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Preview", robots: { index: false, follow: false } };
 
-const tagsOf = (v) =>
-  (Array.isArray(v) ? v : String(v || "").split(",")).map((t) => String(t).trim()).filter(Boolean);
 
 // Studio preview of unsaved editor content. proxy.js already requires a login
 // for /preview; the isAdmin check here is a second lock.

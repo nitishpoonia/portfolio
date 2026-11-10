@@ -1,10 +1,9 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import Spotlight from "@/components/motion/Spotlight";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
 
 const DESCRIPTION =
   "Software developer building mobile and web products end to end with React Native, Next.js, Node and PostgreSQL, now building AI systems in Python. Open to full-time roles.";
@@ -54,7 +53,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${geistMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <body>
         {children}
