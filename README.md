@@ -54,7 +54,7 @@ The Studio password lives in the database (`studio_auth`), hashed with scrypt. N
 
 | Path | What |
 | --- | --- |
-| `lib/story.js` | Story chapters, "Now building" card, skills, photo collage, social links |
+| `lib/story.js` | Defaults for story chapters, "Now building", skills (editable in Studio → Content), photo collage, social links |
 | `lib/contact.js` | Fallback contact details (Studio → Settings overrides these) |
 | `lib/site.js` | `getContact()`: merges Studio settings over the fallback |
 | `app/studio/*` | Admin: posts, projects, settings. Protected by `proxy.js` |

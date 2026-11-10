@@ -36,6 +36,8 @@ export default function RichEditor({ value, onChange }) {
   const fileRef = useRef(null);
   const [uploading, setUploading] = useState(0);
   const [err, setErr] = useState("");
+  // Inline editor for a link URL or image alt text: { kind: "link" | "alt", value }
+  const [pop, setPop] = useState(null);
   const editorRef = useRef(null);
 
   async function insertFiles(files, pos) {
@@ -142,15 +144,12 @@ export default function RichEditor({ value, onChange }) {
         )}
         <Sep />
         <Btn label="Link" active={editor.isActive("link")} on={() => {
-          const url = window.prompt("Link URL (empty to remove)", editor.getAttributes("link").href || "https://");
-          if (url === null) return;
-          url && url !== "https://" ? c().extendMarkRange("link").setLink({ href: url }).run() : c().extendMarkRange("link").unsetLink().run();
+          setPop({ kind: "link", value: editor.getAttributes("link").href || "" });
         }}><Link2 {...I} /></Btn>
         <Btn label="Upload image" on={() => fileRef.current?.click()} disabled={uploading > 0}><ImagePlus {...I} /></Btn>
         {imageSelected && (
           <Btn label="Edit image alt text" on={() => {
-            const alt = window.prompt("Describe the image (alt text)", editor.getAttributes("image").alt || "");
-            if (alt !== null) c().updateAttributes("image", { alt }).run();
+            setPop({ kind: "alt", value: editor.getAttributes("image").alt || "" });
           }}><span className="text-xs font-medium">Alt</span></Btn>
         )}
         <Btn label="Divider" on={() => c().setHorizontalRule().run()}><Minus {...I} /></Btn>
@@ -158,6 +157,35 @@ export default function RichEditor({ value, onChange }) {
           {uploading > 0 ? `Uploading ${uploading} image${uploading > 1 ? "s" : ""}…` : ""}
         </span>
       </div>
+      {pop && (
+        <form
+          className="mb-2 flex flex-wrap items-center gap-2 rounded-[22px] border border-black/15 bg-white/90 p-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const v = pop.value.trim();
+            if (pop.kind === "link") {
+              const href = v && !/^(https?:|mailto:|\/|#)/.test(v) ? `https://${v}` : v;
+              href ? c().extendMarkRange("link").setLink({ href }).run() : c().extendMarkRange("link").unsetLink().run();
+            } else {
+              c().updateAttributes("image", { alt: v }).run();
+            }
+            setPop(null);
+          }}
+          onKeyDown={(e) => { if (e.key === "Escape") { setPop(null); editor.commands.focus(); } }}
+        >
+          <label htmlFor="pop-input" className="px-2 text-sm text-[#55555A]">{pop.kind === "link" ? "Link" : "Alt text"}</label>
+          <input id="pop-input" autoFocus value={pop.value} onChange={(e) => setPop({ ...pop, value: e.target.value })}
+            placeholder={pop.kind === "link" ? "https://… (empty removes the link)" : "Describe the image for screen readers"}
+            className="min-h-[40px] min-w-[200px] flex-1 rounded-full border border-black/15 bg-white px-4 text-[15px] outline-none focus:border-black" />
+          <button className="min-h-[40px] rounded-full bg-[#0A0A0A] px-4 text-sm font-medium text-white">Apply</button>
+          {pop.kind === "link" && editor.isActive("link") && (
+            <button type="button" className="min-h-[40px] rounded-full px-3 text-sm hover:bg-black/5"
+              onClick={() => { c().extendMarkRange("link").unsetLink().run(); setPop(null); }}>Remove link</button>
+          )}
+          <button type="button" className="min-h-[40px] rounded-full px-3 text-sm hover:bg-black/5"
+            onClick={() => { setPop(null); editor.commands.focus(); }}>Cancel</button>
+        </form>
+      )}
       {err && <p role="alert" className="mb-2 px-2 text-sm text-red-700">{err}</p>}
       <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" multiple hidden
         onChange={(e) => { insertFiles(e.target.files); e.target.value = ""; }} />

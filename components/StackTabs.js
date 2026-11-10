@@ -1,11 +1,10 @@
 "use client";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { SKILLS } from "@/lib/story";
 import { SKILL_ICONS } from "@/lib/icons";
 import { useTabKeys } from "./useTabKeys";
 
-export default function StackTabs() {
+export default function StackTabs({ skills: SKILLS }) {
   const [tab, setTab] = useState(0);
   const calm = useReducedMotion();
   const keys = useTabKeys(SKILLS.length, tab, setTab);

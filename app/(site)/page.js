@@ -7,7 +7,8 @@ import { ProjectIcon } from "@/lib/icons";
 import StackTabs from "@/components/StackTabs";
 import { getHomeProjects } from "@/lib/project";
 import { getAllPosts } from "@/lib/posts";
-import { CHAPTERS, COLLAGE, NOW_BUILDING } from "@/lib/story";
+import { COLLAGE } from "@/lib/story";
+import { getSiteContent } from "@/lib/site-content";
 import { getContact, whatsappHref } from "@/lib/site";
 import SplitWords from "@/components/motion/SplitWords";
 import CopyEmail from "@/components/CopyEmail";
@@ -22,21 +23,25 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const [projects, posts, contact] = await Promise.all([
+  const [projects, posts, contact, site] = await Promise.all([
     orEmpty(getHomeProjects()),
     orEmpty(getAllPosts()),
     getContact(),
+    getSiteContent(),
   ]);
+  const { availability, now_building: NOW_BUILDING, chapters: CHAPTERS, skills } = site;
 
   return (
     <main id="main" className="page-main">
       <JsonLd data={{ "@context": "https://schema.org", ...PERSON }} />
       <section className="hero" aria-labelledby="hero-h">
         <HeroAvatar src="/assets/Untitled-design.png" alt="Nitish Poonia" />
-        <Link href="/hire" className="status-pill status-pill-link">
-          <span className="live-dot live-dot-dark" aria-hidden="true" />Open to full-time roles
-          <ArrowRight size={14} strokeWidth={2} aria-hidden="true" />
-        </Link>
+        {availability.open && (
+          <Link href="/hire" className="status-pill status-pill-link">
+            <span className="live-dot live-dot-dark" aria-hidden="true" />{availability.label}
+            <ArrowRight size={14} strokeWidth={2} aria-hidden="true" />
+          </Link>
+        )}
         <h1 id="hero-h" className="split"><SplitWords text="Hi, I’m Nitish. I build apps from Chandigarh." /></h1>
         <p>
           Software developer shipping mobile and web products with React Native, Next.js,
@@ -68,7 +73,7 @@ export default async function HomePage() {
             <span className="now-eyebrow"><span className="live-dot" aria-hidden="true" />Now building</span>
             <h2 id="now-h" className="h2">{NOW_BUILDING.title}</h2>
             <p className="now-text">{NOW_BUILDING.text}</p>
-            <ClaimsFlow />
+            {NOW_BUILDING.diagram && <ClaimsFlow />}
             <ul className="now-points">
               {NOW_BUILDING.points.map((pt) => <li key={pt}>{pt}</li>)}
             </ul>
@@ -141,7 +146,7 @@ export default async function HomePage() {
         <div className="glass panel">
           <h2 id="stack-h" className="h2">What I build with</h2>
           <p className="lede">Tools I reach for regularly, grouped by where they sit in a product.</p>
-          <StackTabs />
+          <StackTabs skills={skills} />
           <div className="btn-row" style={{ marginTop: "1.5rem" }}>
             <a href={whatsappHref(contact, "Hi Nitish, I’d like to book a call.")}
               target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-dark"><MessageCircle size={17} strokeWidth={1.9} aria-hidden="true" />Book a call on WhatsApp</a>
