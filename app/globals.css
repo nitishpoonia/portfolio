@@ -708,3 +708,9 @@ a { color: inherit; }
 .tag-filter .chip { font-size: 12px; }
 .tag-clear { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(10,10,10,.2); color: #0A0A0A; text-decoration: none; font-size: 13px; }
 .tag-clear:hover { background: rgba(10,10,10,.05); }
+
+/* ═════════ Case study extras: cover, at-a-glance ═════════ */
+.card-cover { display: block; width: calc(100% + 48px); max-width: none; margin: -24px -24px 8px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 28px 28px 0 0; background: rgba(10,10,10,.06); }
+.case-cover { display: block; width: 100%; height: auto; margin-bottom: 16px; border-radius: 28px; border: 5px solid rgba(255,255,255,.95); box-shadow: 0 16px 40px rgba(10,10,10,.12); }
+.case-summary { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; padding: clamp(18px, 3vw, 28px); border-radius: 28px; }
+.case-outcome { display: flex; flex-direction: column; gap: 6px; font-size: clamp(17px, 1.8vw, 19px); line-height: 1.5; color: #0A0A0A; text-wrap: pretty; }

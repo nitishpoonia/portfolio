@@ -49,6 +49,35 @@ function MoreList({ title, items }) {
   );
 }
 
+// "At a glance" for a case study: the outcome line and links (live, store, repo).
+function CaseSummary({ project }) {
+  const links = project.links || [];
+  if (!project.outcome && !links.length) return null;
+  return (
+    <section className="glass case-summary" aria-label="At a glance">
+      {project.outcome && (
+        <p className="case-outcome">
+          <span className="eyebrow">Outcome</span>
+          {project.outcome}
+        </p>
+      )}
+      {links.length > 0 && (
+        <div className="btn-row btn-row-start">
+          {links.map((l) => {
+            const external = /^https?:/.test(l.href);
+            return (
+              <a key={l.href} href={l.href} className="pill-btn pill-btn-line"
+                {...(external && { target: "_blank", rel: "noopener noreferrer" })}>
+                {l.label}<ArrowUpRight size={16} strokeWidth={1.9} aria-hidden="true" />
+              </a>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export function PostArticle({ post, body, toc, related, linkTags = true }) {
   const date = formatDate(post.date, "long");
   return (
@@ -102,6 +131,11 @@ export function ProjectArticle({ project, contact, body, toc, more }) {
         )}
       </header>
 
+      {project.cover && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={project.cover} alt="" className="case-cover" />
+      )}
+      <CaseSummary project={project} />
       <Contents toc={toc} />
       <article className="glass article prose">{body}</article>
 

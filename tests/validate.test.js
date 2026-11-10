@@ -22,3 +22,22 @@ describe("validate", () => {
     expect(() => slug("")).toThrow(/empty/);
   });
 });
+
+describe("project links", async () => {
+  const { links, sortOrder } = await import("../lib/validate");
+  it("parses 'Label | URL' lines and fills missing labels", () => {
+    expect(links("Live site | https://example.com\nhttps://github.com/x/y\n")).toEqual([
+      { label: "Live site", href: "https://example.com" },
+      { label: "github.com", href: "https://github.com/x/y" },
+    ]);
+  });
+  it("rejects unsafe or malformed URLs", () => {
+    expect(() => links("Bad | javascript:alert(1)")).toThrow(/must start with/);
+    expect(() => links("Bad | example.com")).toThrow(/must start with/);
+  });
+  it("checks sort order", () => {
+    expect(sortOrder("")).toBe(null);
+    expect(sortOrder("3")).toBe(3);
+    expect(() => sortOrder("1.5")).toThrow();
+  });
+});

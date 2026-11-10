@@ -94,7 +94,11 @@ export default async function HomePage() {
             {projects.map((p) => {
               return (
               <li key={p.link}>
-                <Link href={p.link} className="glass card">
+                <Link href={p.link} className={`glass card${p.cover ? " card-has-cover" : ""}`}>
+                  {p.cover && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={p.cover} alt="" loading="lazy" decoding="async" className="card-cover" />
+                  )}
                   <span className="card-top">
                     <span className="card-icon" aria-hidden="true"><ProjectIcon tags={p.tags} size={18} strokeWidth={1.8} /></span>
                     <span className="mono card-meta">{p.number} · {p.timeline}</span>

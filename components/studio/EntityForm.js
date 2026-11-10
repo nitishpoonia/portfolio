@@ -6,7 +6,8 @@ import { Eye, ExternalLink, Trash2 } from "lucide-react";
 import RichEditor from "./RichEditor";
 import { ago } from "./time";
 import { slugify } from "@/lib/format";
-import { glass, input, btn, btnGhost, label } from "./ui";
+import { glass, input, area, btn, btnGhost, label } from "./ui";
+import ImageField from "./ImageField";
 
 
 // Fields that are sent to the API (everything else in `data` is display-only)
@@ -155,8 +156,20 @@ export default function EntityForm({ kind, apiBase, backHref, publicPath, fields
           const v = data[f.name] ?? "";
           return (
             <div key={f.name} className={f.wide ? "sm:col-span-2" : ""}>
-              <label htmlFor={f.name} className={label}>{f.label}</label>
-              {f.options ? (
+              {f.type !== "checkbox" && <label htmlFor={f.name} className={label}>{f.label}</label>}
+              {f.type === "checkbox" ? (
+                <label htmlFor={f.name} className="flex min-h-[44px] cursor-pointer items-center gap-3 px-1 text-[15px]">
+                  <input id={f.name} type="checkbox" className="h-5 w-5 accent-[#0A0A0A]" checked={Boolean(data[f.name])}
+                    onChange={(e) => set(f.name, e.target.checked)} />
+                  {f.label}
+                </label>
+              ) : f.type === "image" ? (
+                <ImageField id={f.name} value={v} onChange={(url) => set(f.name, url)} />
+              ) : f.type === "textarea" ? (
+                <textarea id={f.name} rows={f.rows || 3} className={area} placeholder={f.hint} value={v}
+                  aria-describedby={f.help ? `${f.name}-help` : undefined}
+                  onChange={(e) => set(f.name, e.target.value)} />
+              ) : f.options ? (
                 <select id={f.name} className={input} value={v} onChange={(e) => set(f.name, e.target.value)}>
                   {f.options.map((o) => <option key={o} value={o}>{o || "None"}</option>)}
                 </select>
@@ -165,6 +178,7 @@ export default function EntityForm({ kind, apiBase, backHref, publicPath, fields
                   aria-describedby={f.counter || f.name === "slug" ? `${f.name}-help` : undefined}
                   onChange={(e) => set(f.name, e.target.value)} />
               )}
+              {f.help && <p id={`${f.name}-help`} className="mt-1 px-1 text-xs text-[#55555A]">{f.help}</p>}
               {f.name === "slug" && <p id="slug-help" className="mt-1 truncate px-1 text-xs text-[#55555A]">{url}</p>}
               {f.counter && (
                 <p id={`${f.name}-help`} className={`mt-1 px-1 text-xs ${v.length >= f.counter[0] && v.length <= f.counter[1] ? "text-[#55555A]" : "text-amber-700"}`}>
