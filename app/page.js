@@ -12,10 +12,10 @@ import { getAllPosts } from "@/lib/posts";
 import { CHAPTERS, COLLAGE, NOW_BUILDING } from "@/lib/story";
 import { getContact, whatsappHref } from "@/lib/site";
 import SplitWords from "@/components/motion/SplitWords";
+import CopyEmail from "@/components/CopyEmail";
 import { orEmpty } from "@/lib/db";
+import { formatDate } from "@/lib/format";
 
-const fmtDate = (d) =>
-  new Date(`${d}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 
 export const metadata = {
   alternates: { canonical: "https://nitishpoonia.in" },
@@ -31,7 +31,7 @@ export default async function HomePage() {
   return (
     <div className="page-shell">
       <Navbar />
-      <main className="page-main">
+      <main id="main" className="page-main">
         <section className="hero" aria-labelledby="hero-h">
           <HeroAvatar src="/assets/Untitled-design.png" alt="Nitish Poonia" />
           <Link href="/hire" className="status-pill status-pill-link">
@@ -158,7 +158,7 @@ export default async function HomePage() {
                   <Link href={`/blog/${post.slug}`} className="list-row">
                     <span className="list-title"><FileText size={16} strokeWidth={1.8} aria-hidden="true" className="list-icon" />{post.title}</span>
                     <span className="list-end">
-                      <time className="mono" dateTime={post.date}>{fmtDate(post.date)}</time>
+                      <time className="mono" dateTime={post.date}>{formatDate(post.date)}</time>
                       <ArrowUpRight size={16} strokeWidth={1.8} className="card-arrow" aria-hidden="true" />
                     </span>
                   </Link>
@@ -177,6 +177,7 @@ export default async function HomePage() {
             </p>
             <div className="btn-row btn-row-start">
               <a href={`mailto:${contact.email}`} className="pill-btn pill-btn-light"><Mail size={17} strokeWidth={1.9} aria-hidden="true" />Email me</a>
+              <CopyEmail email={contact.email} className="pill-btn pill-btn-ghost-light" />
               <a href={whatsappHref(contact)} target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-ghost-light"><MessageCircle size={17} strokeWidth={1.9} aria-hidden="true" />WhatsApp</a>
               <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-ghost-light"><Download size={17} strokeWidth={1.9} aria-hidden="true" />Résumé</a>
             </div>

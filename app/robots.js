@@ -4,6 +4,7 @@ export default function robots() {
       {
         userAgent: "*",
         allow: "/",
+        disallow: ["/studio", "/preview", "/api"],
       },
     ],
     sitemap: "https://nitishpoonia.in/sitemap.xml",

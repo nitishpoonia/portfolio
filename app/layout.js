@@ -3,6 +3,11 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import Spotlight from "@/components/motion/Spotlight";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import ContactEvents from "@/components/ContactEvents";
+
+// Analytics only on the live site, so local runs and builds don't count as visits.
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-K9ZSKF1486";
+const ANALYTICS = process.env.VERCEL_ENV === "production";
 
 
 const DESCRIPTION =
@@ -56,9 +61,11 @@ export default function RootLayout({ children }) {
       className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <body>
+        <a href="#main" className="skip-link">Skip to content</a>
         {children}
         <Spotlight />
-        <GoogleAnalytics gaId="G-K9ZSKF1486" />
+        {ANALYTICS && <GoogleAnalytics gaId={GA_ID} />}
+        {ANALYTICS && <ContactEvents />}
       </body>
     </html>
   );

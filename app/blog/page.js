@@ -29,7 +29,7 @@ export default async function BlogPage() {
   return (
     <div className="page-shell">
       <Navbar />
-      <main className="page-main page-narrow">
+      <main id="main" className="page-main page-narrow">
         <PageHeader
           icon={PenLine}
           eyebrow="Writing"

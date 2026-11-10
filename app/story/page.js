@@ -21,7 +21,7 @@ export default async function StoryPage() {
     <div className="page-shell">
       <div className="story-progress" aria-hidden="true" />
       <Navbar />
-      <main className="page-main story-main">
+      <main id="main" className="page-main story-main">
         <section className="hero" aria-labelledby="story-h">
           <span className="eyebrow">My story</span>
           <h1 id="story-h" className="split"><SplitWords text="How I got here" /></h1>

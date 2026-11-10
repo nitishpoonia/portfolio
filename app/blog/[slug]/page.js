@@ -47,7 +47,7 @@ export default async function PostPage({ params }) {
   return (
     <div className="page-shell">
       <Navbar />
-      <main className="page-main page-narrow">
+      <main id="main" className="page-main page-narrow">
         <PostArticle post={post} body={<MDXRemote source={post.content} options={mdxOptions} />} />
       </main>
       <SiteFooter />

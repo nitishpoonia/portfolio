@@ -4,6 +4,7 @@ import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import { getContact, whatsappHref } from "@/lib/site";
 import SplitWords from "@/components/motion/SplitWords";
+import CopyEmail from "@/components/CopyEmail";
 
 const DESCRIPTION =
   "Nitish Poonia is a software developer who ships mobile and web products end to end and is now building AI systems in Python. Looking for a full-time role.";
@@ -53,7 +54,7 @@ export default async function HirePage() {
   return (
     <div className="page-shell">
       <Navbar />
-      <main className="page-main page-narrow">
+      <main id="main" className="page-main page-narrow">
         <header className="page-head">
           <span className="status-pill"><span className="live-dot live-dot-dark" aria-hidden="true" />Open to full-time roles</span>
           <h1 className="split"><SplitWords text="Looking for my next team" /></h1>
@@ -65,6 +66,7 @@ export default async function HirePage() {
           <div className="btn-row btn-row-start">
             <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="pill-btn pill-btn-dark"><Download size={17} strokeWidth={1.9} aria-hidden="true" />Download résumé</a>
             <a href={`mailto:${contact.email}`} className="pill-btn pill-btn-line"><Mail size={17} strokeWidth={1.9} aria-hidden="true" />Email me</a>
+            <CopyEmail email={contact.email} />
           </div>
         </header>
 

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Mail } from "lucide-react";
 import SplitWords from "@/components/motion/SplitWords";
+import { formatDate } from "@/lib/format";
 
 // Shared by the public pages and the Studio preview, so a preview looks exactly
 // like the live page. `body` is the rendered MDX.
 
 export function PostArticle({ post, body }) {
-  const date = new Date(post.date).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+  const date = formatDate(post.date, "long");
   return (
     <>
       <header className="page-head">
