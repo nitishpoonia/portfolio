@@ -5,10 +5,9 @@ import readingTime from "reading-time";
 import { Eye, ExternalLink, Trash2 } from "lucide-react";
 import RichEditor from "./RichEditor";
 import { ago } from "./time";
+import { slugify } from "@/lib/format";
 import { glass, input, btn, btnGhost, label } from "./ui";
 
-const slugify = (s) =>
-  String(s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
 // Fields that are sent to the API (everything else in `data` is display-only)
 const pick = (d, names) => Object.fromEntries([...names, "content", "published"].map((k) => [k, d[k] ?? ""]));
