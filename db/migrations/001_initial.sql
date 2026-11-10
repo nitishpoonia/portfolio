@@ -1,5 +1,5 @@
--- Run once against your Neon database (npm run db:setup).
--- Safe to re-run: every statement is IF NOT EXISTS.
+-- 001: the schema as it stood before migrations existed. Every statement is
+-- IF NOT EXISTS, so it is a no-op on the production database, which already has these tables.
 
 CREATE TABLE IF NOT EXISTS posts (
   id          SERIAL PRIMARY KEY,

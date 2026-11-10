@@ -23,3 +23,6 @@ jobs:
       - run: npm run lint
       - run: npm run test
       - run: npm run build
+        env:
+          # A throwaway in-memory Postgres filled from content/, so the build renders real pages.
+          DATABASE_URL: pglite:memory

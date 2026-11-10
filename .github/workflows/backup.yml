@@ -1,0 +1,45 @@
+name: Weekly content backup
+
+# Exports every post and project from the production database to MDX and keeps
+# it as a workflow artifact for 90 days. To turn it on, add a repository secret
+# named BACKUP_DATABASE_URL (a Neon connection string; a read-only role is best).
+on:
+  schedule:
+    - cron: "17 3 * * 1" # Mondays 03:17 UTC
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check for the secret
+        id: has
+        env:
+          URL: ${{ secrets.BACKUP_DATABASE_URL }}
+        run: |
+          if [ -z "$URL" ]; then
+            echo "BACKUP_DATABASE_URL is not set; skipping. See the comment at the top of this file."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.has.outputs.run == 'true'
+        uses: actions/checkout@v4
+      - if: steps.has.outputs.run == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - if: steps.has.outputs.run == 'true'
+        run: npm ci
+      - if: steps.has.outputs.run == 'true'
+        run: npm run db:export -- --out backup
+        env:
+          DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+      - if: steps.has.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-backup-${{ github.run_number }}
+          path: backup
+          retention-days: 90

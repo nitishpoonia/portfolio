@@ -4,6 +4,7 @@ import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import PageHeader from "@/components/PageHeader";
 import { Layers } from "lucide-react";
+import { orEmpty } from "@/lib/db";
 
 const DESCRIPTION =
   "Case studies and projects by Nitish Poonia: NFC attendance tracking, hotel booking with Stripe, a campus social feed, a study-centre SaaS backend, and client websites.";
@@ -23,7 +24,7 @@ export const metadata = {
 };
 
 export default async function ProjectsPage() {
-  const projects = await getAllProjects().catch(() => []);
+  const projects = await orEmpty(getAllProjects());
 
   return (
     <div className="page-shell">

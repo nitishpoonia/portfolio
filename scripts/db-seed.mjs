@@ -1,49 +1,25 @@
-// Usage: npm run db:seed
-// Imports content/blog/*.mdx and content/projects/*.mdx into Postgres.
-// Safe to re-run: existing slugs are updated, not duplicated.
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-import { neon } from "@neondatabase/serverless";
+// Usage: npm run db:seed -- --force
+// Upserts every file in content/ into the database. DANGER: any post or project
+// with the same slug is OVERWRITTEN with the file, losing edits made in Studio.
+// To fill an empty database you don't need this: the build does it safely.
+import { createSql, closeDatabases } from "../lib/sql-client.mjs";
+import { readContent, seedFromContent } from "../lib/seed.mjs";
 
-const sql = neon(process.env.DATABASE_URL);
+try { process.loadEnvFile(".env.local"); } catch {}
+const sql = createSql();
 
-function readDir(dir) {
-  return fs
-    .readdirSync(dir)
-    .filter((f) => f.endsWith(".mdx"))
-    .map((f) => {
-      const { data, content } = matter(fs.readFileSync(path.join(dir, f), "utf8"));
-      return { slug: f.replace(".mdx", ""), data, content: content.trim() };
-    });
+const slugs = [...readContent("blog"), ...readContent("projects")].map((i) => i.slug);
+const [{ n }] = await sql.query(
+  `SELECT (SELECT count(*) FROM posts WHERE slug = ANY($1)) + (SELECT count(*) FROM projects WHERE slug = ANY($1)) AS n`,
+  [slugs]
+);
+
+if (!process.argv.includes("--force")) {
+  console.error(
+    `Refusing to run: ${Number(n)} posts/projects in the database would be overwritten by content/.\n` +
+      `Run \`npm run db:export\` first to save current content, then \`npm run db:seed -- --force\`.`
+  );
+  process.exit(1);
 }
-
-const posts = readDir("content/blog");
-for (const { slug, data, content } of posts) {
-  await sql`
-    INSERT INTO posts (slug, title, description, date, tags, category, content, published)
-    VALUES (${slug}, ${data.title}, ${data.description || ""}, ${data.date},
-            ${data.tags || []}, ${data.category || "tech"}, ${content},
-            ${data.published !== false})
-    ON CONFLICT (slug) DO UPDATE SET
-      title = EXCLUDED.title, description = EXCLUDED.description,
-      date = EXCLUDED.date, tags = EXCLUDED.tags, category = EXCLUDED.category,
-      content = EXCLUDED.content, published = EXCLUDED.published, updated_at = now()`;
-}
-console.log(`Imported ${posts.length} posts.`);
-
-const projects = readDir("content/projects");
-for (const { slug, data, content } of projects) {
-  await sql`
-    INSERT INTO projects (slug, title, tagline, role, company, timeline, tags, type, status, content, published)
-    VALUES (${slug}, ${data.title}, ${data.tagline || ""}, ${data.role || ""},
-            ${data.company || ""}, ${data.timeline || ""}, ${data.tags || []},
-            ${data.type || "case-study"}, ${data.status || null}, ${content},
-            ${data.published !== false})
-    ON CONFLICT (slug) DO UPDATE SET
-      title = EXCLUDED.title, tagline = EXCLUDED.tagline, role = EXCLUDED.role,
-      company = EXCLUDED.company, timeline = EXCLUDED.timeline, tags = EXCLUDED.tags,
-      type = EXCLUDED.type, status = EXCLUDED.status, content = EXCLUDED.content,
-      published = EXCLUDED.published, updated_at = now()`;
-}
-console.log(`Imported ${projects.length} projects.`);
+await seedFromContent(sql, { onlyIfEmpty: false });
+await closeDatabases();

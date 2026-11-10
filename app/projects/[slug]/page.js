@@ -6,6 +6,7 @@ import { getAllProjects, getProjectBySlug } from "@/lib/project";
 import { getContact } from "@/lib/site";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
+import { orEmpty } from "@/lib/db";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }) {
 }
 
 export async function generateStaticParams() {
-  const projects = await getAllProjects().catch(() => []);
+  const projects = await orEmpty(getAllProjects());
   return projects.map((p) => ({ slug: p.slug }));
 }
 

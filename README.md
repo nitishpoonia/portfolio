@@ -14,16 +14,32 @@ Personal site: story, work, writing, and a small admin ("Studio") for publishing
 
 ```bash
 npm install
-cp .env.example .env.local   # then fill in the values below
-npm run db:setup             # creates tables (safe to re-run)
+npm run db:local   # local Postgres in .data/, filled from content/, Studio password "local-studio"
 npm run dev
 ```
 
-Environment variables:
+That never touches production. To work against Neon instead, put its connection string in
+`.env.local` as `DATABASE_URL`.
 
-| Name | What it is |
+| `DATABASE_URL` | Database |
 | --- | --- |
-| `DATABASE_URL` | Neon connection string |
+| `postgres://…neon.tech/…` | Neon (production) |
+| `pglite:.data/pglite` | Local database made by `npm run db:local` |
+| `pglite:memory` | Throwaway in-memory database filled from `content/` (CI builds) |
+
+## Database changes
+
+Schema lives in numbered files in `db/migrations/`. Each runs once, recorded in `schema_migrations`, and
+new ones are applied automatically before every build (`npm run db:setup` runs them by hand). Migrations
+must be additive and safe to run twice; see AGENTS.md.
+
+## Backups
+
+- Studio → Settings → Backup downloads every post, project and setting as JSON (optionally with images).
+- `npm run db:export` writes the database back to `content/` as MDX.
+- `.github/workflows/backup.yml` does the export weekly and keeps it for 90 days once you add a
+  `BACKUP_DATABASE_URL` repository secret.
+- `npm run db:seed -- --force` overwrites the database from `content/`. It refuses to run without `--force`.
 
 ## Studio login
 
@@ -42,5 +58,5 @@ The Studio password lives in the database (`studio_auth`), hashed with scrypt. N
 | `lib/contact.js` | Fallback contact details (Studio → Settings overrides these) |
 | `lib/site.js` | `getContact()`: merges Studio settings over the fallback |
 | `app/studio/*` | Admin: posts, projects, settings. Protected by `proxy.js` |
-| `db/schema.sql` | Database tables |
+| `db/migrations/` | Database schema, one numbered file per change |
 | `content/` | Original MDX files, used only by `npm run db:seed` |

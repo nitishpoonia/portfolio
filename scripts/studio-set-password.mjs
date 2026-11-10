@@ -2,7 +2,7 @@
 // Sets (or resets) the Studio password directly in the database. Use it if you
 // are ever locked out. Needs DATABASE_URL in .env.local. Logs out every browser.
 import readline from "readline";
-import { neon } from "@neondatabase/serverless";
+import { createSql, closeDatabases } from "../lib/sql-client.mjs";
 import { hashPassword, MIN_PASSWORD_LENGTH } from "../lib/password.mjs";
 
 try { process.loadEnvFile(".env.local"); } catch {}
@@ -29,10 +29,11 @@ if (again !== pw) {
   process.exit(1);
 }
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = createSql();
 const hash = await hashPassword(pw);
 await sql`
   INSERT INTO studio_auth (id, password_hash) VALUES (1, ${hash})
   ON CONFLICT (id) DO UPDATE SET password_hash = EXCLUDED.password_hash, updated_at = now()`;
 await sql`DELETE FROM studio_sessions`;
 console.log("Studio password saved. All sessions logged out.");
+await closeDatabases();

@@ -5,6 +5,7 @@ import { PostArticle } from "@/components/ArticleViews";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import Navbar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
+import { orEmpty } from "@/lib/db";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }) {
 }
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts().catch(() => []);
+  const posts = await orEmpty(getAllPosts());
   return posts.map((p) => ({ slug: p.slug }));
 }
 
