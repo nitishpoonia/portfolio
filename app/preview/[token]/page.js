@@ -64,7 +64,7 @@ export default async function PreviewPage({ params }) {
   return (
     <div className="page-shell">
       <Navbar />
-      <main id="main" className="page-main page-narrow">{article}</main>
+      <main id="main" className="page-main">{article}</main>
       <SiteFooter />
       <div className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full bg-[#0A0A0A] px-5 py-2.5 text-sm text-white shadow-lg">
         Preview · {d.published ? "unsaved changes to a live page" : "not published"}

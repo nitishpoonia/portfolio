@@ -1,4 +1,5 @@
 import PageHeader from "@/components/PageHeader";
+import Band from "@/components/Band";
 import { Laptop, Terminal, Code2, NotebookPen } from "lucide-react";
 import { pageMeta } from "@/lib/meta";
 
@@ -52,20 +53,19 @@ const SECTIONS = [
 
 export default function UsesPage() {
   return (
-    <main id="main" className="page-main page-narrow">
-      <PageHeader icon={Laptop} eyebrow="Uses" title="What I use" lede="The editor, hardware and tools behind the projects on this site." />
-      {SECTIONS.map(({ label, icon: Icon, items }) => (
-        <section key={label} className="section-block" aria-label={label}>
-          <h2 className="h3 h-icon"><span className="icon-tile icon-tile-sm" aria-hidden="true"><Icon size={16} strokeWidth={1.8} /></span>{label}</h2>
-          <div className="glass stat-list">
+    <main id="main" className="page-main">
+      <PageHeader eyebrow="Uses" title="What I use" lede="The editor, hardware and tools behind the projects on this site." />
+      {SECTIONS.map(({ label, items }) => (
+        <Band key={label} title={label} titleId={`uses-${label.toLowerCase().replace(/[^a-z]+/g, "-")}`}>
+          <dl className="toolkit">
             {items.map(({ name, note }) => (
-              <div key={name} className="stat-row">
-                <span className="stat-value">{name}</span>
-                <span className="mono">{note}</span>
+              <div key={name} className="toolkit-row toolkit-row-wide">
+                <dt>{name}</dt>
+                <dd>{note}</dd>
               </div>
             ))}
-          </div>
-        </section>
+          </dl>
+        </Band>
       ))}
     </main>
   );

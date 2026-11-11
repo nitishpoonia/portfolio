@@ -1,64 +1,57 @@
-/* Story page: scroll-driven timeline, chapter index, reading progress bar.
-   Loaded after app/globals.css (see app/layout.js); colours come from the tokens there. */
+/* Story page: chapters on the site grid, with a line that fills as you scroll.
+   Columns match Band: [year, in the rail] [line] [chapter]. */
 
-/* ═════════ Story timeline (scroll-driven) ═════════ */
-.timeline { list-style: none; display: flex; flex-direction: column; }
-.tl-row { display: flex; gap: clamp(12px, 3vw, 36px); padding-bottom: clamp(32px, 6vw, 72px); view-timeline-name: --row; view-timeline-axis: block; }
-.tl-rail { flex: 0 0 52px; position: relative; }
-.tl-track { position: absolute; left: 50%; margin-left: -1.5px; top: 0; bottom: 0; width: 3px; border-radius: 999px; background: rgba(10,10,10,.12); overflow: hidden; }
+.story-index ol { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s2); }
+.story-index-link { display: inline-flex; align-items: center; min-height: 36px; padding: 0 var(--s4); border-radius: var(--r-pill); border: 1px solid rgba(10,10,10,.22); font-size: 13.5px; font-weight: 500; text-decoration: none; font-variant-numeric: tabular-nums; transition: background var(--t-fast) var(--ease-soft), color var(--t-fast) var(--ease-soft); }
+.story-index-link:hover, .story-index-link:focus-visible, .story-index-link.is-current { background: var(--ink); border-color: var(--ink); color: var(--white); }
+
+.timeline { list-style: none; margin-top: var(--gap-section); border-top: 1px solid var(--ink); }
+.tl-row { display: grid; grid-template-columns: calc(var(--rail) - 12px) 12px minmax(0, 1fr); column-gap: 0; scroll-margin-top: calc(var(--nav-h) + var(--s5)); view-timeline-name: --row; view-timeline-axis: block; }
+.tl-when { display: flex; flex-direction: column; gap: var(--s1); padding-top: var(--s6); }
+.tl-big { font-family: var(--display); font-size: 44px; font-weight: 700; line-height: 1; letter-spacing: -.05em; }
+.tl-rail { position: relative; }
+.tl-track { position: absolute; left: 50%; margin-left: -1px; top: 0; bottom: 0; width: 2px; background: rgba(10,10,10,.14); overflow: hidden; }
 .tl-fill { width: 100%; height: 100%; background: var(--ink); transform-origin: top; }
-.tl-dot { position: sticky; top: 104px; z-index: 1; width: 52px; height: 52px; border-radius: 50%; border: 3px solid var(--ink); box-shadow: 0 0 0 8px var(--paper); background: var(--ink); color: var(--white); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
-.tl-card { position: relative; flex: 1 1 auto; min-width: 0; overflow: hidden; border-radius: 36px; display: flex; flex-direction: column; gap: clamp(20px, 3vw, 32px); padding: clamp(20px, 3.5vw, 40px); }
-.tl-big { position: absolute; top: -.12em; right: 20px; font-size: clamp(80px, 14vw, 170px); font-weight: 700; letter-spacing: -.05em; line-height: 1; color: rgba(10,10,10,.05); pointer-events: none; }
-.tl-body { position: relative; display: flex; flex-direction: column; gap: 10px; max-width: 560px; }
-.tl-body h2 { font-size: clamp(24px, 3.2vw, 38px); line-height: 1.1; font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
-.tl-body p { font-size: 17px; line-height: 1.6; color: var(--text-2); text-wrap: pretty; }
-.tl-photo { width: min(100%, 520px); height: auto; border-radius: 28px; border: 5px solid rgba(255,255,255,.95); box-shadow: 0 16px 40px rgba(10,10,10,.14); transform: rotate(var(--tilt, 0deg)); }
+.tl-dot { position: sticky; top: calc(var(--nav-h) + var(--s7)); z-index: 1; width: 12px; height: 12px; margin-top: calc(var(--s6) + 14px); border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 5px var(--paper); }
+.tl-card { display: flex; flex-direction: column; gap: var(--s5); min-width: 0; padding: var(--s6) 0 var(--s8) var(--col-gap); }
+.tl-body { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s3); max-width: 620px; }
+.tl-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); font-size: 13.5px; color: var(--muted); }
+.tl-now { display: inline-flex; align-items: center; gap: var(--s2); padding: 3px 10px; border-radius: var(--r-pill); background: var(--white); border: 1px solid rgba(10,10,10,.1); font-weight: 500; color: var(--ink); }
+.tl-body h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 700; line-height: 1.06; letter-spacing: -.03em; text-wrap: balance; }
+.tl-body > p:not(.tl-meta):not(.row-stack) { font-size: 17px; line-height: 1.6; color: var(--text-2); text-wrap: pretty; }
+.tl-links { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); margin-top: var(--s2); }
+.tl-link { display: inline-flex; align-items: center; gap: 5px; font-size: 14.5px; font-weight: 500; text-decoration: underline; text-decoration-color: rgba(10,10,10,.25); text-underline-offset: 4px; }
+.tl-link:hover { text-decoration-color: var(--ink); }
+.tl-link svg { transition: translate .3s var(--ease-out); }
+.tl-link:hover svg { translate: 3px 0; }
+.tl-photo { width: min(100%, 520px); height: auto; border-radius: var(--r-xl); filter: grayscale(1); }
+.tl-row-current .tl-track { background: repeating-linear-gradient(to bottom, rgba(10,10,10,.3) 0 6px, transparent 6px 12px); }
+.tl-row-current .tl-fill { display: none; }
+.tl-row-current .tl-dot { background: var(--paper); box-shadow: 0 0 0 2px var(--ink), 0 0 0 6px var(--paper); }
 
 @keyframes tlFill { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-@keyframes tlDot { from { background: var(--paper); color: var(--muted); border-color: var(--grey-1); transform: scale(.85); } to { background: var(--ink); color: var(--white); border-color: var(--ink); transform: scale(1); } }
-@keyframes tlRise { from { opacity: 0; transform: translateY(56px); } to { opacity: 1; transform: none; } }
+@keyframes tlDot { from { background: var(--grey-1); scale: .7; } to { background: var(--ink); scale: 1; } }
 @supports (animation-timeline: view()) {
-  .tl-fill { animation: tlFill linear both; animation-timeline: --row; animation-range: cover 18% cover 60%; }
-  .tl-dot  { animation: tlDot linear both; animation-timeline: --row; animation-range: cover 14% cover 26%; }
-  .tl-card { animation: tlRise linear both; animation-timeline: --row; animation-range: entry 8% entry 55%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .tl-fill { animation: tlFill linear both; animation-timeline: --row; animation-range: cover 18% cover 60%; }
+    .tl-row:not(.tl-row-current) .tl-dot { animation: tlDot linear both; animation-timeline: --row; animation-range: cover 14% cover 26%; }
+  }
 }
-@media (prefers-reduced-motion: reduce) { .tl-fill, .tl-dot, .tl-card { animation: none !important; } }
 
-/* Story: chapter index, reading progress, links, current chapter */
-.story-index ol { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 720px; }
-.story-index-link { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.7); border: 1px solid rgba(10,10,10,.1); font-size: 13px; font-weight: 500; color: var(--ink); text-decoration: none; transition: background var(--t-fast) var(--ease-soft), color var(--t-fast) var(--ease-soft); }
-.story-index-link:hover, .story-index-link:focus-visible { background: var(--ink); color: var(--white); }
-.story-index-link.is-current { background: var(--ink); color: var(--white); }
-.story-index-num { font-family: var(--mono); font-size: 11px; opacity: .55; }
-.story-cue { margin-top: 8px; color: var(--subtle); animation: bob 2.4s ease-in-out infinite; }
-.tl-row { scroll-margin-top: 96px; }
-.timeline .chip-row { list-style: none; }
-.tl-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.tl-now { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border-radius: 999px; background: rgba(10,10,10,.07); font-size: 12px; font-weight: 500; }
-.tl-links { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 6px; }
-.tl-link { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: underline; text-decoration-color: rgba(10,10,10,.25); text-underline-offset: 4px; transition: text-decoration-color var(--t-fast) var(--ease-soft); }
-.tl-link:hover { text-decoration-color: var(--ink); }
-.tl-link svg { transition: transform var(--t-fast) var(--ease-soft); }
-.tl-link:hover svg { transform: translateX(3px); }
-.tl-row-current .tl-card { box-shadow: 0 0 0 2px var(--ink), 0 20px 50px rgba(10,10,10,.12); }
-.tl-row-current .tl-track { background: repeating-linear-gradient(to bottom, rgba(10,10,10,.25) 0 6px, transparent 6px 12px); }
-.tl-row-current .tl-fill { display: none; }
-.story-end { padding-top: 1rem; }
-
-/* thin bar under the nav that fills as you read */
+/* thin bar at the top that fills as you read (story and posts) */
 .story-progress { display: none; }
 @supports (animation-timeline: scroll()) {
-  .story-progress { display: block; position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 300; background: var(--ink); transform-origin: left; transform: scaleX(0); animation: storyProgress linear both; animation-timeline: scroll(root); }
+  @media (prefers-reduced-motion: no-preference) {
+    .story-progress { display: block; position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 300; background: var(--ink); transform-origin: left; transform: scaleX(0); animation: storyProgress linear both; animation-timeline: scroll(root); }
+  }
 }
 @keyframes storyProgress { to { transform: scaleX(1); } }
 
-/* Phones: slimmer rail so the cards get the width */
-@media (max-width: 640px) {
-  .tl-rail { flex-basis: 36px; }
-  .tl-dot { width: 36px; height: 36px; font-size: 12px; border-width: 2px; box-shadow: 0 0 0 6px var(--paper); top: 92px; }
-  .tl-card { border-radius: 28px; }
-  .tl-body p { font-size: 16px; }
-  .story-index-link { padding: 7px 12px; font-size: 12px; }
+@media (max-width: 860px) {
+  .tl-row { grid-template-columns: 12px minmax(0, 1fr); column-gap: var(--s5); }
+  .tl-rail { grid-column: 1; grid-row: 1 / span 2; }
+  .tl-when { grid-column: 2; grid-row: 1; flex-direction: row; align-items: baseline; gap: var(--s3); padding-top: var(--s6); }
+  .tl-big { font-size: 32px; }
+  .tl-card { grid-column: 2; grid-row: 2; padding: var(--s3) 0 var(--s7); }
+  .tl-dot { margin-top: calc(var(--s6) + 10px); }
 }
-@media (prefers-reduced-motion: reduce) { .story-progress, .story-cue { animation: none !important; } .story-progress { display: none; } }

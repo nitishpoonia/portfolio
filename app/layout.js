@@ -1,18 +1,26 @@
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import localFont from "next/font/local";
 import "./globals.css";
 // Order matters: later files build on earlier ones, as when this was one file.
-import "./styles/site.css";
-import "./styles/story.css";
+import "./styles/layout.css";
+import "./styles/home.css";
 import "./styles/pages.css";
+import "./styles/story.css";
+import "./styles/articles.css";
 import "./styles/graphics.css";
 import "./styles/motion.css";
-import "./styles/home.css";
-import "./styles/articles.css";
-import Spotlight from "@/components/motion/Spotlight";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import ContactEvents from "@/components/ContactEvents";
 import { SITE_URL, DEFAULT_IMAGE, FEED } from "@/lib/meta";
+
+// Display face for headings (variable: weight + optical size). Body and controls stay in Geist.
+const display = localFont({
+  src: "../assets/fonts/BricolageGrotesque-latin.woff2",
+  variable: "--font-display",
+  weight: "200 800",
+  display: "swap",
+});
 
 // Analytics only on the live site, so local runs and builds don't count as visits.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-K9ZSKF1486";
@@ -69,12 +77,11 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${display.variable}`}
     >
       <body>
         <a href="#main" className="skip-link">Skip to content</a>
         {children}
-        <Spotlight />
         {ANALYTICS && <GoogleAnalytics gaId={GA_ID} />}
         {ANALYTICS && <ContactEvents />}
       </body>

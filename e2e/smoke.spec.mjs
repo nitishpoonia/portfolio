@@ -39,12 +39,22 @@ test("blog tabs and tags work from the URL", async ({ page }) => {
 
 test("post has contents, code copy and related posts", async ({ page }) => {
   await page.goto("/blog/how-to-fix-flatlist-performance");
-  await page.locator(".toc summary").click();
-  const first = page.locator(".toc a").first();
+  const first = page.locator(".toc-rail a").first();
   const id = (await first.getAttribute("href")).slice(1);
   await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
   await expect(page.locator(".code-copy").first()).toBeVisible();
   await expect(page.getByRole("heading", { name: "Keep reading" })).toBeVisible();
+});
+
+test("phone layout: nothing wider than the screen, contents box works", async ({ browser }) => {
+  const page = await (await browser.newContext({ viewport: { width: 375, height: 812 } })).newPage();
+  for (const path of ["/", "/story", "/projects", "/blog", "/hire", "/blog/how-to-fix-flatlist-performance"]) {
+    await page.goto(path);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow, `${path} scrolls sideways`).toBeLessThanOrEqual(0);
+  }
+  await page.locator(".toc summary").click();
+  await expect(page.locator(".toc a").first()).toBeVisible();
 });
 
 test("feed, sitemap, robots and manifest respond", async ({ request }) => {
