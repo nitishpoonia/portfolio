@@ -35,11 +35,17 @@ database filled from `content/`, and the browser smoke test on every pull reques
   to production before the new code goes live, so the old code must keep working against the new schema.
 - Public pages load data through `orEmpty(...)` from `lib/db.js`, never `.catch(() => [])`: with a database
   configured, a failed query must fail the build rather than ship an empty page.
-- Design: black and white only, frosted glass surfaces, pill-shaped controls. Public pages use plain CSS:
-  `app/globals.css` (reset, colour tokens, prose) then `app/styles/*.css` by area, imported in order from
-  `app/layout.js`. Use the colour tokens (`var(--ink)`, `var(--muted)`…), not hex values. For text on a light
-  background, `--muted` is the lightest grey allowed. Tailwind is only for `/studio` (preflight is off). All motion must switch off under
-  `prefers-reduced-motion`.
+- Design: black and white only, pill-shaped controls, a glass nav. Every public page is a stack of
+  `components/Band.js` sections on one grid: a label rail on the left, content on the right, inside one
+  1120px container. Lists are ruled rows (`.rows`, `components/ProjectRow.js`), not cards; at most one
+  `.dark-card` per page. Spacing comes only from the scale in `app/globals.css` (`--s1` to `--s9`,
+  `--gap-section`); colours only from the tokens there (`--muted` is the lightest grey for text on light).
+  Headings use the display face (`var(--display)`, Bricolage Grotesque); body and controls use Geist;
+  monospace only in code. Styles: `app/globals.css` (tokens, prose) then `app/styles/*.css`, imported in
+  order from `app/layout.js`. Motion is limited to what `app/styles/motion.css` lists, and all of it is off
+  under `prefers-reduced-motion`. Tailwind is only for `/studio` (preflight is off).
+- Don't add `loading.js` (or a `<Suspense>` around data) to public pages. They are pre-built; a slow
+  database at build time bakes the fallback into the static HTML, which then flashes on every visit.
 - Don't rewrite site copy, invent facts about Nitish, or add placeholder content to public pages.
 - Name a new dependency and the reason for it in the PR description.
 

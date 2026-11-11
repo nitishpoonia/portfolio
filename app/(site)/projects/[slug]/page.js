@@ -43,7 +43,7 @@ export default async function ProjectPage({ params }) {
   const media = await getMediaSizes(mediaIdsIn(project.content));
 
   return (
-    <main id="main" className="page-main page-narrow">
+    <main id="main" className="page-main">
       <ProjectArticle
         project={project}
         contact={contact}

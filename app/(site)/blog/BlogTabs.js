@@ -70,18 +70,17 @@ export default function BlogTabs({ posts, tab, tag }) {
         {shown.length === 0 ? (
           <p className="empty">Nothing here yet. Check back soon.</p>
         ) : (
-          <ul className="glass list-panel tab-swap" key={tag || active}>
+          <ul className="rows tab-swap" key={tag || active}>
             {shown.map((post, i) => (
               <li key={post.slug} style={{ "--i": i }}>
-                <Link href={`/blog/${post.slug}`} className="post-row">
-                  <span className="post-main">
-                    <strong>{post.title}</strong>
-                    {post.description && <span className="muted">{post.description}</span>}
+                <Link href={`/blog/${post.slug}`} className="row">
+                  <span className="row-main">
+                    <span className="row-title">{post.title}</span>
+                    {post.description && <span className="row-text">{post.description}</span>}
                   </span>
-                  <span className="post-meta mono">
-                    <span>{formatDate(post.date)}</span>
-                    <span>{post.readingTime}</span>
-                    <ArrowUpRight size={18} strokeWidth={1.8} className="card-arrow" aria-hidden="true" />
+                  <span className="row-end">
+                    <span className="meta">{formatDate(post.date)}<br />{post.readingTime}</span>
+                    <ArrowUpRight size={18} strokeWidth={1.8} className="row-arrow" aria-hidden="true" />
                   </span>
                 </Link>
               </li>

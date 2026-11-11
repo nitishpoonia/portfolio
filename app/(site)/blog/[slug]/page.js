@@ -51,7 +51,7 @@ export default async function PostPage({ params }) {
   const [all, media] = await Promise.all([orEmpty(getAllPosts()), getMediaSizes(mediaIdsIn(post.content))]);
 
   return (
-    <main id="main" className="page-main page-narrow">
+    <main id="main" className="page-main">
       <JsonLd data={blogPostingLd(post)} />
       <PostArticle
         post={post}
