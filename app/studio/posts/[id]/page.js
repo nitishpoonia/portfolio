@@ -6,7 +6,7 @@ const fields = [
   { name: "title", label: "Title", wide: true },
   { name: "slug", label: "Slug", hint: "auto from title if empty" },
   { name: "date", label: "Date", type: "date" },
-  { name: "category", label: "Category", options: ["tech", "personal"] },
+  { name: "category", label: "Category", options: ["tech", "personal", "geopolitics"] },
   { name: "tags", label: "Tags (comma separated)" },
   { name: "description", label: "Description (shown in Google and link previews)", wide: true, counter: [150, 160] },
 ];
@@ -22,7 +22,7 @@ export default async function PostEditor({ params }) {
     ? {
         ...post,
         // Older posts may have a category the blog no longer has a tab for; they show under Personal.
-        category: post.category === "tech" ? "tech" : "personal",
+        category: ["tech", "geopolitics"].includes(post.category) ? post.category : "personal",
         tags: (post.tags || []).join(", "),
         updated_at: iso(post.updated_at),
       }
