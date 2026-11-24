@@ -8,6 +8,7 @@ const PAGES = [
   ["/projects/nfc-time-tracking", /NFC/],
   ["/blog", /Notes from building/],
   ["/blog/how-to-fix-flatlist-performance", /FlatList/],
+  ["/blog/russia-ukraine-war-history", /Russia-Ukraine war/i],
   ["/hire", /Looking for my next team/],
   ["/uses", /What I use/],
 ];
@@ -33,6 +34,9 @@ test("unknown page is a 404 with the site shell", async ({ page }) => {
 test("blog tabs and tags work from the URL", async ({ page }) => {
   await page.goto("/blog?tab=personal");
   await expect(page.locator("#blog-tab-personal")).toHaveAttribute("aria-selected", "true");
+  await page.goto("/blog?tab=geopolitics");
+  await expect(page.locator("#blog-tab-geopolitics")).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("link", { name: /Russia-Ukraine war/i })).toBeVisible();
   await page.goto("/blog?tag=performance");
   await expect(page.locator(".tag-filter")).toContainText("performance");
 });

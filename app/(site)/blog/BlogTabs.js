@@ -3,17 +3,18 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import { Code2, NotebookPen, ArrowUpRight, X } from "lucide-react";
+import { Code2, Globe, NotebookPen, ArrowUpRight, X } from "lucide-react";
 import { formatDate } from "@/lib/format";
 import { useTabKeys } from "@/components/useTabKeys";
 
 const TABS = [
   { id: "tech", label: "Tech", icon: Code2 },
+  { id: "geopolitics", label: "Geopolitics", icon: Globe },
   { id: "personal", label: "Personal", icon: NotebookPen },
 ];
 
-// Anything that isn't "tech" lists under Personal, so no post is ever unreachable.
-const tabOf = (p) => (p.category === "tech" ? "tech" : "personal");
+// Anything that isn't "tech" or "geopolitics" lists under Personal, so no post is ever unreachable.
+const tabOf = (p) => (p.category === "tech" || p.category === "geopolitics" ? p.category : "personal");
 
 // Reads ?tab= and ?tag= so a tab or tag filter can be linked and survives Back.
 export function BlogTabsFromUrl({ posts }) {
